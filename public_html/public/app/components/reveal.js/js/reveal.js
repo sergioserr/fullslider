@@ -39,15 +39,15 @@
 
 			// The "normal" size of the presentation, aspect ratio will be preserved
 			// when the presentation is scaled to fit different resolutions
-			width: 960,
-			height: 700,
+			width: screen.width,
+			height: screen.height,
 
 			// Factor of the display size that should remain empty around the content
 			margin: 0.1,
 
 			// Bounds for smallest/largest possible scale to apply to content
-			minScale: 0.2,
-			maxScale: 1.5,
+			minScale: 0.3,
+			maxScale: 1.8,
 
 			// Display controls in the bottom right corner
 			controls: true,
@@ -1618,44 +1618,23 @@
 			dom.slides.style.height = size.height + 'px';
 
 			// Determine scale of content to fit within available space
-			scale = Math.min( size.presentationWidth / size.width, size.presentationHeight / size.height );
+            var scaleWidth = size.width / size.presentationWidth;
+            var scaleHeight = size.height / size.presentationHeight;
 
 			// Respect max/min scale settings
-			scale = Math.max( scale, config.minScale );
-			scale = Math.min( scale, config.maxScale );
+			scaleWidth = Math.max( scaleWidth, config.minScale );
+			scaleWidth = Math.min( scaleWidth, config.maxScale );
+            
+            scaleHeight = Math.max( scaleHeight, config.minScale );
+			scaleHeight = Math.min( scaleHeight, config.maxScale );
 
-			// Don't apply any scaling styles if scale is 1
-			if( scale === 1 ) {
-				dom.slides.style.zoom = '';
-				dom.slides.style.left = '';
-				dom.slides.style.top = '';
-				dom.slides.style.bottom = '';
-				dom.slides.style.right = '';
-				transformSlides( { layout: '' } );
-			}
-			else {
-				// Prefer zoom for scaling up so that content remains crisp.
-				// Don't use zoom to scale down since that can lead to shifts
-				// in text layout/line breaks.
-				if( scale > 1 && features.zoom ) {
-					dom.slides.style.zoom = scale;
-					dom.slides.style.left = '';
-					dom.slides.style.top = '';
-					dom.slides.style.bottom = '';
-					dom.slides.style.right = '';
-					transformSlides( { layout: '' } );
-				}
-				// Apply scale transform as a fallback
-				else {
-					dom.slides.style.zoom = '';
-					dom.slides.style.left = '50%';
-					dom.slides.style.top = '50%';
-					dom.slides.style.bottom = 'auto';
-					dom.slides.style.right = 'auto';
-					transformSlides( { layout: 'translate(-50%, -50%) scale('+ scale +')' } );
-				}
-			}
-
+			dom.slides.style.zoom = '';
+            dom.slides.style.left = '50%';
+            dom.slides.style.top = '50%';
+            dom.slides.style.bottom = 'auto';
+            dom.slides.style.right = 'auto';
+            transformSlides( { layout: 'translate(-50%, -50%) scale('+ scaleWidth + ',' + scaleHeight + ')' } );
+				
 			// Select all slides, vertical and horizontal
 			var slides = toArray( dom.wrapper.querySelectorAll( SLIDES_SELECTOR ) );
 
@@ -1731,17 +1710,17 @@
 
 		var size = {
 			// Slide size
-			width: config.width,
-			height: config.height,
+			width: reveal.offsetWidth,
+			height: reveal.offsetHeight,
 
 			// Presentation size
-			presentationWidth: presentationWidth || dom.wrapper.offsetWidth,
-			presentationHeight: presentationHeight || dom.wrapper.offsetHeight
+			presentationWidth: presentationWidth || slides.offsetWidth,
+			presentationHeight: presentationHeight || slides.offsetHeight
 		};
 
 		// Reduce available space by margin
-		size.presentationWidth -= ( size.presentationWidth * config.margin );
-		size.presentationHeight -= ( size.presentationHeight * config.margin );
+		//size.presentationWidth -= ( size.presentationWidth * config.margin );
+		//size.presentationHeight -= ( size.presentationHeight * config.margin );
 
 		// Slide width may be a percentage of available width
 		if( typeof size.width === 'string' && /%$/.test( size.width ) ) {

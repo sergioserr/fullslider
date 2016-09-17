@@ -28,11 +28,20 @@ function slideNavigate(direction) {
     }
 }
 
-key('delete', function(e) {
-    var selectedElement = Impressionist.prototype.getSelectedElement();
-    if (selectedElement !== "") {
-        Impressionist.prototype.deleteElement(selectedElement);
-    }
+key	('delete', function(e) {
+	var selectedSlide = Impressionist.prototype.getSelectedSlide()
+	var selectedElement = Impressionist.prototype.getSelectedElement();
+	if (selectedElement !== "") {
+		Impressionist.prototype.deleteElement(selectedElement);
+	} 
+	else {
+		var selectedClicked = Impressionist.prototype.getCurrentClicked();
+		slideIdCliked = $(selectedClicked).attr("id").split("_")[1];
+		slideIdSlide = $(selectedSlide).attr("id").split("_")[2];
+		if(slideIdCliked === slideIdSlide){
+			Impressionist.prototype.deleteSlide(selectedSlide);
+		}
+	}
 });
 
 key('ctrl+s', function(e) {

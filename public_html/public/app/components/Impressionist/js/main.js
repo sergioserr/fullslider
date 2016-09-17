@@ -794,6 +794,27 @@ Impressionist.prototype =
                 $("#presentationmetatitle").html($("#titleinput").val());
                 changeContent();//Event for undo redo
             },
+            deleteSlide: function(sl) {
+	           slideid = $(sl).attr("id").split("_")[2];
+	           p = $("#slidethumb_" + slideid);
+	           var index = $("#slidethumb_" + slideid).index();
+	           p.animate({opacity: 0}, 200, function(e){
+		          $(this).remove();
+		          $("#fullslider_slide_" + slideid).remove();
+		          me.assignSlideNumbers();
+		          var children = $(".slidethumbholder").children();
+		          var newslideid;
+		          if (children[index]) {
+			         newslideid = $(children[index]).attr("id");
+		          }
+		          else {
+			         ewslideid = $(children[index - 1]).attr("id");
+		          }
+		          newslideid = newslideid.split("_")[1];
+		          me.selectSlide("#fullslider_slide_" + newslideid);
+		          me.selectThumb(newslideid);
+	           });
+            },
             addSlideEvents: function()
             {
                 $(".deletebtn").on("click", function(e)
@@ -2010,6 +2031,9 @@ Impressionist.prototype =
             },
             getSelectedElement: function() {
                 return me.selectedElement;
+            },
+            getSelectedSlide: function() {
+	           return me.selectedSlide;
             },
             getSelectedForEdit: function() {
                 return me.selectedforedit;
