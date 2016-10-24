@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!-- 
+fullslider main
+Eduardo Jiménez Grande
+-->
+<html lang="en">
+    <head>
+        <title>Prueba</title>
+        <meta charset="UTF-8">
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="markdown.js"></script>
+        <script>
+            $(document).ready(function() {   
+                $('#convertir').click(function() {   
+                    var $añadido = $('#texto').val();
+                    var $html_content = markdown.toHTML( $añadido );
+                    document.getElementById("resultado").innerHTML='<span>' + $html_content + '</span>'
+                    document.getElementById("texto").value ='';
+                });
+            }); 
+
+        
+        
+        </script>
+    </head>
+    <body>
+        <textarea id="texto"></textarea>
+        <br>
+        <button id="convertir"> Convertir </button>
+        <div id="resultado"></div>
+        <div id="pasos"></div>
+    </body>

@@ -157,12 +157,23 @@ Eduardo Jiménez Grande
                     </div>
                 </div>
                 <div id="markdown-editor" class="col-sm-3 col-xs-3">
-                    <!--                    <div class="center-block text-center h4">
-                                            <span class="glyphicon glyphicon-pencil"></span> Markdown
-                                        </div>
-                                        <div id="markdown-space">
-                                            <textarea></textarea>
-                                        </div>-->
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-6">
+                            <div class="center-block h4">
+                                <span class="glyphicon glyphicon-pencil"></span> Markdown
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-6">
+                            <button id="convert" type="button" class="btn btn-info"> Convert </button>
+                        </div>
+                    </div>
+                    <!-- <div class="center-block text-center h4">
+                            <span class="glyphicon glyphicon-pencil"></span> Markdown
+                    </div>-->
+                    <div id="markdown-space">
+                        <textarea id="markdown-text">#Titulo slide</textarea>
+                    </div>
+                    <div id="test-conversion"></div>
                     <div id="graphic-options">
                         <div class="panel panel-default">
                             <div class="panel-heading">Fill:</div>
@@ -218,7 +229,7 @@ Eduardo Jiménez Grande
                     </div>
                 </div>
             </div>
-
+                    
         </div>
 
         <div id="modals">
@@ -243,6 +254,8 @@ Eduardo Jiménez Grande
         <!-- code formatting -->
         <script src="app/components/Impressionist/js/main.js"></script>
         <script src ="app/components/Impressionist/js/startup.js"></script>
+        <script src="app/js/markdown_transformer.js"></script>
+        <script src="app/components/markdown-browser-0.6.0-beta1/markdown.js"></script>
 
         <script type="text/javascript" src="app/components/jQuery-contextMenu-2.1.0/dist/jquery.contextMenu.js"></script>
         <script type="text/javascript" src="app/components/jQuery-contextMenu-2.1.0/dist/jquery.ui.position.min.js"></script>
