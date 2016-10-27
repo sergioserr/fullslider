@@ -793,6 +793,21 @@ Impressionist.prototype =
                 me.addFullsliderSlide(uid);
                 $("#presentationmetatitle").html($("#titleinput").val());
                 changeContent();//Event for undo redo
+                addSlideList(uid);
+            },
+            addSlideMD: function()
+            {
+                uid = me.generateUID();
+                me.addSlideThumb(uid);
+                //$("#slidethumb_" + uid).attr("data-left", me.lastslideleftpos + "px");
+                //$("#slidethumb_" + uid).attr("data-top", "0px");
+                me.addSlideEvents();
+                me.lastslideleftpos += 200;
+                me.assignSlideNumbers(true);
+                me.addFullsliderSlideMD(uid);
+                $("#presentationmetatitle").html($("#titleinput").val());
+                changeContent();//Event for undo redo
+                return uid;
             },
             deleteSlide: function(sl) {
 	           slideid = $(sl).attr("id").split("_")[2];
@@ -801,6 +816,26 @@ Impressionist.prototype =
 	           p.animate({opacity: 0}, 200, function(e){
 		          $(this).remove();
 		          $("#fullslider_slide_" + slideid).remove();
+		          me.assignSlideNumbers();
+		          var children = $(".slidethumbholder").children();
+		          var newslideid;
+		          if (children[index]) {
+			         newslideid = $(children[index]).attr("id");
+		          }
+		          else {
+			         ewslideid = $(children[index - 1]).attr("id");
+		          }
+		          newslideid = newslideid.split("_")[1];
+		          me.selectSlide("#fullslider_slide_" + newslideid);
+		          me.selectThumb(newslideid);
+	           });
+            },
+            deleteIdSlide: function(id) {
+	           p = $("#slidethumb_" + id);
+	           var index = $("#slidethumb_" + id).index();
+	           p.animate({opacity: 0}, 200, function(e){
+		          $(this).remove();
+		          $("#fullslider_slide_" + id).remove();
 		          me.assignSlideNumbers();
 		          var children = $(".slidethumbholder").children();
 		          var newslideid;
@@ -859,7 +894,27 @@ Impressionist.prototype =
                 //$("#fullslider_slide_"+id).addClass(me.theme);
                 me.selectSlide("#fullslider_slide_" + id);
                 me.selectThumb(id);
-                me.addFullsliderText("normal");
+                me.addFullsliderTextMD("title", "Title Slide");
+
+                //Slidenumbers
+                $(me.selectedSlide).append(slidenumbers_snippet);
+                me.setSlideNumbersDisplay();
+                me.setSlideNumber();
+
+                for (var i in me.patterns) {
+                    $(me.selectedSlide).append(me.clonePatternElement(me.patterns[i]));
+                }
+                me.generateScaledSlide(me.selectedSlide);
+            },
+            addFullsliderSlideMD: function(id)
+            {
+                islide = fullslider_slide;
+                islide = islide.split("__slidenumber__").join("_" + id);
+                $(".fullslider-slide-container").append(islide);
+                $("#fullslider_slide_" + id).addClass("fullslider-slide-element");
+                //$("#fullslider_slide_"+id).addClass(me.theme);
+                me.selectSlide("#fullslider_slide_" + id);
+                me.selectThumb(id);
 
                 //Slidenumbers
                 $(me.selectedSlide).append(slidenumbers_snippet);
@@ -885,6 +940,12 @@ Impressionist.prototype =
             },
             addFullsliderText: function(type) {
                 var element = me.addFullsliderSlideItem(text_snippet);
+                me.addTextStyle(element, type);
+                me.finishAddFile($(element));
+            },
+            addFullsliderTextMD: function(type, text) {
+                var mText = text_snippet.replace("Sample Text", text);
+                var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyle(element, type);
                 me.finishAddFile($(element));
             },
