@@ -486,7 +486,12 @@
     // convert this node
     switch ( jsonml[ 0 ] ) { 
     case "slider":
-        jsonml[0] = "slide";
+        jsonml[0] = "slide" + jsonml[ 1 ].level;
+        delete jsonml[ 1 ].level;
+        break;
+    case "title":
+        jsonml[0] = "tl" + jsonml[ 1 ].level;
+        delete jsonml[ 1 ].level;
         break;
     case "header":
       jsonml[ 0 ] = "h" + jsonml[ 1 ].level;
@@ -680,12 +685,13 @@
   var Gruber = {
     block: {
       slider: function slider( block, next){
-          var m = block.match( /^(#)\s*(.*?)\s*#*\s*(?:\n|$)/ );
+          var m = block.match( /^(#{1,3})\s*(.*?)\s*#*\s*(?:\n|$)/ );
           
           if ( !m )
             return undefined;
         
-          var slide = [ "slide" ];
+           
+          var slide = [ "slider", { level: m[ 1 ].length } ];
           Array.prototype.push.apply(slide, this.processInline(m[ 2 ]));
           
           if ( m[0].length < block.length )
@@ -695,8 +701,25 @@
           
       },
         
+      title: function title( block, next){
+          var m = block.match( /^(-{1,2})\s*(.*?)\s*#*\s*(-{1,2})/ );
+          
+          if ( !m )
+            return undefined;
+        
+           
+          var title = [ "title", { level: m[ 1 ].length } ];
+          Array.prototype.push.apply(title, this.processInline(m[ 2 ]));
+          
+          if ( m[0].length < block.length )
+            next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
+          
+          return [ title ]
+          
+      },
+        
       atxHeader: function atxHeader( block, next ) {
-        var m = block.match( /^(#{2,6})\s*(.*?)\s*#*\s*(?:\n|$)/ );
+        var m = block.match( /^(#{4,6})\s*(.*?)\s*#*\s*(?:\n|$)/ );
 
         if ( !m )
           return undefined;
@@ -1385,7 +1408,7 @@
 
   // Meta Helper/generator method for em and strong handling
   function strong_em( tag, md ) {
-
+      
     var state_slot = tag + "_state",
         other_slot = tag === "strong" ? "em_state" : "strong_state";
 
@@ -1444,6 +1467,7 @@
   Gruber.inline["__"] = strong_em("strong", "__");
   Gruber.inline["*"]  = strong_em("em", "*");
   Gruber.inline["_"]  = strong_em("em", "_");
+    
 
   Markdown.dialects.Gruber = Gruber;
   Markdown.buildBlockOrder ( Markdown.dialects.Gruber.block );

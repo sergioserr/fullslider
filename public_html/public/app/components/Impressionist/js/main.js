@@ -894,7 +894,7 @@ Impressionist.prototype =
                 //$("#fullslider_slide_"+id).addClass(me.theme);
                 me.selectSlide("#fullslider_slide_" + id);
                 me.selectThumb(id);
-                me.addFullsliderTextMD("title", "Title Slide");
+                me.addFullsliderTextMD("title", "Title Slide", "normal");
 
                 //Slidenumbers
                 $(me.selectedSlide).append(slidenumbers_snippet);
@@ -940,16 +940,16 @@ Impressionist.prototype =
             },
             addFullsliderText: function(type) {
                 var element = me.addFullsliderSlideItem(text_snippet);
-                me.addTextStyle(element, type);
+                me.addTextStyle(element, type, "normal");
                 me.finishAddFile($(element));
             },
-            addFullsliderTextMD: function(type, text) {
+            addFullsliderTextMD: function(type, text, mode) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyle(element, type);
+                me.addTextStyle(element, type, mode);
                 me.finishAddFile($(element));
             },
-            addTextStyle: function(element, type) {
+            addTextStyle: function(element, type, mode) {
                 var size = "";
                 var font = "";
                 var color = "";
@@ -978,7 +978,17 @@ Impressionist.prototype =
 
                 $(element).css("font-size", size + "vw");
                 var text_value = $(element).text();
-                $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
+                switch(mode){
+                    case "em":
+                        $(element).children().html("<i><font color='" + color + "'>" + text_value + "</font></i>");
+                        break;
+                    case "normal":
+                        $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
+                        break;
+                    case "strong":
+                        $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
+                        break;
+                }
                 $(element).css("font-family", font);
 
 
