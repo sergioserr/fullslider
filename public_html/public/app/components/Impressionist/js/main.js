@@ -1013,6 +1013,13 @@ Impressionist.prototype =
                 hljs.highlightBlock($(element).find("code")[0]);
                 me.finishAddFile($(element));
             },
+            addFullsliderCodeMD: function(text) {
+                var cText = code_snippet.replace("<li>function example(){</li><li>alert();</li><li>}</li>", text);
+                var element = me.addFullsliderSlideItem(cText);
+                me.addCodeStyle(element);
+                hljs.highlightBlock($(element).find("code")[0]);
+                me.finishAddFile($(element));
+            },
             addCodeStyle: function(element) {
                 $(element).css("font-size", "1.3vw");
                 $(element).css("position", "absolute");

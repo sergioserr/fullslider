@@ -493,6 +493,10 @@
         jsonml[0] = "tl" + jsonml[ 1 ].level;
         delete jsonml[ 1 ].level;
         break;
+    case "figurer":
+        jsonml[0] = "figure" + jsonml[ 1 ].level;
+        delete jsonml[ 1 ].level;
+        break;
     case "header":
       jsonml[ 0 ] = "h" + jsonml[ 1 ].level;
       delete jsonml[ 1 ].level;
@@ -698,6 +702,23 @@
             next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
           
           return [ slide ]
+          
+      },
+        
+      figurer: function figurer( block, next){
+          var m = block.match( /^(>{1,4})\s*(.*?)\s*#*\s*(?:\n|$)/ );
+          
+          if ( !m )
+            return undefined;
+        
+           
+          var figure = [ "figurer", { level: m[ 1 ].length } ];
+          Array.prototype.push.apply(figure, this.processInline(m[ 2 ]));
+          
+          if ( m[0].length < block.length )
+            next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
+          
+          return [ figure ]
           
       },
         
@@ -1074,7 +1095,7 @@
         };
       })(),
 
-      blockquote: function blockquote( block, next ) {
+      /*blockquote: function blockquote( block, next ) {
         if ( !block.match( /^>/m ) )
           return undefined;
 
@@ -1125,7 +1146,7 @@
 
         jsonml.push( processedBlock );
         return jsonml;
-      },
+      },*/
 
       referenceDefn: function referenceDefn( block, next) {
         var re = /^\s*\[(.*?)\]:\s*(\S+)(?:\s+(?:(['"])(.*?)\3|\((.*?)\)))?\n?/;
