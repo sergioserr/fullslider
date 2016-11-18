@@ -795,20 +795,7 @@ Impressionist.prototype =
                 changeContent();//Event for undo redo
                 addSlideList(uid);
             },
-            addSlideMD: function()
-            {
-                uid = me.generateUID();
-                me.addSlideThumb(uid);
-                //$("#slidethumb_" + uid).attr("data-left", me.lastslideleftpos + "px");
-                //$("#slidethumb_" + uid).attr("data-top", "0px");
-                me.addSlideEvents();
-                me.lastslideleftpos += 200;
-                me.assignSlideNumbers(true);
-                me.addFullsliderSlideMD(uid);
-                $("#presentationmetatitle").html($("#titleinput").val());
-                changeContent();//Event for undo redo
-                return uid;
-            },
+            
             deleteSlide: function(sl) {
 	           slideid = $(sl).attr("id").split("_")[2];
 	           p = $("#slidethumb_" + slideid);
@@ -906,26 +893,6 @@ Impressionist.prototype =
                 }
                 me.generateScaledSlide(me.selectedSlide);
             },
-            addFullsliderSlideMD: function(id)
-            {
-                islide = fullslider_slide;
-                islide = islide.split("__slidenumber__").join("_" + id);
-                $(".fullslider-slide-container").append(islide);
-                $("#fullslider_slide_" + id).addClass("fullslider-slide-element");
-                //$("#fullslider_slide_"+id).addClass(me.theme);
-                me.selectSlide("#fullslider_slide_" + id);
-                me.selectThumb(id);
-
-                //Slidenumbers
-                $(me.selectedSlide).append(slidenumbers_snippet);
-                me.setSlideNumbersDisplay();
-                me.setSlideNumber();
-
-                for (var i in me.patterns) {
-                    $(me.selectedSlide).append(me.clonePatternElement(me.patterns[i]));
-                }
-                me.generateScaledSlide(me.selectedSlide);
-            },
             addFullsliderSlideItem: function(template)
             {
                 var id = "slidelement_" + me.generateUID();
@@ -941,12 +908,6 @@ Impressionist.prototype =
             addFullsliderText: function(type) {
                 var element = me.addFullsliderSlideItem(text_snippet);
                 me.addTextStyle(element, type, "normal");
-                me.finishAddFile($(element));
-            },
-            addFullsliderTextMD: function(type, text, mode) {
-                var mText = text_snippet.replace("Sample Text", text);
-                var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyle(element, type, mode);
                 me.finishAddFile($(element));
             },
             addTextStyle: function(element, type, mode) {
@@ -1009,13 +970,6 @@ Impressionist.prototype =
             },
             addFullsliderCode: function() {
                 var element = me.addFullsliderSlideItem(code_snippet);
-                me.addCodeStyle(element);
-                hljs.highlightBlock($(element).find("code")[0]);
-                me.finishAddFile($(element));
-            },
-            addFullsliderCodeMD: function(text) {
-                var cText = code_snippet.replace("<li>function example(){</li><li>alert();</li><li>}</li>", text);
-                var element = me.addFullsliderSlideItem(cText);
                 me.addCodeStyle(element);
                 hljs.highlightBlock($(element).find("code")[0]);
                 me.finishAddFile($(element));
@@ -1422,7 +1376,8 @@ Impressionist.prototype =
 
                 $('#urlimgform').submit(function() {
                     $.post($(this).attr('action'), $(this).serialize(), function(json) {
-//                        me.addImageToSlide(json);
+                        console.log(json);
+//                       me.addImageToSlide(json);
                         //Clear input and preview image
                         $("#urlimageinput").val("");
                         $("#previewimg").removeAttr("src");
@@ -1941,17 +1896,16 @@ Impressionist.prototype =
                 var graphic_list = $("#canvas").find("svg").children();
                 var defs = $("#canvas").find("defs");
                 var svgtype = "";
-
+                
                 for (var i = 0; i < graphic_list.length; i++) {
                     var graphic = graphic_list[i];
-
                     if (!$(graphic).is("defs")) {
                         var element = me.addFullsliderSlideItem(graphic_snippet);
                         svgtype = $(graphic).attr("data-svgtype");
 
                         //On resize svg, transform is defined an set to " " -> remove transform attr.
                         $(graphic).removeAttr('transform');
-
+                        
                         $(element).find("svg").append($(graphic).clone());
 
                         switch (svgtype) {
@@ -2311,4 +2265,173 @@ Impressionist.prototype =
             pasteTextFromClipboard: function(element) {
                 document.execCommand('paste', false, "asd");
             },
+    
+            //--------------------------- Markdown ---------------------------------------
+    
+            addSlideMD: function(){
+                uid = me.generateUID();
+                me.addSlideThumb(uid);
+                //$("#slidethumb_" + uid).attr("data-left", me.lastslideleftpos + "px");
+                //$("#slidethumb_" + uid).attr("data-top", "0px");
+                me.addSlideEvents();
+                me.lastslideleftpos += 200;
+                me.assignSlideNumbers(true);
+                me.addFullsliderSlideMD(uid);
+                $("#presentationmetatitle").html($("#titleinput").val());
+                changeContent();//Event for undo redo
+                return uid;
+            },
+            addFullsliderSlideMD: function(id){
+                islide = fullslider_slide;
+                islide = islide.split("__slidenumber__").join("_" + id);
+                $(".fullslider-slide-container").append(islide);
+                $("#fullslider_slide_" + id).addClass("fullslider-slide-element");
+                //$("#fullslider_slide_"+id).addClass(me.theme);
+                me.selectSlide("#fullslider_slide_" + id);
+                me.selectThumb(id);
+
+                //Slidenumbers
+                $(me.selectedSlide).append(slidenumbers_snippet);
+                me.setSlideNumbersDisplay();
+                me.setSlideNumber();
+
+                for (var i in me.patterns) {
+                    $(me.selectedSlide).append(me.clonePatternElement(me.patterns[i]));
+                }
+                me.generateScaledSlide(me.selectedSlide);
+            },
+            addFullsliderTextMD: function(type, text, mode) {
+                var mText = text_snippet.replace("Sample Text", text);
+                var element = me.addFullsliderSlideItem(mText);
+                me.addTextStyle(element, type, mode);
+                me.finishAddFile($(element));
+            },
+            addFullsliderCodeMD: function(text) {
+                var cText = code_snippet.replace("<li>function example(){</li><li>alert();</li><li>}</li>", text);
+                var element = me.addFullsliderSlideItem(cText);
+                me.addCodeStyle(element);
+                hljs.highlightBlock($(element).find("code")[0]);
+                me.finishAddFile($(element));
+            },
+            /*addGraphicsMD: function() {
+                var graphic = me.createDefautlGraphicMD();
+                var defs = $("#canvas").find("defs");
+                var svgtype = "";
+
+                var element = me.addFullsliderSlideItem(graphic_snippet);
+                svgtype = $(graphic).attr("data-svgtype");
+
+                //On resize svg, transform is defined an set to " " -> remove transform attr.
+                $(graphic).removeAttr('transform');
+
+                $(element).find("svg").append($(graphic).clone());
+                switch (svgtype) {
+                    case "arrow":
+                        $(element).find("svg").prepend($(defs).clone()); //Prepend: Append in first position
+                        break;
+                    default:
+                        break;
+                }
+
+                me.addGraphicStyleMD(element, graphic);
+
+                me.finishAddFile($(element));
+            },
+            addGraphicStyleMD: function(element, graphic) {
+                var svg_element = $(element).find("svg");
+                var added_graphic = $(svg_element).children()[0];
+
+//                var stroke_width = pxToVw(parseFloat(getNumericValue($("#strokewidth").val())));
+                var stroke_width = pxToVw(parseFloat($(graphic).attr("stroke-width")));
+                var is_arrow = false;
+
+                if ($(added_graphic).is("defs")) { //If is arrow
+                    is_arrow = true;
+                    var last = $($(svg_element).children()).size() - 1;
+                    var added_graphic = $(svg_element).children()[last];
+                    stroke_width *= 3;
+                }
+
+                //After append, because before has relative modal values
+                var width = parseFloat(pxToVw($(graphic).attr("width")));
+                var height = parseFloat(pxToVw($(graphic).attr("height")));
+
+                var left = $(graphic).attr("x");
+                var top = $(graphic).attr("y");
+
+                var left_translate = (left * -1);
+                var top_translate = (top * -1);
+
+                switch (true) {
+                    case (height != 0 && width != 0):
+                        if (width > height) {
+                            var w_rel = (stroke_width + 0 * height / width);
+                        }
+                        else {
+                            var w_rel = (stroke_width + 0 * width / height);
+                        }
+                        width += w_rel;
+                        left_translate += vwToPx(w_rel / 2);
+                        height += w_rel;
+                        top_translate += vwToPx(w_rel / 2);
+                        break;
+                    case(height != 0 && width == 0):
+                        width += stroke_width + 1;
+                        left_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            height += stroke_width + 1;
+                            top_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                    case(height == 0 && width != 0):
+                        height += stroke_width + 1;
+                        top_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            width += stroke_width + 1;
+                            left_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                }
+
+                $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
+
+                $(svg_element).css("width", width + "vw");
+                $(svg_element).css("height", height + "vw");
+                $(svg_element).css("position", "absolute");
+                $(element).css("width", width + "vw");
+                $(element).css("height", height + "vw");
+                $(element).css("position", "absolute");
+                $(element).css("left", pxToVw(left) + "vw");
+                $(element).css("top", pxToVw(top) + "vw");
+
+
+                //Javascript insteadof Jquery because attr("viewBox") set attribute "viewbox". Case Sensitive
+                $(svg_element)[0].setAttribute('preserveAspectRatio', "xMinYMin meet");
+                $(svg_element)[0].setAttribute('viewBox', "0 0 " + vwToPx(width) + " " + vwToPx(height));
+                var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
+                var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
+                $(element).css("max-width", maxwidth + "vw");
+                $(element).css("max-height", maxheight + "vw");
+            },
+            createDefautlGraphicMD: function(){
+                var graphic = document.createElement('rect');
+                graphic.setAttribute('x', '224.390625');
+                graphic.setAttribute('visibility', 'visible');
+                graphic.setAttribute('y', '127.484375');
+                graphic.setAttribute('width', '95');
+                graphic.setAttribute('height', '77');
+                graphic.setAttribute('z-index', '50');
+                graphic.setAttribute('r', '0');
+                graphic.setAttribute('rx', '0');
+                graphic.setAttribute('ry', '0');
+                graphic.setAttribute('fill', '#3470e9');
+                graphic.setAttribute('stroke', '#000000');
+                graphic.setAttribute('stroke-width', '2');
+                graphic.setAttribute('fill-opacity', '1');
+                graphic.setAttribute('stroke-opacity', '1');
+                graphic.setAttribute('style', '-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 1; stroke-opacity: 1;');
+                graphic.setAttribute('data-svgtype', 'rect');
+                return graphic;
+            },*/
         };
+

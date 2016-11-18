@@ -1,5 +1,5 @@
 var slides_list = [];
-var code = false;
+var code_img = '';
 
 $(document).ready(function() {   
     $('#convert').click(function() {   
@@ -10,10 +10,12 @@ $(document).ready(function() {
         var $content = $('#markdown-text').val();
         var $fullSlider_content = markdown.toHTML( $content );
         var source = $fullSlider_content;
-        //console.log(source);
+        console.log(source);
         for (i = 1 ; i < source.length; ++i ) {
             process(source[i]);
-            
+            console.log(source);
+            console.log(i);
+            //console.log(slides_list);
         };
     });
 }); 
@@ -31,7 +33,12 @@ var process = function(source){
                 break;
             case "code":
                 var mode = "normal";
-                code = true;
+                code_img = 'code';
+                source[1] = source[1][1];
+                break;
+            case "img":
+                var mode = "normal";
+                code_img = 'img';
                 source[1] = source[1][1];
                 break;
             default:
@@ -80,37 +87,64 @@ var process = function(source){
             Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
             break;
         case 'figure1':
-            /*var editor = onToolSelectedMD('rect');
-            editor.addRectMD();
-            onEditEnd()*/
+            $('#drawRect').click();
+            eventsSimulate();
+            $('#editEnd').click();
             break;
         case 'figure2':
+            $('#drawLine').click();
+            eventsSimulate();
+            $('#editEnd').click();
             break;
         case 'figure3':
+            $('#drawEllipse').click();
+            eventsSimulate();
+            $('#editEnd').click();
             break;
         case 'figure4':
+            $('#drawArrow').click();
+            eventsSimulate();
+            $('#editEnd').click();
             break;
         case 'p':
-            if(code){
-                var text = '<li>';
-                for(i = 0; i < source[1].length; i++){
-                    text += source[1][i];
-                    if(source[1][i] === '\n'){
-                        text += '</li><li>'
+            switch(code_img){
+                case 'code':
+                    console.log('code');
+                    var text = '<li>';
+                    for(x = 0; x < source[1].length; x++){
+                        text += source[1][x];
+                        if(source[1][x] === '\n'){
+                            text += '</li><li>'
+                        }
                     }
-                }
-                text += '</li>'
-                Impressionist.prototype.addFullsliderCodeMD(text);
-                code = false;
+                    text += '</li>'
+                    Impressionist.prototype.addFullsliderCodeMD(text);
+                    code_img = '';
+                    break;
+                case 'img':
+                    createImageFromDataUrl(source[1].src);
+                    code_img = '';
+                    break;
+                default:
+                    Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
+                    break;
             }
-            else{
-                Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
-            }
-            break;
     }
 }
 
 var addSlideList = function(idSlide){
     slides_list.push(idSlide);
     $('#markdown-text').val($('#markdown-text').val()+'#Title Slide\n\n');
+}
+
+function eventsSimulate(){
+    var eventDown = document.createEvent("MouseEvents");
+    var eventMove = document.createEvent("MouseEvents");
+    var eventUp= document.createEvent("MouseEvents");
+    eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 295, 210, false, false, false, false, 0, null);
+    document.getElementById('canvas').dispatchEvent(eventDown);
+    eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+    document.getElementById('canvas').dispatchEvent(eventMove);
+    eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+    document.getElementById('canvas').dispatchEvent(eventUp);
 }
