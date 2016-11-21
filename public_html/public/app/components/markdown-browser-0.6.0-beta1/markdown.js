@@ -489,6 +489,9 @@
         jsonml[0] = "slide" + jsonml[ 1 ].level;
         delete jsonml[ 1 ].level;
         break;
+    case "indexer":
+        jsonml[ 0 ] = "index";
+        break;
     case "title":
         jsonml[0] = "tl" + jsonml[ 1 ].level;
         delete jsonml[ 1 ].level;
@@ -702,6 +705,23 @@
             next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
           
           return [ slide ]
+          
+      },
+        
+      indexer: function indexer( block, next){
+          var m = block.match( /^({index)([tp])(}$)/ );
+          
+          if ( !m )
+            return undefined;
+        
+           
+          var indexe = [ "indexer" ];
+          Array.prototype.push.apply(indexe, this.processInline(m[ 2 ]));
+          
+          if ( m[0].length < block.length )
+            next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
+          
+          return [ indexe ]
           
       },
         

@@ -1,12 +1,55 @@
-var slides_list = [];
+var id_slides_list = [];
 var code_img = '';
+var slides_list = [];
 
 $(document).ready(function() {   
-    $('#convert').click(function() {   
-        for(x = 0; x < slides_list.length; x++){
-            Impressionist.prototype.deleteIdSlide(slides_list[x]);
+    $('#markdown-text').on('change', function() { 
+        //Resetting
+        for(x = 0; x < id_slides_list.length; x++){
+            Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
         }
-        slides_list = [];
+        id_slides_list = [];
+        var content = $('#markdown-text').val();
+        var source = markdown.toHTML(content);
+        //console.log(source);
+        //Check error
+        if(source[0] != 'start'){
+            alert("Ha ocurrido un error, intentelo de nuevo");
+            return;
+        }
+        //Preprocessing
+        if(source[1][0] == 'index'){
+            for(pre = 2 ; pre < source.length; ++pre ){
+                switch(source[pre][0]){
+                    case 'slide1':
+                        slides_list.push(1);
+                        slides_list.push(source[pre][1]);
+                        break;
+                    case 'slide2':
+                        slides_list.push(2);
+                        slides_list.push(source[pre][1]);
+                        break;
+                    case 'slide3':
+                        slides_list.push(3);
+                        slides_list.push(source[pre][1]);
+                        break;
+                }
+            };
+        };
+        //console.log(slides_list);
+        //Processing
+        for (i = 1 ; i < source.length; ++i ) {
+            process(source[i]);
+            //console.log(source);
+            //console.log(i);
+            //console.log(id_slides_list);
+        };
+    });
+    /*$('#convert').click(function() {   
+        for(x = 0; x < id_slides_list.length; x++){
+            Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
+        }
+        id_slides_list = [];
         var $content = $('#markdown-text').val();
         var $fullSlider_content = markdown.toHTML( $content );
         var source = $fullSlider_content;
@@ -15,9 +58,9 @@ $(document).ready(function() {
             process(source[i]);
             console.log(source);
             console.log(i);
-            //console.log(slides_list);
+            //console.log(id_slides_list);
         };
-    });
+    });*/
 }); 
 
 var process = function(source){
@@ -46,36 +89,36 @@ var process = function(source){
                 break;
         }   
     }
-    switch(source[0]) {
+    switch(source[0]){
         case 'slide1':
             if(source[1] === undefined){
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 break;
             }
             else{
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
                 break;
             }
             break;
         case 'slide2':
             if(source[1] === undefined){
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 break;
             }
             else{
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
                 break;
             }
             break;
         case 'slide3':
             if(source[1] === undefined){
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 break;
             }
             else{
-                slides_list.push(Impressionist.prototype.addSlideMD());
+                id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
                 break;
             }
@@ -133,7 +176,7 @@ var process = function(source){
 }
 
 var addSlideList = function(idSlide){
-    slides_list.push(idSlide);
+    id_slides_list.push(idSlide);
     $('#markdown-text').val($('#markdown-text').val()+'#Title Slide\n\n');
 }
 
