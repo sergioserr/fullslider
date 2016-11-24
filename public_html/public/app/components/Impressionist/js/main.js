@@ -2313,6 +2313,49 @@ Impressionist.prototype =
                 hljs.highlightBlock($(element).find("code")[0]);
                 me.finishAddFile($(element));
             },
+            addFullsliderTextIndexMD: function(text, position, range, current, long) {
+                var mText = text_snippet.replace("Sample Text", text);
+                var element = me.addFullsliderSlideItem(mText);
+                me.addTextStyleMD(element, position, range, current, long);
+                me.finishAddFile($(element));
+            },
+            addTextStyleMD: function(element, position, range, current, long) {
+                var size = ""
+                if(long >= 0 && long <= 10){
+                    size = 2.5;
+                }else if(long >= 11 && long <= 15){
+                    size = 2;
+                }
+                var font = me.normalFont;
+                var color = me.normalColor
+
+                $(element).css("font-size", size + "vw");
+                var text_value = $(element).text();
+                if(current){
+                    $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
+                }
+                else{
+                    $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
+                }
+                $(element).css("font-family", font);
+
+                $(element).css("position", "absolute");
+                var leftSpace = 6.8 + range
+                $(element).css("left", leftSpace + "vw");
+                var topSpace = 4.50 + position;
+                $(element).css("top", topSpace + "vw");
+                $(element).css("line-height", "initial", "important");
+                //$(element).css("color", "#000");
+                $(element).css("height", "initial");
+                $(element).css("width", "auto");
+                $(element).css("white-space", "normal");
+                var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
+                var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
+                $(element).css("max-width", maxwidth + "vw");
+                $(element).css("max-height", maxheight + "vw");
+                $(element).css("overflow", "hidden");
+                $(element).css("word-break", "break-word", "important");
+            },
             /*addGraphicsMD: function() {
                 var graphic = me.createDefautlGraphicMD();
                 var defs = $("#canvas").find("defs");

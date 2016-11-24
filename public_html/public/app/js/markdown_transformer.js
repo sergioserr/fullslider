@@ -1,6 +1,7 @@
 var id_slides_list = [];
 var code_img = '';
 var slides_list = [];
+var modeIndex = ""
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -8,7 +9,9 @@ $(document).ready(function() {
         for(x = 0; x < id_slides_list.length; x++){
             Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
         }
+        modeIndex = ""
         id_slides_list = [];
+        //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
         //console.log(source);
@@ -35,6 +38,7 @@ $(document).ready(function() {
                         break;
                 }
             };
+            modeIndex = source[1][1];
         };
         //console.log(slides_list);
         //Processing
@@ -169,7 +173,22 @@ var process = function(source){
                     code_img = '';
                     break;
                 default:
-                    Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 0, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 2, 4, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 4, 8, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 6, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 8, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 10, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 12, 4, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 14, 4, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 16, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 18, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 20, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 22, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 24, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 26, 0, true, 15)
+                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 28, 0, true, 15)
+                    //Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
                     break;
             }
     }
@@ -190,4 +209,52 @@ function eventsSimulate(){
     document.getElementById('canvas').dispatchEvent(eventMove);
     eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventUp);
+}
+
+function createSlideIndex(name){
+    var position = 0;
+    var range = 0;
+    var current = false;
+    var long = (slides_list.length / 2);
+    var y = 0;
+    
+    id_slides_list.push(Impressionist.prototype.addSlideMD());
+    
+    while (y <= slides_list.length){
+        if(slides_list[y+1] == name){
+            current = true;
+        }
+        range = moreRange(slides_list[y]);
+        //text, position, range, current, long
+        Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+        y += 2;
+        position = morePosition(position, long);
+        range = 0;
+    }
+}
+    
+function morePosition(position, long){
+    if(long >= 0 && long <= 10){
+        position += 3;
+    }else if(long >= 11 && long <= 15){
+        position += 2;
+    }
+    return position;
+}
+
+function moreRange(num){
+    switch(num){
+        case "1":
+            return 0;
+            break;
+        case "2":
+            return 4;
+            break;
+        case "3":
+            return 8;
+            break;
+        default:
+            return 0:
+            break;
+    }
 }
