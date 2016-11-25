@@ -2332,6 +2332,7 @@ Impressionist.prototype =
                 $(element).css("font-size", size + "vw");
                 var text_value = $(element).text();
                 if(current){
+                    color = "#EC312E";
                     $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
                 }
                 else{

@@ -11,10 +11,11 @@ $(document).ready(function() {
         }
         modeIndex = ""
         id_slides_list = [];
+        slides_list = [];
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        //console.log(source);
+        console.log(source);
         //Check error
         if(source[0] != 'start'){
             alert("Ha ocurrido un error, intentelo de nuevo");
@@ -23,23 +24,27 @@ $(document).ready(function() {
         //Preprocessing
         if(source[1][0] == 'index'){
             for(pre = 2 ; pre < source.length; ++pre ){
-                switch(source[pre][0]){
-                    case 'slide1':
-                        slides_list.push(1);
-                        slides_list.push(source[pre][1]);
-                        break;
-                    case 'slide2':
-                        slides_list.push(2);
-                        slides_list.push(source[pre][1]);
-                        break;
-                    case 'slide3':
-                        slides_list.push(3);
-                        slides_list.push(source[pre][1]);
-                        break;
+                if(source[pre][1] != undefined){
+                    switch(source[pre][0]){
+                        case 'slide1':
+                            slides_list.push(0);
+                            slides_list.push(source[pre][1]);
+                            break;
+                        case 'slide2':
+                            slides_list.push(2);
+                            slides_list.push(source[pre][1]);
+                            break;
+                        case 'slide3':
+                            slides_list.push(3);
+                            slides_list.push(source[pre][1]);
+                            break;
+                    }
                 }
             };
             modeIndex = source[1][1];
+            createSlideIndex("primera", 0);
         };
+        console.log(slides_list);
         //console.log(slides_list);
         //Processing
         for (i = 1 ; i < source.length; ++i ) {
@@ -100,6 +105,9 @@ var process = function(source){
                 break;
             }
             else{
+                if(modeIndex == 't'){
+                    createSlideIndex(source[1], 1);
+                }
                 id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
                 break;
@@ -111,6 +119,9 @@ var process = function(source){
                 break;
             }
             else{
+                if(modeIndex == 't'){
+                    createSlideIndex(source[1], 2);
+                }
                 id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
                 break;
@@ -122,6 +133,9 @@ var process = function(source){
                 break;
             }
             else{
+                if(modeIndex == 't'){
+                    createSlideIndex(source[1], 3);
+                }
                 id_slides_list.push(Impressionist.prototype.addSlideMD());
                 Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
                 break;
@@ -173,22 +187,7 @@ var process = function(source){
                     code_img = '';
                     break;
                 default:
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 0, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 2, 4, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 4, 8, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 6, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 8, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 10, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 12, 4, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 14, 4, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 16, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 18, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 20, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 22, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 24, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 26, 0, true, 15)
-                    Impressionist.prototype.addFullsliderTextIndexMD(source[1], 28, 0, true, 15)
-                    //Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
+                    Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
                     break;
             }
     }
@@ -211,50 +210,72 @@ function eventsSimulate(){
     document.getElementById('canvas').dispatchEvent(eventUp);
 }
 
-function createSlideIndex(name){
+function createSlideIndex(name, orden){
     var position = 0;
     var range = 0;
     var current = false;
+    //var open = false;
     var long = (slides_list.length / 2);
     var y = 0;
     
     id_slides_list.push(Impressionist.prototype.addSlideMD());
     
-    while (y <= slides_list.length){
+    while (y <= slides_list.length - 1){
         if(slides_list[y+1] == name){
             current = true;
+            //open = true;
         }
         range = moreRange(slides_list[y]);
-        //text, position, range, current, long
-        Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-        y += 2;
-        position = morePosition(position, long);
+        
+        
+        /*if(open && (orden == 1)){
+            if(slides_list[y] != 3){
+                //text, position, range, current, long
+                Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                position = morePosition(position, long);
+                if(slides_list[y+2] == 1){
+                    open = false;
+                }
+            }
+        }else if(open && (orden == 2)){
+                //text, position, range, current, long
+                Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                position = morePosition(position, long);
+                if((slides_list[y+2] == 1) || (slides_list[y+2] == 2)){
+                    open = false;
+                }
+            }else if(open && (orden == 3)){
+                    //text, position, range, current, long
+                    Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                    position = morePosition(position, long);
+                    if((slides_list[y+2] == 1) || (slides_list[y+2] == 2)){
+                        open = false;
+                    }
+                }else if(orden == 2){
+                        if(slides_list[y] != 3){
+                            //text, position, range, current, long
+                            Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                            position = morePosition(position, long);
+                        }
+                        //text, position, range, current, long
+                        Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                        position = morePosition(position, long);
+                    }else if((slides_list[y] != 2) && (slides_list[y] != 3)){*/
+                        //text, position, range, current, long
+                        Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                        position = morePosition(position, long);
+                       // }
         range = 0;
+        current = false;
+        y += 2;
     }
+        
 }
     
 function morePosition(position, long){
-    if(long >= 0 && long <= 10){
-        position += 3;
-    }else if(long >= 11 && long <= 15){
-        position += 2;
-    }
-    return position;
+    return position += (30 / long);
 }
 
 function moreRange(num){
-    switch(num){
-        case "1":
-            return 0;
-            break;
-        case "2":
-            return 4;
-            break;
-        case "3":
-            return 8;
-            break;
-        default:
-            return 0:
-            break;
-    }
+    return Math.pow(2, num);
 }
