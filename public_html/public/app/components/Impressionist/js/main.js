@@ -881,7 +881,7 @@ Impressionist.prototype =
                 //$("#fullslider_slide_"+id).addClass(me.theme);
                 me.selectSlide("#fullslider_slide_" + id);
                 me.selectThumb(id);
-                me.addFullsliderTextMD("title", "Title Slide", "normal");
+                //me.addFullsliderTextMD("title", "Title Slide", "normal");
 
                 //Slidenumbers
                 $(me.selectedSlide).append(slidenumbers_snippet);
@@ -1919,6 +1919,8 @@ Impressionist.prototype =
                         me.addGraphicStyle(element, graphic);
 
                         me.finishAddFile($(element));
+                        
+                        takeIdFigure(element.id);
                     }
                 }
             },
@@ -2305,6 +2307,7 @@ Impressionist.prototype =
                 var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyle(element, type, mode);
                 me.finishAddFile($(element));
+                return element.id;
             },
             addFullsliderCodeMD: function(text) {
                 var cText = code_snippet.replace("<li>function example(){</li><li>alert();</li><li>}</li>", text);
@@ -2312,12 +2315,14 @@ Impressionist.prototype =
                 me.addCodeStyle(element);
                 hljs.highlightBlock($(element).find("code")[0]);
                 me.finishAddFile($(element));
+                return element.id;
             },
             addFullsliderTextIndexMD: function(text, position, range, current, long) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyleMD(element, position, range, current, long);
                 me.finishAddFile($(element));
+                return element.id;
             },
             addTextStyleMD: function(element, position, range, current, long) {
                 var size = ""
