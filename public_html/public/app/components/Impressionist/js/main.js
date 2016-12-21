@@ -798,6 +798,7 @@ Impressionist.prototype =
             
             deleteSlide: function(sl) {
 	           slideid = $(sl).attr("id").split("_")[2];
+               deleteSlideList(slideid);
 	           p = $("#slidethumb_" + slideid);
 	           var index = $("#slidethumb_" + slideid).index();
 	           p.animate({opacity: 0}, 200, function(e){
@@ -848,6 +849,7 @@ Impressionist.prototype =
                     {
                         $(this).remove();
                         $("#fullslider_slide_" + slideid).remove();
+                        deleteSlideList(slideid);
                         me.assignSlideNumbers();
                         var children = $(".slidethumbholder").children();
                         var newslideid;
