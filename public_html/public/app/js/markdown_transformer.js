@@ -111,7 +111,7 @@ var process = function(source){
             }
             else{
                 if(modeIndex == 'f'){
-                    createSlideIndex(source[1], 1);
+                    createSlideIndex(source[1], 1);                   
                 }
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
@@ -209,13 +209,13 @@ var process = function(source){
     }
 }
 
+//Slide
 var addSlideList = function(idSlide){
     id_slides_list.push(idSlide);
     restructureList(max_line, true, 'slide');
     elements_list[idSlide] = max_line;
     max_line += 2;
 }
-
 var deleteSlideList = function(idSlide){
     for(var i = 0; i < id_slides_list.length; i++){
         if(id_slides_list[i] == idSlide){
@@ -229,6 +229,10 @@ var deleteSlideList = function(idSlide){
     
 }
 
+//Text
+
+
+//Figures
 function eventsSimulate(){
     var eventDown = document.createEvent("MouseEvents");
     var eventMove = document.createEvent("MouseEvents");
@@ -240,98 +244,89 @@ function eventsSimulate(){
     eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventUp);
 }
-
-function createSlideIndex(name, orden){
-    var position = 0;
-    var range = 0;
-    var current = false;
-    //var open = false;
-    var long = (slides_list.length / 2);
-    var y = 0;
-    
-    var id = Impressionist.prototype.addSlideMD();
-    id_slides_list.push(id);
-    elements_list.push(id);
-    
-    while (y <= slides_list.length - 1){
-        if(slides_list[y+1] == name){
-            current = true;
-            //open = true;
-        }
-        range = moreRange(slides_list[y]);
-        
-        
-        /*if(open && (orden == 1)){
-            if(slides_list[y] != 3){
-                //text, position, range, current, long
-                Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                position = morePosition(position, long);
-                if(slides_list[y+2] == 1){
-                    open = false;
-                }
-            }
-        }else if(open && (orden == 2)){
-                //text, position, range, current, long
-                Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                position = morePosition(position, long);
-                if((slides_list[y+2] == 1) || (slides_list[y+2] == 2)){
-                    open = false;
-                }
-            }else if(open && (orden == 3)){
-                    //text, position, range, current, long
-                    Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                    position = morePosition(position, long);
-                    if((slides_list[y+2] == 1) || (slides_list[y+2] == 2)){
-                        open = false;
-                    }
-                }else if(orden == 2){
-                        if(slides_list[y] != 3){
-                            //text, position, range, current, long
-                            Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                            position = morePosition(position, long);
-                        }
-                        //text, position, range, current, long
-                        Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                        position = morePosition(position, long);
-                    }else if((slides_list[y] != 2) && (slides_list[y] != 3)){*/
-                        //text, position, range, current, long
-                        id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-                        id = id.substr(12, 4);
-                        elements_list.push(id);
-                        position = morePosition(position, long);
-                       // }
-        range = 0;
-        current = false;
-        y += 2;
-    }
-        
-}
-    
-function morePosition(position, long){
-    return position += (30 / long);
-}
-
-function moreRange(num){
-    return Math.pow(2, num);
-}
-
 var takeIdFigure = function(id){
     id_figure = id;
 }
 
+//Index
+function createSlideIndex(name, orden){
+    var position = 0; //Number of slide
+    var range = 0; //Slide level
+    var y = 0;
+    var current = false;
+    var open = false;
+    var level = false;
+    var long = (slides_list.length / 2); //Slide space
+    
+    var id = Impressionist.prototype.addSlideMD();
+    id_slides_list.push(id);
+    //elements_list[id] = max_line;
+    //max_line += 2;
+    
+    while (y <= slides_list.length - 1){
+        var j = y;
+        while (slides_list[j] == 2){
+            if(slides_list[j+1] == name){
+                level = true;
+            }
+            j += 2;
+        }
+        if(slides_list[y+1] == name){
+            current = true;
+            open = true;
+        }
+        range = moreRange(slides_list[y]);
+        
+        if(open && (orden == 1)){
+            //text, position, range, current, long
+            Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+            position = morePosition(position, long);
+            if(slides_list[y+2] == 1){
+                open = false;
+            }
+        }
+        else if(level && orden == 2){
+                id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                //id = id.substr(12, 4);
+                //elements_list[id] = max_line;
+                //max_line += 2;
+                position = morePosition(position, long);
+                if(slides_list[y+2] == 1){
+                    level = false;
+                }
+            }
+            else{
+                if(slides_list[y] != 2){
+                    id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                    //id = id.substr(12, 4);
+                    //elements_list[id] = max_line;
+                    //max_line += 2;
+                    position = morePosition(position, long);
+                }
+            }
+        range = 0;
+        current = false;
+        y += 2;
+    } 
+}
+function morePosition(position, long){
+    return position += (30 / long);
+}
+function moreRange(num){
+    return Math.pow(2, num);
+}
+
+//Text-editor
 function restructureList(modified, add, type){
     var preText = $('#markdown-text').val().split('\n');
-    console.log('--------');
-    console.log(modified);
-    console.log(preText); //testing
-    console.log(preText.length); //testing
+    //console.log(preText); //testing
     var text = '';
     if(preText.length == 1){
         text = '#\n\n';
     }
     else{
         for(var i = 0; i <= preText.length-1; i++){
-            console.log(i);
+            //console.log(i); //testing
             if(i == modified){
                 if(preText != ''){
                     if(add){
@@ -351,7 +346,7 @@ function restructureList(modified, add, type){
                     text += preText[i] + '\n\n';
                 }
             }
-            console.log(text); //testing
+            //console.log(text); //testing
         }
     }
     $('#markdown-text').val(text);
@@ -367,7 +362,3 @@ function restructureList(modified, add, type){
         }
     }
 }
-
-
-
-

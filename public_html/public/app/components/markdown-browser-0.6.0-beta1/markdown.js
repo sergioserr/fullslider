@@ -709,7 +709,7 @@
       },
         
       indexer: function indexer( block, next){
-          var m = block.match( /^({index)([tp])(}$)/ );
+          var m = block.match( /^({index)([fp])(}$)/ );
           
           if ( !m )
             return undefined;
