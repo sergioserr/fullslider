@@ -24,7 +24,6 @@ $(document).ready(function() {
             if(preText[i] != ''){
                 text += preText[i] + '\n\n';
             }
-            //console.log(preText[i]); //testing
         }
         $('#markdown-text').val(text);
         //Markdown
@@ -358,32 +357,39 @@ var takeIdFigure = function(id){
 
 function restructureList(modified, add, type){
     var preText = $('#markdown-text').val().split('\n');
+    console.log('--------');
     console.log(modified);
     console.log(preText); //testing
+    console.log(preText.length); //testing
     var text = '';
-    for(var i = 0; i < preText.length; i++){
-        if(preText != ''){
+    if(preText.length == 1){
+        text = '#\n\n';
+    }
+    else{
+        for(var i = 0; i <= preText.length-1; i++){
+            console.log(i);
             if(i == modified){
-                if(add && i == modified){
-                    switch(type){
-                        case 'slide':
-                            text += '#\n\n';
-                            break;
-                    }                    
-                }
-                else{
-                
-                }
-            }   
+                if(preText != ''){
+                    if(add){
+                        switch(type){
+                            case 'slide':
+                                text += '#\n\n';
+                                break;
+                        }                    
+                    }
+                    else{
+                        //To delete
+                    }
+                }   
+            }
             else{
-                text += preText[i] + '\n\n';
+                if(preText[i] != ''){
+                    text += preText[i] + '\n\n';
+                }
             }
             console.log(text); //testing
         }
-        else if(max_line == 0){
-                text += '#\n\n';
-        }
-    }  
+    }
     $('#markdown-text').val(text);
     
     for(lock in elements_list){
