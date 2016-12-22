@@ -29,7 +29,7 @@ $(document).ready(function() {
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        //console.log(source); //testing
+        console.log(source); //testing
         //Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -46,10 +46,6 @@ $(document).ready(function() {
                             break;
                         case 'slide2':
                             slides_list.push(2);
-                            slides_list.push(source[pre][1]);
-                            break;
-                        case 'slide3':
-                            slides_list.push(3);
                             slides_list.push(source[pre][1]);
                             break;
                     }
@@ -70,23 +66,11 @@ $(document).ready(function() {
         };
     });
     $('#convert').click(function() { 
-        console.log(elements_list); //testing
-        console.log(max_line); //testing
-        /*for(key in elements_list){
-            elements_list[key] += 2;
-            console.log(elements_list[key]);
-        }
+        //console.log(elements_list); //testing
+        //console.log(max_line); //testing
         //var test = $("[style='z-index: 1;']").attr('id');
         //console.log(test);
         //console.log(elements_list); //testing
-        var max_lines = $('#markdown-text').val().split('\n');
-        var text = '';
-        for(var i = 0;i < max_lines.length;i++){
-            //max_lines[i] += '\n\n';
-            //text += max_lines[i];
-            console.log(max_lines[i]); //testing
-        }*/
-        //$('#markdown-text').val(max_lines);
     }); //testing
 }); 
 
@@ -148,26 +132,6 @@ var process = function(source){
             else{
                 if(modeIndex == 'f'){
                     createSlideIndex(source[1], 2);
-                }
-                var id = Impressionist.prototype.addSlideMD();
-                id_slides_list.push(id);
-                elements_list[id] = max_line;
-                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
-                id = id.substr(12, 4);
-                elements_list[id] = max_line;
-                break;
-            }
-            break;
-        case 'slide3':
-            if(source[1] === undefined){
-                var id = Impressionist.prototype.addSlideMD();
-                id_slides_list.push(id);
-                elements_list[id] = max_line;
-                break;
-            }
-            else{
-                if(modeIndex == 'f'){
-                    createSlideIndex(source[1], 3);
                 }
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);

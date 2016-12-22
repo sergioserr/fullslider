@@ -692,7 +692,7 @@
   var Gruber = {
     block: {
       slider: function slider( block, next){
-          var m = block.match( /^(#{1,3})\s*(.*?)\s*#*\s*(?:\n|$)/ );
+          var m = block.match( /^(#{1,2})\s*(.*?)\s*#*\s*(?:\n|$)/ );
           
           if ( !m )
             return undefined;
