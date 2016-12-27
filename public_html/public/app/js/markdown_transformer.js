@@ -66,7 +66,7 @@ $(document).ready(function() {
         };
     });
     $('#convert').click(function() { 
-        //console.log(elements_list); //testing
+        console.log(elements_list); //testing
         //console.log(max_line); //testing
         //var test = $("[style='z-index: 1;']").attr('id');
         //console.log(test);
@@ -228,9 +228,30 @@ var deleteSlideList = function(idSlide){
     max_line -= 2;
     
 }
+function currentSlide(){
+    var slide = $("[style='z-index: 1;']").attr('id');
+    slide = slide.substr(17, 4);
+    return elements_list[slide];
+}
+
+//Elements
+var deleteElementList = function(idElement){
+    idElement = idElement.substr(12, 4);
+    console.log(idElement)
+    var line = elements_list[idElement];
+    restructureList(line, false, '');
+    delete elements_list[idElement];
+    max_line -= 2;
+}
 
 //Text
-
+var addTextList = function(idText, type){
+    var lineSlide = currentSlide();
+    restructureList(lineSlide+2, true, type);
+    idText = idText.substr(12, 4);
+    elements_list[idText] = lineSlide + 2;
+    max_line += 2;
+}
 
 //Figures
 function eventsSimulate(){
@@ -278,7 +299,6 @@ function createSlideIndex(name, orden){
         range = moreRange(slides_list[y]);
         
         if(open && (orden == 1)){
-            //text, position, range, current, long
             Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
             position = morePosition(position, long);
             if(slides_list[y+2] == 1){
@@ -319,7 +339,10 @@ function moreRange(num){
 //Text-editor
 function restructureList(modified, add, type){
     var preText = $('#markdown-text').val().split('\n');
-    //console.log(preText); //testing
+    var preElement = preText[modified];
+    console.log(preElement); //testing
+    console.log(modified); //testing
+    console.log(preText); //testing
     var text = '';
     if(preText.length == 1){
         text = '#\n\n';
@@ -328,23 +351,39 @@ function restructureList(modified, add, type){
         for(var i = 0; i <= preText.length-1; i++){
             //console.log(i); //testing
             if(i == modified){
-                if(preText != ''){
+                //if(preText != ''){
                     if(add){
                         switch(type){
                             case 'slide':
                                 text += '#\n\n';
+                                break;
+                            case 'normal':
+                                text += 'Sample Text\n\n';
+                                break;
+                            case 'title':
+                                text += '-Sample Text-\n\n';
+                                break;
+                            case 'subtitle':
+                                text += '--Sample Text--\n\n';
                                 break;
                         }                    
                     }
                     else{
                         //To delete
                     }
-                }   
+                //}   
             }
             else{
-                if(preText[i] != ''){
-                    text += preText[i] + '\n\n';
+                if(preElement != '' && i > modified && add){
+                    text += preElement + '\n\n';
+                    preElement = preText[i];
                 }
+                else{
+                    if(preText[i] != ''){
+                        text += preText[i] + '\n\n';
+                    }
+                }
+                
             }
             //console.log(text); //testing
         }

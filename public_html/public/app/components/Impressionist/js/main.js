@@ -641,6 +641,7 @@ Impressionist.prototype =
                 i.src = image_data;
             },
             deleteElement: function(el) {
+                deleteElementList(el.context.id);
                 el.remove();
                 me.updateScaledSlide(me.selectedSlide);
                 $("#play").css("display", "none");
@@ -911,6 +912,7 @@ Impressionist.prototype =
                 var element = me.addFullsliderSlideItem(text_snippet);
                 me.addTextStyle(element, type, "normal");
                 me.finishAddFile($(element));
+                addTextList(element.id, type);
             },
             addTextStyle: function(element, type, mode) {
                 var size = "";
