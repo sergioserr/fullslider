@@ -977,6 +977,7 @@ Impressionist.prototype =
                 me.addCodeStyle(element);
                 hljs.highlightBlock($(element).find("code")[0]);
                 me.finishAddFile($(element));
+                addCodeList(element.id);
             },
             addCodeStyle: function(element) {
                 $(element).css("font-size", "1.3vw");

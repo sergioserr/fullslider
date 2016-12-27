@@ -244,12 +244,19 @@ var deleteElementList = function(idElement){
     max_line -= 2;
 }
 
-//Text
+//Text, code
 var addTextList = function(idText, type){
     var lineSlide = currentSlide();
     restructureList(lineSlide+2, true, type);
     idText = idText.substr(12, 4);
     elements_list[idText] = lineSlide + 2;
+    max_line += 2;
+}
+var addCodeList = function(idCode){
+    var lineSlide = currentSlide();
+    restructureList(lineSlide+2, true, 'code');
+    idCode = idCode.substr(12, 4);
+    elements_list[idCode] = lineSlide + 2;
     max_line += 2;
 }
 
@@ -365,6 +372,9 @@ function restructureList(modified, add, type){
                                 break;
                             case 'subtitle':
                                 text += '--Sample Text--\n\n';
+                                break;
+                            case 'code':
+                                text += '`function example(){ alert(); }`\n\n'
                                 break;
                         }                    
                     }
