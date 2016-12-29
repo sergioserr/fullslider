@@ -204,7 +204,7 @@ When user click on Download button, a file with .fspf extension is automatically
 * Paragraph --> Text
 * Bold paragraph --> Text between two asterisks or two low bars
 * Italic paragraph --> Text between one asterisk or one low bar
-* Code --> `code in line`
+* Code --> Code between apostrophes
 * Square --> >
 * Line --> >>
 * Ellipse --> >>>
