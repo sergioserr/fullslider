@@ -145,7 +145,7 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ## Release Notes
 
-###### v0.3 - With Fullslider, you can do: ######
+###### v0.4 - With Fullslider, you can do: ######
  - Create new presentations.
  - Download presentation as .fspf file (FullSlider Presentation File).
  - Open downloaded presentations from Fullslider, with .fspf extension.
@@ -169,7 +169,8 @@ When user click on Download button, a file with .fspf extension is automatically
  - Configure default values of text (color, font, etc.)
  - Save presentation on session storage
  - Open recent presentations.
- - And view presentation!
+ - View presentation
+ - And you can create presentation using a text-editor!
 
 ## Quick Guide ##
 
