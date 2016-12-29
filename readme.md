@@ -209,7 +209,7 @@ When user click on Download button, a file with .fspf extension is automatically
 * Line --> >>
 * Ellipse --> >>>
 * Arrow --> >>>>
-* Image --> ![Alternate text](url)
+* Image --> ! + [Alternate text] + (url)
 
 ## Credits ##
 
