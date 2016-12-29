@@ -198,18 +198,18 @@ When user click on Download button, a file with .fspf extension is automatically
 * Slide with title --> #Title
 * Subslide without title --> ##
 * Subslide with title --> ##Title
-* Create automatic index --> You starts the text with [indexp] (one slide for the index) or [indexf] (several slides for the index)
+* Create automatic index --> You starts the text with \[indexp\] (one slide for the index) or \[indexf\] (several slides for the index)
 * Title --> -Title-
 * Subtitle --> --Subtitle--
 * Paragraph --> Text
-* Bold paragraph --> Text between two asterisks or two low bars
-* Italic paragraph --> Text between one asterisk or one low bar
-* Code --> Code between apostrophes
+* Bold paragraph --> \*\*Text\*\* or \_\_Text\_\_
+* Italic paragraph --> \*Text\* or \_Text\_
+* Code --> \`Code\`
 * Square --> >
 * Line --> >>
 * Ellipse --> >>>
 * Arrow --> >>>>
-* Image --> ! + [Alternate text] + (url)
+* Image --> !\[Alternate text\](url)
 
 ## Credits ##
 
