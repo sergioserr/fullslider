@@ -1925,6 +1925,7 @@ Impressionist.prototype =
 
                         me.finishAddFile($(element));
                         
+                        addFigureList(element.id, svgtype);
                         takeIdFigure(element.id);
                     }
                 }

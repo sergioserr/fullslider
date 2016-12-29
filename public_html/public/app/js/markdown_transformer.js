@@ -5,6 +5,7 @@ var modeIndex = ''; //Full or parcial index
 var id_figure = ''; //Save id for add figure a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
 var max_line = 0; //max_line for add text-editor
+var manualFigure = true; //difference between graphic or text add figure
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -68,9 +69,7 @@ $(document).ready(function() {
     $('#convert').click(function() { 
         console.log(elements_list); //testing
         //console.log(max_line); //testing
-        //var test = $("[style='z-index: 1;']").attr('id');
-        //console.log(test);
-        //console.log(elements_list); //testing
+        console.log(id_slides_list);
     }); //testing
 }); 
 
@@ -153,29 +152,37 @@ var process = function(source){
             break;
         case 'figure1':
             $('#drawRect').click();
+            manualFigure = false;
             eventsSimulate();
             $('#editEnd').click();
+            manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             break;
         case 'figure2':
             $('#drawmax_line').click();
+            manualFigure = false;
             eventsSimulate();
             $('#editEnd').click();
+            manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             break;
         case 'figure3':
             $('#drawEllipse').click();
+            manualFigure = false;
             eventsSimulate();
             $('#editEnd').click();
+            manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             break;
         case 'figure4':
             $('#drawArrow').click();
+            manualFigure = false;
             eventsSimulate();
             $('#editEnd').click();
+            manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             break;
@@ -226,7 +233,22 @@ var deleteSlideList = function(idSlide){
     delete elements_list[idSlide];
     restructureList(line, false, 'slide');
     max_line -= 2;
-    
+    var notSlide = true;
+    for(lock in elements_list){
+        if(elements_list[lock] == line){
+            for(i = 0; i < id_slides_list.length; i++){
+                if(id_slides_list[i] == lock){
+                    notSlide = false;
+                }
+            }
+            if(notSlide){
+                deleteElementList(lock);
+            }  
+        }
+        if(!notSlide){
+            break;
+        }  
+    }
 }
 function currentSlide(){
     var slide = $("[style='z-index: 1;']").attr('id');
@@ -236,8 +258,10 @@ function currentSlide(){
 
 //Elements
 var deleteElementList = function(idElement){
-    idElement = idElement.substr(12, 4);
-    console.log(idElement)
+    if(idElement.length > 4){
+        idElement = idElement.substr(12, 4);
+        console.log('Hola')
+    }
     var line = elements_list[idElement];
     restructureList(line, false, '');
     delete elements_list[idElement];
@@ -274,6 +298,15 @@ function eventsSimulate(){
 }
 var takeIdFigure = function(id){
     id_figure = id;
+}
+var addFigureList = function(idFigure, type){
+    if(manualFigure){
+        var lineSlide = currentSlide();
+        restructureList(lineSlide+2, true, type);
+        idFigure = idFigure.substr(12, 4);
+        elements_list[idFigure] = lineSlide + 2;
+        max_line += 2;
+    }
 }
 
 //Index
@@ -347,9 +380,9 @@ function moreRange(num){
 function restructureList(modified, add, type){
     var preText = $('#markdown-text').val().split('\n');
     var preElement = preText[modified];
-    console.log(preElement); //testing
-    console.log(modified); //testing
-    console.log(preText); //testing
+    //console.log(preElement); //testing
+    //console.log(modified); //testing
+    //console.log(preText); //testing
     var text = '';
     if(preText.length == 1){
         text = '#\n\n';
@@ -358,30 +391,40 @@ function restructureList(modified, add, type){
         for(var i = 0; i <= preText.length-1; i++){
             //console.log(i); //testing
             if(i == modified){
-                //if(preText != ''){
-                    if(add){
-                        switch(type){
-                            case 'slide':
-                                text += '#\n\n';
-                                break;
-                            case 'normal':
-                                text += 'Sample Text\n\n';
-                                break;
-                            case 'title':
-                                text += '-Sample Text-\n\n';
-                                break;
-                            case 'subtitle':
-                                text += '--Sample Text--\n\n';
-                                break;
-                            case 'code':
-                                text += '`function example(){ alert(); }`\n\n'
-                                break;
-                        }                    
-                    }
-                    else{
-                        //To delete
-                    }
-                //}   
+                if(add){
+                    switch(type){
+                        case 'slide':
+                            text += '#\n\n';
+                            break;
+                        case 'normal':
+                            text += 'Sample Text\n\n';
+                            break;
+                        case 'title':
+                            text += '-Sample Text-\n\n';
+                            break;
+                        case 'subtitle':
+                            text += '--Sample Text--\n\n';
+                            break;
+                        case 'code':
+                            text += '`function example(){ alert(); }`\n\n'
+                            break;
+                        case 'rect':
+                            text += '>\n\n'
+                            break;
+                        case 'line':
+                            text += '>>\n\n'
+                            break;
+                        case 'ellipse':
+                            text += '>>>\n\n'
+                            break;
+                        case 'arrow':
+                            text += '>>>>\n\n'
+                            break;
+                    }                    
+                }
+                else{
+                    //To delete
+                } 
             }
             else{
                 if(preElement != '' && i > modified && add){
