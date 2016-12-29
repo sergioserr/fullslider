@@ -192,6 +192,24 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ![edit](https://cloud.githubusercontent.com/assets/6854006/15626730/12b11214-24cd-11e6-883a-120d33d3cf13.PNG)
 
+## Text-editor guide ##
+
+* Slide without title --> #
+* Slide with title --> #Title
+* Subslide without title --> ##
+* Subslide with title --> ##Title
+* Create automatic index --> You starts the text with [indexp] (one slide for the index) or [indexf] (several slides for the index)
+* Title --> -Title-
+* Subtitle --> --Subtitle--
+* Paragraph --> Text
+* Bold paragraph --> Text between two asterisks or two low bars
+* Italic paragraph --> Text between one asterisk or one low bar
+* Code --> `code in line`
+* Square --> >
+* Line --> >>
+* Ellipse --> >>>
+* Arrow --> >>>>
+* Image --> ![Alternate text](url)
 
 ## Credits ##
 
@@ -213,6 +231,7 @@ When user click on Download button, a file with .fspf extension is automatically
 * Highlight.js https://highlightjs.org
 * PhantomJS phantomjs.org
 * Decktape https://github.com/astefanutti/decktape
+* Markdown-js https://github.com/evilstreak/markdown-js
 
 ## License ##
 Fullslider is licensed under Apache license 2.0
