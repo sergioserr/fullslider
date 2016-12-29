@@ -154,9 +154,9 @@ When user click on Download button, a file with .fspf extension is automatically
  - Add/remove text element
  - Edit text element: change color, font, size, align, rotate, skew, add link, add bold, italic, underline and list format.
  - Add Image from:
-	*URL
-	*Local file
-	*Clipboard
+	* URL
+	* Local file
+	* Clipboard
  - Edit uploaded images (resize, rotate and crop)
  - Create graphics with Graphic editor
  - Edit already created graphics
