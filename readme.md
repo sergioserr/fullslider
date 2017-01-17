@@ -23,12 +23,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	sudo docker pull edujg/fullslider:v0.3
+	sudo docker pull sergioserr/fullslider:v0.4
 	```
 3. Run image
 
 	```
-	sudo docker run -p 8888:8888 edujg/fullslider:v0.3
+	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.4
 	```
 4. Open your browser and write url: 
 
@@ -42,12 +42,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	docker pull edujg/fullslider:v0.3
+	docker pull sergioserr/fullslider:v0.4
 	```
 3. Run image
 
 	```
-	docker run -p 8888:8888 edujg/fullslider:v0.3
+	docker run -p 8888:8888 sergioserr/fullslider:v0.4
 	```
 4. Get docker machine ip
 	
