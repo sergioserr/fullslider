@@ -23,12 +23,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	sudo docker pull edujg/fullslider:v0.3
+	sudo docker pull sergioserr/fullslider:v0.4
 	```
 3. Run image
 
 	```
-	sudo docker run -p 8888:8888 edujg/fullslider:v0.3
+	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.4
 	```
 4. Open your browser and write url: 
 
@@ -42,12 +42,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	docker pull edujg/fullslider:v0.3
+	docker pull sergioserr/fullslider:v0.4
 	```
 3. Run image
 
 	```
-	docker run -p 8888:8888 edujg/fullslider:v0.3
+	docker run -p 8888:8888 sergioserr/fullslider:v0.4
 	```
 4. Get docker machine ip
 	
@@ -145,7 +145,7 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ## Release Notes
 
-###### v0.3 - With Fullslider, you can do: ######
+###### v0.4 - With Fullslider, you can do: ######
  - Create new presentations.
  - Download presentation as .fspf file (FullSlider Presentation File).
  - Open downloaded presentations from Fullslider, with .fspf extension.
@@ -154,9 +154,9 @@ When user click on Download button, a file with .fspf extension is automatically
  - Add/remove text element
  - Edit text element: change color, font, size, align, rotate, skew, add link, add bold, italic, underline and list format.
  - Add Image from:
-	*URL
-	*Local file
-	*Clipboard
+	* URL
+	* Local file
+	* Clipboard
  - Edit uploaded images (resize, rotate and crop)
  - Create graphics with Graphic editor
  - Edit already created graphics
@@ -169,7 +169,8 @@ When user click on Download button, a file with .fspf extension is automatically
  - Configure default values of text (color, font, etc.)
  - Save presentation on session storage
  - Open recent presentations.
- - And view presentation!
+ - View presentation
+ - And you can create presentation using a text-editor!
 
 ## Quick Guide ##
 
@@ -192,6 +193,26 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ![edit](https://cloud.githubusercontent.com/assets/6854006/15626730/12b11214-24cd-11e6-883a-120d33d3cf13.PNG)
 
+## Text-editor guide ##
+
+* Slide without title --> #
+* Slide with title --> #Title
+* Subslide without title --> ##
+* Subslide with title --> ##Title
+* Create automatic index --> You starts the text with \[indexp\] (one slide for the index) or \[indexf\] (several slides for the index)
+* Title --> -Title-
+* Subtitle --> --Subtitle--
+* Paragraph --> Text
+* Bold paragraph --> \*\*Text\*\* or \_\_Text\_\_
+* Italic paragraph --> \*Text\* or \_Text\_
+* Code --> \`Code\`
+* Square --> >
+* Line --> >>
+* Ellipse --> >>>
+* Arrow --> >>>>
+* Image --> !\[Alternate text\](url)
+
+![fullslider markdown](https://cloud.githubusercontent.com/assets/15110402/22182662/38d83e78-e0ab-11e6-8bd9-04c7ab4d6a51.png)
 
 ## Credits ##
 
@@ -213,6 +234,7 @@ When user click on Download button, a file with .fspf extension is automatically
 * Highlight.js https://highlightjs.org
 * PhantomJS phantomjs.org
 * Decktape https://github.com/astefanutti/decktape
+* Markdown-js https://github.com/evilstreak/markdown-js
 
 ## License ##
 Fullslider is licensed under Apache license 2.0
