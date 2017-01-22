@@ -212,6 +212,8 @@ When user click on Download button, a file with .fspf extension is automatically
 * Arrow --> >>>>
 * Image --> !\[Alternate text\](url)
 
+![fullslider markdown](https://cloud.githubusercontent.com/assets/15110402/22182662/38d83e78-e0ab-11e6-8bd9-04c7ab4d6a51.png)
+
 ## Credits ##
 
 * Impressionist https://github.com/harish-io/Impressionist
