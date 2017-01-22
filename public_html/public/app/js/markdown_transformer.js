@@ -145,6 +145,7 @@ var process = function(source){
             var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
+            break;
         case 'tl2':
             var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
             id = id.substr(12, 4);
@@ -160,7 +161,7 @@ var process = function(source){
             elements_list[id] = max_line;
             break;
         case 'figure2':
-            $('#drawmax_line').click();
+            $('#drawLine').click();
             manualFigure = false;
             eventsSimulate();
             $('#editEnd').click();
