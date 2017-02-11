@@ -958,8 +958,8 @@ Impressionist.prototype =
 
 
                 $(element).css("position", "absolute");
-                $(element).css("left", "24.6vw");
-                $(element).css("top", "5.66vw");
+                $(element).css("left", "24.6vw");//24.6
+                $(element).css("top", "5.66vw");//5.66
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -2308,10 +2308,10 @@ Impressionist.prototype =
                 }
                 me.generateScaledSlide(me.selectedSlide);
             },
-            addFullsliderTextMD: function(type, text, mode) {
+            addFullsliderTextMD: function(type, text, mode, top, left) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyle(element, type, mode);
+                me.addTextStyleMD(element, type, mode, top, left);
                 me.finishAddFile($(element));
                 return element.id;
             },
@@ -2326,11 +2326,11 @@ Impressionist.prototype =
             addFullsliderTextIndexMD: function(text, position, range, current, long) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyleMD(element, position, range, current, long);
+                me.addIndexTextStyleMD(element, position, range, current, long);
                 me.finishAddFile($(element));
                 return element.id;
             },
-            addTextStyleMD: function(element, position, range, current, long) {
+            addIndexTextStyleMD: function(element, position, range, current, long) {
                 var size = ""
                 if(long >= 0 && long <= 10){
                     size = 2.5;
@@ -2368,125 +2368,73 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-            /*addGraphicsMD: function() {
-                var graphic = me.createDefautlGraphicMD();
-                var defs = $("#canvas").find("defs");
-                var svgtype = "";
-
-                var element = me.addFullsliderSlideItem(graphic_snippet);
-                svgtype = $(graphic).attr("data-svgtype");
-
-                //On resize svg, transform is defined an set to " " -> remove transform attr.
-                $(graphic).removeAttr('transform');
-
-                $(element).find("svg").append($(graphic).clone());
-                switch (svgtype) {
-                    case "arrow":
-                        $(element).find("svg").prepend($(defs).clone()); //Prepend: Append in first position
+            addTextStyleMD: function(element, type, mode, top, left) {
+                var size = "";
+                var font = "";
+                var color = "";
+                switch (type) {
+                    case "normal":
+                        size = me.normalSize;
+                        color = me.normalColor;
+                        font = me.normalFont;
+                        break;
+                    case "title":
+                        size = me.titleSize;
+                        color = me.titleColor;
+                        font = me.titleFont;
+                        break;
+                    case "subtitle":
+                        size = me.subtitleSize;
+                        color = me.subtitleColor;
+                        font = me.subtitleFont;
                         break;
                     default:
+                        size = "1.75vw";
+                        color = "#000";
+                        font = "'Montserrat', sans-serif";
                         break;
                 }
 
-                me.addGraphicStyleMD(element, graphic);
-
-                me.finishAddFile($(element));
-            },
-            addGraphicStyleMD: function(element, graphic) {
-                var svg_element = $(element).find("svg");
-                var added_graphic = $(svg_element).children()[0];
-
-//                var stroke_width = pxToVw(parseFloat(getNumericValue($("#strokewidth").val())));
-                var stroke_width = pxToVw(parseFloat($(graphic).attr("stroke-width")));
-                var is_arrow = false;
-
-                if ($(added_graphic).is("defs")) { //If is arrow
-                    is_arrow = true;
-                    var last = $($(svg_element).children()).size() - 1;
-                    var added_graphic = $(svg_element).children()[last];
-                    stroke_width *= 3;
-                }
-
-                //After append, because before has relative modal values
-                var width = parseFloat(pxToVw($(graphic).attr("width")));
-                var height = parseFloat(pxToVw($(graphic).attr("height")));
-
-                var left = $(graphic).attr("x");
-                var top = $(graphic).attr("y");
-
-                var left_translate = (left * -1);
-                var top_translate = (top * -1);
-
-                switch (true) {
-                    case (height != 0 && width != 0):
-                        if (width > height) {
-                            var w_rel = (stroke_width + 0 * height / width);
-                        }
-                        else {
-                            var w_rel = (stroke_width + 0 * width / height);
-                        }
-                        width += w_rel;
-                        left_translate += vwToPx(w_rel / 2);
-                        height += w_rel;
-                        top_translate += vwToPx(w_rel / 2);
+                $(element).css("font-size", size + "vw");
+                var text_value = $(element).text();
+                switch(mode){
+                    case "em":
+                        $(element).children().html("<i><font color='" + color + "'>" + text_value + "</font></i>");
                         break;
-                    case(height != 0 && width == 0):
-                        width += stroke_width + 1;
-                        left_translate += vwToPx((stroke_width + 1) / 2);
-                        if (is_arrow) {
-                            height += stroke_width + 1;
-                            top_translate += vwToPx(stroke_width / 1.75);
-                        }
-                        break
-                    case(height == 0 && width != 0):
-                        height += stroke_width + 1;
-                        top_translate += vwToPx((stroke_width + 1) / 2);
-                        if (is_arrow) {
-                            width += stroke_width + 1;
-                            left_translate += vwToPx(stroke_width / 1.75);
-                        }
-                        break
+                    case "normal":
+                        $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
+                        break;
+                    case "strong":
+                        $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
+                        break;
                 }
+                $(element).css("font-family", font);
 
-                $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
 
-                $(svg_element).css("width", width + "vw");
-                $(svg_element).css("height", height + "vw");
-                $(svg_element).css("position", "absolute");
-                $(element).css("width", width + "vw");
-                $(element).css("height", height + "vw");
                 $(element).css("position", "absolute");
-                $(element).css("left", pxToVw(left) + "vw");
-                $(element).css("top", pxToVw(top) + "vw");
-
-
-                //Javascript insteadof Jquery because attr("viewBox") set attribute "viewbox". Case Sensitive
-                $(svg_element)[0].setAttribute('preserveAspectRatio', "xMinYMin meet");
-                $(svg_element)[0].setAttribute('viewBox', "0 0 " + vwToPx(width) + " " + vwToPx(height));
+                $(element).css("left", left + "vw");
+                $(element).css("top", top + "vw");
+                $(element).css("line-height", "initial", "important");
+                //$(element).css("color", "#000");
+                $(element).css("height", "initial");
+                $(element).css("width", "auto");
+                $(element).css("white-space", "normal");
                 var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
                 var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
                 $(element).css("max-width", maxwidth + "vw");
                 $(element).css("max-height", maxheight + "vw");
+                $(element).css("overflow", "hidden");
+                $(element).css("word-break", "break-word", "important");
             },
-            createDefautlGraphicMD: function(){
-                var graphic = document.createElement('rect');
-                graphic.setAttribute('x', '224.390625');
-                graphic.setAttribute('visibility', 'visible');
-                graphic.setAttribute('y', '127.484375');
-                graphic.setAttribute('width', '95');
-                graphic.setAttribute('height', '77');
-                graphic.setAttribute('z-index', '50');
-                graphic.setAttribute('r', '0');
-                graphic.setAttribute('rx', '0');
-                graphic.setAttribute('ry', '0');
-                graphic.setAttribute('fill', '#3470e9');
-                graphic.setAttribute('stroke', '#000000');
-                graphic.setAttribute('stroke-width', '2');
-                graphic.setAttribute('fill-opacity', '1');
-                graphic.setAttribute('stroke-opacity', '1');
-                graphic.setAttribute('style', '-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 1; stroke-opacity: 1;');
-                graphic.setAttribute('data-svgtype', 'rect');
-                return graphic;
-            },*/
         };
+
+
+
+
+
+
+
+
+
+
 

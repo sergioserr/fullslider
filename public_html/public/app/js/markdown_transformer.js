@@ -6,6 +6,8 @@ var id_figure = ''; //Save id for add figure a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
 var max_line = 0; //max_line for add text-editor
 var manualFigure = true; //difference between graphic or text add figure
+var mainSlide = '';
+var numText = 0;
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -30,7 +32,7 @@ $(document).ready(function() {
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        console.log(source); //testing
+        //console.log(source); //testing
         //Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -67,10 +69,10 @@ $(document).ready(function() {
         };
     });
     $('#convert').click(function() { 
-        console.log(elements_list); //testing
+        //console.log(elements_list); //testing
         //console.log(max_line); //testing
-        console.log(id_slides_list);
-    }); //testing
+        //console.log(id_slides_list); //testing
+    });
 }); 
 
 var process = function(source){
@@ -106,6 +108,7 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                numText = 0;
                 break;
             }
             else{
@@ -115,9 +118,11 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
-                id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
+                id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 0.0732064, 1.02489);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
+                mainSlide = source[1];
+                numText = 0;
                 break;
             }
             break;
@@ -126,6 +131,7 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                numText = 0;
                 break;
             }
             else{
@@ -135,19 +141,23 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
-                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
+                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
+                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.13089, 3.66492);
+                id = id.substr(12, 4);
+                elements_list[id] = max_line;
+                numText = 0;
                 break;
             }
             break;
         case 'tl1':
-            var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
+            var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 5.66, 24.6);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             break;
         case 'tl2':
-            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
+            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.66, 24.6);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             break;
@@ -209,9 +219,11 @@ var process = function(source){
                     code_img = '';
                     break;
                 default:
-                    var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
+                    var top = 11.4202 + numText * 2;
+                    var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
                     id = id.substr(12, 4);
                     elements_list[id] = max_line;
+                    numText++;
                     break;
             }
     }
