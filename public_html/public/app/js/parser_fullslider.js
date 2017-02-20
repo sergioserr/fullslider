@@ -6,8 +6,8 @@ var id_figure = ''; //Save id for add figure a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
 var max_line = 0; //max_line for add text-editor
 var manualFigure = true; //difference between graphic or text add figure
-var mainSlide = '';
-var numText = 0;
+var mainSlide = ''; //save the slide title for subslides
+var numText = 0; //quantity lines of text for organize in the slide
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -20,7 +20,7 @@ $(document).ready(function() {
         slides_list = [];
         elements_list = {};
         max_line = 0;
-        //Preprocessing
+        /*//Preprocessing
         var preText = $('#markdown-text').val().split('\n');
         var text = '';
         for(var i = 0; i < preText.length; i++){
@@ -28,7 +28,7 @@ $(document).ready(function() {
                 text += preText[i] + '\n\n';
             }
         }
-        $('#markdown-text').val(text);
+        $('#markdown-text').val(text);**/
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
@@ -200,6 +200,8 @@ var process = function(source){
         case 'p':
             switch(code_img){
                 case 'code':
+                    //var test = multiElement(2, 'code');
+                    //console.log(test);
                     console.log('code');
                     var text = '<li>';
                     for(x = 0; x < source[1].length; x++){
@@ -219,6 +221,8 @@ var process = function(source){
                     code_img = '';
                     break;
                 default:
+                    //var test = multiElement(2, 'text');
+                    //console.log(test);
                     var top = 11.4202 + numText * 2;
                     var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
                     id = id.substr(12, 4);
@@ -466,4 +470,36 @@ function restructureList(modified, add, type){
             }
         }
     }
+}
+function multiElement(line, type){
+    var lines = [];
+    var text = $('#markdown-text').val().split('\n');
+    console.log(text) //testing
+    switch(type){
+        case 'code':
+            for(var l = line; l < text.length; l++){
+                var c = 0;
+                var n = 1;
+                while(c < text[l].length){
+                    if(text[l][c] == '`'){
+                        if(n == 2){
+                            return lines;
+                        }
+                        n++;
+                    }
+                    c++;
+                }
+                lines.push(l);
+            }
+            break;
+        case 'text':
+            for(var l = line; l < text.length; l++){
+                if(text[l] == ""){
+                    return lines;
+                }
+                lines.push(l);
+            }
+            break;
+    }
+    return lines;
 }
