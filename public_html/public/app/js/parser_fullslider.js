@@ -8,6 +8,7 @@ var max_line = 0; //max_line for add text-editor
 var manualFigure = true; //difference between graphic or text add figure
 var mainSlide = ''; //save the slide title for subslides
 var numText = 0; //quantity lines of text for organize in the slide
+var spaceLines = []; //White lines
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -20,15 +21,35 @@ $(document).ready(function() {
         slides_list = [];
         elements_list = {};
         max_line = 0;
-        /*//Preprocessing
+        spaceLines = [];
+        //Preprocessing
         var preText = $('#markdown-text').val().split('\n');
         var text = '';
         for(var i = 0; i < preText.length; i++){
-            if(preText[i] != ''){
-                text += preText[i] + '\n\n';
+            if(preText[i] == ''){
+                spaceLines.push(i);
+            }
+            if(preText[i][0] == '#'){
+                if(preText[i+1] != ''){
+                   text += preText[i] + '\n\n';
+                }
+                else{
+                    text += preText[i] + '\n';
+                }
+            }
+            else if(preText[i][0] == '>'){
+                if(preText[i+1] != ''){
+                   text += preText[i] + '\n\n';
+                }
+                else{
+                    text += preText[i] + '\n';
+                }
+            }
+            else{
+                text += preText[i] + '\n';
             }
         }
-        $('#markdown-text').val(text);**/
+        $('#markdown-text').val(text);
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
@@ -61,17 +82,23 @@ $(document).ready(function() {
         //Processing
         for (var i = 1 ; i < source.length; ++i ) {
             process(source[i]);
-            max_line += 2;
+            max_line++;
+            while(spaceLines.includes(max_line)){
+                spaceLines.shift;
+                max_line++;
+            }
             //console.log(source); //testing
             //console.log(i); //testing
             //console.log(id_slides_list); //testing
             //console.log(elements_list); //testing
         };
+        deleteSpaces();
     });
     $('#convert').click(function() { 
-        //console.log(elements_list); //testing
-        //console.log(max_line); //testing
-        //console.log(id_slides_list); //testing
+        console.log(elements_list); //testing
+        console.log(spaceLines); //testing
+        console.log(max_line); //testing
+        console.log(id_slides_list); //testing
     });
 }); 
 
@@ -108,6 +135,7 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                max_line++;
                 numText = 0;
                 break;
             }
@@ -121,6 +149,7 @@ var process = function(source){
                 id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 0.0732064, 1.02489);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
+                max_line++;
                 mainSlide = source[1];
                 numText = 0;
                 break;
@@ -131,6 +160,7 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                max_line++;
                 numText = 0;
                 break;
             }
@@ -147,6 +177,7 @@ var process = function(source){
                 id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.13089, 3.66492);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
+                max_line++;
                 numText = 0;
                 break;
             }
@@ -169,6 +200,7 @@ var process = function(source){
             manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
+            max_line++;
             break;
         case 'figure2':
             $('#drawLine').click();
@@ -178,6 +210,7 @@ var process = function(source){
             manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
+            max_line++;
             break;
         case 'figure3':
             $('#drawEllipse').click();
@@ -187,6 +220,7 @@ var process = function(source){
             manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
+            max_line++;
             break;
         case 'figure4':
             $('#drawArrow').click();
@@ -196,13 +230,13 @@ var process = function(source){
             manualFigure = true;
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
+            max_line++;
             break;
         case 'p':
             switch(code_img){
                 case 'code':
-                    //var test = multiElement(2, 'code');
-                    //console.log(test);
-                    console.log('code');
+                    var lines = multiElement(max_line, 'code');
+                    //console.log(lines); //testing
                     var text = '<li>';
                     for(x = 0; x < source[1].length; x++){
                         text += source[1][x];
@@ -213,7 +247,8 @@ var process = function(source){
                     text += '</li>'
                     var id = Impressionist.prototype.addFullsliderCodeMD(text);
                     id = id.substr(12, 4);
-                    elements_list[id] = max_line;
+                    elements_list[id] = lines;
+                    max_line += lines.length;
                     code_img = '';
                     break;
                 case 'img':
@@ -221,12 +256,13 @@ var process = function(source){
                     code_img = '';
                     break;
                 default:
-                    //var test = multiElement(2, 'text');
-                    //console.log(test);
+                    var lines = multiElement(max_line, 'text');
+                    //console.log(lines) //testing
                     var top = 11.4202 + numText * 2;
                     var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
                     id = id.substr(12, 4);
-                    elements_list[id] = max_line;
+                    elements_list[id] = lines;
+                    max_line += lines.length;
                     numText++;
                     break;
             }
@@ -238,6 +274,7 @@ var addSlideList = function(idSlide){
     id_slides_list.push(idSlide);
     restructureList(max_line, true, 'slide');
     elements_list[idSlide] = max_line;
+    spaceLines.push(max_line+1);
     max_line += 2;
 }
 var deleteSlideList = function(idSlide){
@@ -249,10 +286,21 @@ var deleteSlideList = function(idSlide){
     var line = elements_list[idSlide];
     delete elements_list[idSlide];
     restructureList(line, false, 'slide');
-    max_line -= 2;
+    max_line--;
+    if(spaceLines.includes(line+1)){
+        restructureList(line+1, false, 'slide');
+        max_line--;
+        spaceLines.splice(spaceLines.findIndex(line+1), 1);
+    }
     var notSlide = true;
+    deleteSpaces();
     for(lock in elements_list){
-        if(elements_list[lock] == line){
+        console.log(lock);
+        console.log(elements_list);
+        console.log(elements_list[lock]);
+        var aux = compareLines(elements_list[lock], line);
+        console.log(aux);
+        if(aux){
             for(i = 0; i < id_slides_list.length; i++){
                 if(id_slides_list[i] == lock){
                     notSlide = false;
@@ -266,6 +314,24 @@ var deleteSlideList = function(idSlide){
             break;
         }  
     }
+    deleteSpaces();
+}
+function compareLines(lineElement, line){
+    if(lineElement.length != undefined){
+        console.log('Multi');
+        if(lineElement[0] == line){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        console.log('NOMulti');
+        console.log(lineElement);
+        console.log(line);
+        return lineElement == line;
+    }
 }
 function currentSlide(){
     var slide = $("[style='z-index: 1;']").attr('id');
@@ -277,12 +343,21 @@ function currentSlide(){
 var deleteElementList = function(idElement){
     if(idElement.length > 4){
         idElement = idElement.substr(12, 4);
-        console.log('Hola')
     }
     var line = elements_list[idElement];
-    restructureList(line, false, '');
+    //console.log(line)
+    if(line.length != undefined){
+        for(var i = 0; i < line.length; i++){
+            restructureList(line[i], false, '');
+        }
+        max_line -= line.length;
+    }
+    else{
+        restructureList(line, false, '');
+        max_line -= 1;
+    }
     delete elements_list[idElement];
-    max_line -= 2;
+    deleteSpaces();
 }
 
 //Text, code
@@ -291,6 +366,7 @@ var addTextList = function(idText, type){
     restructureList(lineSlide+2, true, type);
     idText = idText.substr(12, 4);
     elements_list[idText] = lineSlide + 2;
+    spaceLines.push(max_line+1);
     max_line += 2;
 }
 var addCodeList = function(idCode){
@@ -298,6 +374,7 @@ var addCodeList = function(idCode){
     restructureList(lineSlide+2, true, 'code');
     idCode = idCode.substr(12, 4);
     elements_list[idCode] = lineSlide + 2;
+    spaceLines.push(max_line+1);
     max_line += 2;
 }
 
@@ -322,6 +399,7 @@ var addFigureList = function(idFigure, type){
         restructureList(lineSlide+2, true, type);
         idFigure = idFigure.substr(12, 4);
         elements_list[idFigure] = lineSlide + 2;
+        spaceLines.push(max_line+1);
         max_line += 2;
     }
 }
@@ -450,23 +528,53 @@ function restructureList(modified, add, type){
                 }
                 else{
                     if(preText[i] != ''){
-                        text += preText[i] + '\n\n';
+                        text += preText[i] + '\n';
+                    }
+                    else{
+                        if(i != preText.length-1){
+                            text += '\n';
+                        }
                     }
                 }
                 
             }
-            //console.log(text); //testing
+            /*console.log(text);
+            console.log('-------------------------')*/ //testing
         }
     }
     $('#markdown-text').val(text);
     
     for(lock in elements_list){
-        if(elements_list[lock] >= modified){
+        if(elements_list[lock].length != undefined){
+            for(var m = 0; m < elements_list[lock].length; m++){
+                if(elements_list[lock][m] >= modified){
+                    if(add){
+                        elements_list[lock][m] += 2;
+                    }
+                    else{
+                        elements_list[lock][m] -= 1;
+                    }
+                }
+            }
+        }
+        else{
+            if(elements_list[lock] >= modified){
+                if(add){
+                    elements_list[lock] += 2;
+                }
+                else{
+                    elements_list[lock] -= 1;
+                }
+            }
+        }
+    }
+    for(s = 0; s < spaceLines.length; s++){
+        if(spaceLines[s] >= modified){
             if(add){
-                elements_list[lock] += 2;
+                spaceLines[s] += 2;
             }
             else{
-                elements_list[lock] -= 2;
+                spaceLines[s] -= 1;
             }
         }
     }
@@ -474,7 +582,7 @@ function restructureList(modified, add, type){
 function multiElement(line, type){
     var lines = [];
     var text = $('#markdown-text').val().split('\n');
-    console.log(text) //testing
+    //console.log(text) //testing
     switch(type){
         case 'code':
             for(var l = line; l < text.length; l++){
@@ -502,4 +610,17 @@ function multiElement(line, type){
             break;
     }
     return lines;
+}
+function deleteSpaces(){
+    var s = 0;
+    while(s < spaceLines.length){
+        if(spaceLines[s+1] == spaceLines[s] + 1 || spaceLines[s+1] == spaceLines[s]){
+            spaceLines.splice(s, 1);
+            restructureList(spaceLines[s], false, '');
+            max_line -= 1;
+        }
+        else{
+            s++;
+        }
+    }
 }
