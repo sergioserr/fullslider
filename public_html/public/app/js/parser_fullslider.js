@@ -286,11 +286,11 @@ var deleteSlideList = function(idSlide){
     }
     var notSlide = true;
     for(lock in elements_list){
-        //console.log("lock " + lock); //debug
+        console.log("lock " + lock); //debug
         //console.log(elements_list); //debug
         //console.log("elements_list[lock] " + elements_list[lock]); //debug
         var aux = compareLines(elements_list[lock], line);
-        //console.log(aux); //debug
+        console.log(aux); //debug
         if(aux){
             for(iS = 0; iS < id_slides_list.length; iS++){
                 if(id_slides_list[iS] == lock){
@@ -302,21 +302,17 @@ var deleteSlideList = function(idSlide){
             }  
         }
         if(!notSlide){
+            con = false;
             break;
         }  
     }
-    deleteSpaces();
     processingText();
+    deleteSpaces();
 }
 function compareLines(lineElement, line){
     if(lineElement.length != undefined){
         //console.log('Multi'); //debug
-        if(lineElement[0] == line){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return lineElement.includes(line);
     }
     else{
         //console.log('NOMulti'); //debug
@@ -336,23 +332,25 @@ var deleteElementList = function(idElement){
     if(idElement.length > 4){
         idElement = idElement.substr(12, 4);
     }
-    var line = elements_list[idElement];
-    console.log(line)
-    if(line.length != undefined){
-        for(var i = 0; i < line.length; i++){
-            restructureList(line[i], false, '');
-            elements_list[idElement].shift;
+    var lineElement = elements_list[idElement];
+    console.log(lineElement.length)
+    if(lineElement.length != undefined){
+        var line = lineElement[0];
+        for(var i = 0; i < lineElement.length; i++){
+            restructureList(line, false, '');
+//            elements_list[idElement].splice(0,1);
+            console.log("Hola " + line)
         }
-        max_line -= line.length;
-        console.log("Maxline- " + line.length + " " + max_line); //debug
+        max_line -= lineElement.length;
+        console.log("Maxline- " + lineElement.length + " " + max_line); //debug
     }
     else{
-        restructureList(line, false, '');
+        restructureList(lineElement, false, '');
         max_line--;
         console.log("Maxline-- " + max_line); //debug
     }
     delete elements_list[idElement];
-    deleteSpaces();
+//    deleteSpaces();
 }
 
 //Text, code
@@ -471,6 +469,7 @@ function moreRange(num){
 
 //Text-editor
 function processingText(){
+    spaceLines = [];
     var preText = $('#markdown-text').val().split('\n');
     var text = '';
     var preTextLine = 0;
@@ -517,7 +516,7 @@ function processingText(){
         //console.log(text); //debug
         preTextLine++;
     }
-    if(text[text.length-1] != ''){ //This add a final white line
+    if(text[text.length-1] != ' '){ //This add a final white line
         text += '\n'
         spaceLines.push(textLine);
     }
