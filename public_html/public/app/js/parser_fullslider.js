@@ -232,7 +232,9 @@ var process = function(source){
                     id = id.substr(12, 4);
                     elements_list[id] = lines;
                     max_line += lines.length;
-                    console.log("Maxline+ " + lines.length + " " + max_line); //debug
+                    max_line--;
+                    var pepe = lines.length - 1;
+                    console.log("Maxline+ " + pepe + " " + max_line); //debug
                     code_img = '';
                     break;
                 case 'img':
@@ -241,13 +243,15 @@ var process = function(source){
                     break;
                 default:
                     var lines = multiElement(max_line, 'text');
-                    //console.log(lines) //debug
+                    console.log(lines) //debug
                     var top = 11.4202 + numText * 2;
                     var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
                     id = id.substr(12, 4);
                     elements_list[id] = lines;
                     max_line += lines.length;
-                    console.log("Maxline+ " + lines.length + " " + max_line); //debug
+                    max_line--;
+                    var pepe = lines.length - 1;
+                    console.log("Maxline+ " + pepe + " " + max_line); //debug
                     numText++;
                     break;
             }
@@ -285,7 +289,13 @@ var deleteSlideList = function(idSlide){
         console.log("Maxline-- " + max_line); //debug
     }
     var notSlide = true;
-    for(lock in elements_list){
+    var l = 0;
+    var locks = Object.keys(elements_list);
+    var lock = '';
+    while(l < locks.length){
+        locks = Object.keys(elements_list);
+        var lock = locks[l];
+//    for(lock in elements_list){
         console.log("lock " + lock); //debug
         //console.log(elements_list); //debug
         //console.log("elements_list[lock] " + elements_list[lock]); //debug
@@ -299,20 +309,26 @@ var deleteSlideList = function(idSlide){
             }
             if(notSlide){
                 deleteElementList(lock);
+                l = 0;
             }  
         }
+        else{
+            l++;
+        }
         if(!notSlide){
-            con = false;
             break;
         }  
     }
-    processingText();
+    if(line == 0){
+        processingText();
+    }
     deleteSpaces();
 }
 function compareLines(lineElement, line){
     if(lineElement.length != undefined){
         //console.log('Multi'); //debug
-        return lineElement.includes(line);
+        return lineElement[0] == line;
+//        return lineElement.includes(line);
     }
     else{
         //console.log('NOMulti'); //debug
@@ -343,11 +359,31 @@ var deleteElementList = function(idElement){
         }
         max_line -= lineElement.length;
         console.log("Maxline- " + lineElement.length + " " + max_line); //debug
+        if(spaceLines.includes(line)){
+            for(s = 0; s < spaceLines.length; s++){
+                if(line == spaceLines[s]){
+                    spaceLines.splice(s, 1);
+                }
+            }
+            restructureList(line, false, 'slide');
+            max_line--;
+            console.log("Maxline-- " + max_line); //debug
+        }
     }
     else{
         restructureList(lineElement, false, '');
         max_line--;
         console.log("Maxline-- " + max_line); //debug
+        if(spaceLines.includes(line)){
+            for(s = 0; s < spaceLines.length; s++){
+                if(line == spaceLines[s]){
+                    spaceLines.splice(s, 1);
+                }
+            }
+            restructureList(line, false, 'slide');
+            max_line--;
+            console.log("Maxline-- " + max_line); //debug
+        }
     }
     delete elements_list[idElement];
 //    deleteSpaces();
@@ -653,7 +689,7 @@ function multiElement(line, type){
             break;
         case 'text':
             for(var l = line; l < text.length; l++){
-                if(text[l] == ""){
+                if(text[l] == "" || text[l] == "#" || text[l] == "##"){
                     return lines;
                 }
                 lines.push(l);
