@@ -27,7 +27,7 @@ $(document).ready(function() {
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        console.log(source); //debug
+        //console.log(source); //debug
         //Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -243,7 +243,7 @@ var process = function(source){
                     break;
                 default:
                     var lines = multiElement(max_line, 'text');
-                    console.log(lines) //debug
+                    //console.log(lines) //debug
                     var top = 11.4202 + numText * 2;
                     var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
                     id = id.substr(12, 4);
@@ -277,13 +277,13 @@ var deleteSlideList = function(idSlide){
     delete elements_list[idSlide];
     for(lock in elements_list){
         if(elements_list[lock] == line){
-            console.log("-----") //debug
-            console.log(lock) //debug
-            console.log(elements_list[lock]) //debug
+            //console.log("-----") //debug
+            //console.log(lock) //debug
+            //console.log(elements_list[lock]) //debug
             delete elements_list[lock];
         }
     }
-    console.log(elements_list); //debug
+    //console.log(elements_list); //debug
     restructureList(line, false, 'slide');
     max_line--;
     console.log("Maxline--" + max_line); //debug
@@ -302,17 +302,17 @@ var deleteSlideList = function(idSlide){
     var locks = Object.keys(elements_list);
     var lock = '';
     var posibleTitle = false;
-    while(l < locks.length){
-        console.log("Tamaño"); //debug
-        console.log(locks.length); //debug
+    while(l <= locks.length-1){
+        //console.log("Tamaño"); //debug
+        //console.log(locks.length); //debug
         var lock = locks[l];
-        console.log(locks); //debug
+        //console.log(locks); //debug
 //    for(lock in elements_list){
-        console.log("l: " + l + ", lock " + lock); //debug
-        console.log(elements_list); //debug
-        console.log("elements_list[lock] " + elements_list[lock]); //debug
+        //console.log("l: " + l + ", lock " + lock); //debug
+        //console.log(elements_list); //debug
+        //console.log("elements_list[lock] " + elements_list[lock]); //debug
         var aux = compareLines(elements_list[lock], line);
-        console.log(aux); //debug
+        //console.log(aux); //debug
         if(aux){
             for(iS = 0; iS < id_slides_list.length; iS++){
                 if(id_slides_list[iS] == lock){
@@ -327,12 +327,12 @@ var deleteSlideList = function(idSlide){
                     posibleTitle = false;
                 }
                 else{
-                    console.log("Hola1")
+                    //console.log("No titulo"); //debug
                     posibleTitle = true;
-                    if((l == ((locks.length) - 1))){
-                        l--;
-                    }
                     l++;
+                    if(l == locks.length){
+                        l = 0;
+                    }
                 }
             }  
         }
@@ -342,16 +342,15 @@ var deleteSlideList = function(idSlide){
         if(!notSlide){
             break;
         }
-//        var tamano = (locks.length) - 1;
-        console.log((locks.length) - 1); //debug
-        if((l == (locks.length) - 1) && posibleTitle){
-            console.log("Hola")
+        //console.log((locks.length) - 1); //debug
+        if((l == locks.length) && posibleTitle){
+            //console.log("Reinicio"); //debug
             l = 0;
         }
     }
-    if(line == 0){
-        processingText();
-    }
+//    if(line == 0){
+//        processingText();
+//    }
     deleteSpaces();
 }
 function compareLines(lineElement, line){
@@ -385,7 +384,6 @@ var deleteElementList = function(idElement){
         for(var i = 0; i < lineElement.length; i++){
             restructureList(line, false, '');
 //            elements_list[idElement].splice(0,1);
-            console.log("Hola " + line)
         }
         max_line -= lineElement.length;
         console.log("Maxline- " + lineElement.length + " " + max_line); //debug
@@ -404,13 +402,13 @@ var deleteElementList = function(idElement){
         restructureList(lineElement, false, '');
         max_line--;
         console.log("Maxline-- " + max_line); //debug
-        if(spaceLines.includes(line)){
+        if(spaceLines.includes(lineElement)){
             for(s = 0; s < spaceLines.length; s++){
-                if(line == spaceLines[s]){
+                if(lineElement == spaceLines[s]){
                     spaceLines.splice(s, 1);
                 }
             }
-            restructureList(line, false, 'slide');
+            restructureList(lineElement, false, 'slide');
             max_line--;
             console.log("Maxline-- " + max_line); //debug
         }
@@ -738,7 +736,7 @@ function deleteSpaces(){
     var sp = 0;
     while(sp < spaceLines.length){
         if(spaceLines[sp+1] == spaceLines[sp] + 1 || spaceLines[sp+1] == spaceLines[sp]){
-            console.log(spaceLines); //debug
+            //console.log(spaceLines); //debug
             spaceLines.splice(sp, 1);
             restructureList(spaceLines[sp], false, '');
             max_line--;
