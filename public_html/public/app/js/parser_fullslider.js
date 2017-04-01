@@ -27,7 +27,7 @@ $(document).ready(function() {
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        //console.log(source); //debug
+        console.log(source); //debug
         //Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -250,9 +250,7 @@ var process = function(source){
                     elements_list[id] = lines;
                     max_line += lines.length;
                     max_line--;
-                    var pepe = lines.length - 1;
-                    console.log("Maxline+ " + pepe + " " + max_line); //debug
-                    numText++;
+                    numText += lines.length;
                     break;
             }
     }

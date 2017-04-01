@@ -909,7 +909,8 @@ Impressionist.prototype =
                 me.updateScaledSlide(me.selectedSlide);
             },
             addFullsliderText: function(type) {
-                var element = me.addFullsliderSlideItem(text_snippet);
+                var mText = text_snippet.replace("Sample Text", "<div> Sample Text </div>");
+                var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyle(element, type, "normal");
                 me.finishAddFile($(element));
                 addTextList(element.id, type);
@@ -2309,7 +2310,13 @@ Impressionist.prototype =
                 me.generateScaledSlide(me.selectedSlide);
             },
             addFullsliderTextMD: function(type, text, mode, top, left) {
-                var mText = text_snippet.replace("Sample Text", text);
+                text = text.split('\n');
+                var futureText = '';
+                for(p = 0; p < text.length; p++){
+                    console.log('multiline'); //debug
+                    futureText += '<div> ' + text[p] + ' </div>' + '\n';
+                }
+                var mText = text_snippet.replace("Sample Text", futureText);
                 var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyleMD(element, type, mode, top, left);
                 me.finishAddFile($(element));
@@ -2324,7 +2331,7 @@ Impressionist.prototype =
                 return element.id;
             },
             addFullsliderTextIndexMD: function(text, position, range, current, long) {
-                var mText = text_snippet.replace("Sample Text", text);
+                var mText = text_snippet.replace("Sample Text", '<di> ' + text + ' </div>');
                 var element = me.addFullsliderSlideItem(mText);
                 me.addIndexTextStyleMD(element, position, range, current, long);
                 me.finishAddFile($(element));
@@ -2396,16 +2403,26 @@ Impressionist.prototype =
                 }
 
                 $(element).css("font-size", size + "vw");
-                var text_value = $(element).text();
+                var text_value = $(element).text().split('\n');
+                var h = 0;
                 switch(mode){
                     case "em":
-                        $(element).children().html("<i><font color='" + color + "'>" + text_value + "</font></i>");
+                        $(element).children().each(function(){
+                            $(this).html("<i><font color='" + color + "'>" + text_value[h] + "</font></i>")
+                            h++;
+                        });
                         break;
                     case "normal":
-                        $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
+                        $(element).children().each(function(){
+                            $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
+                            h++;
+                        });
                         break;
                     case "strong":
-                        $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
+                        $(element).children().each(function(){
+                            $(this).html("<b><font color='" + color + "'>" + text_value[h] + "</font></b>")
+                            h++;
+                        });
                         break;
                 }
                 $(element).css("font-family", font);

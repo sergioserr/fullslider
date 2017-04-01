@@ -18,7 +18,7 @@ var slidethumb = '<div id="slidethumb_^UID^" class="slidethumb thumbelement cent
         '<canvas class="slidemask" id="slidethumb_^UID^" style="z-index:1000; width:100%; height:100%; background-color:#FFF; opacity:0.1; left:0px; top:0px; position:absolute"></canvas>' +
         '<a id="deletebtn" data-parent="slidethumb_^UID^" style="z-index:1001;" class="btn btn-warning btn-small deletebtn"><i class="fa fa-close"></i></a>' +
         '</div>';
-var text_snippet = '<div class="slidelement editable elementselectable" id="slidelement_id" data-button-class="text" data-type="text"><div>Sample Text</div> </div>';
+var text_snippet = '<div class="slidelement editable elementselectable" id="slidelement_id" data-button-class="text" data-type="text"> Sample Text </div>';
 var image_snippet = '<div class="slidelement elementselectable" id="slidelement_id" data-button-class="image" data-type="image"><img style="width: 100%;" src=""></div>';
 var graphic_snippet = '<div class="slidelement editable elementselectable" id="slidelement_id" data-button-class="graphic" data-type="graphic"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" ></svg></div>';
 var code_snippet = '<div class="slidelement editable elementselectable" id="slidelement_id" data-button-class="code" data-type="code"><pre class="prettyprint prettyprinted idea" data-class="idea"><code><ol><li>function example(){</li><li>alert();</li><li>}</li></ol></code></pre></div>';
