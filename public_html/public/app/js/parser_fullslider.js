@@ -27,7 +27,7 @@ $(document).ready(function() {
         //Markdown
         var content = $('#markdown-text').val();
         var source = markdown.toHTML(content);
-        console.log(source); //debug
+        //console.log(source); //debug
         //Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -106,7 +106,7 @@ var process = function(source){
     }
     switch(source[0]){
         case 'slide1':
-            if(source[1] === undefined){
+            if(source[1] == undefined){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
@@ -133,7 +133,7 @@ var process = function(source){
             }
             break;
         case 'slide2':
-            if(source[1] === undefined){
+            if(source[1] == undefined){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
@@ -215,6 +215,62 @@ var process = function(source){
             max_line++;
             console.log("Maxline++ " + max_line); //debug
             break;
+        case 'ol':
+//            console.log('Lista ordenada'); //debug
+            var lines = multiElement(max_line, 'list');
+            console.log(lines); //debug
+            var text = '<ol><li>';
+            for(x = 1; x < source.length; x++){
+//                for(l = 0; l < source[x][1].length; l++){
+                if(x == source.length-1){
+                    text += source[x][1] + '</li>';
+                }
+                else{
+                    text += source[x][1] + '</li><li>';
+                }
+//                    text += source[x][1][l] + '</li><li>';
+//                    if(source[x][1][l] == '\n'){
+//                        text += '</li><li>'
+//                    }
+//                }
+            }
+            text += '</ol>'
+            var top = 11.4202 + numText * 2;
+            var id = Impressionist.prototype.addFullsliderListMD(text, top, 3.66032);
+            id = id.substr(12, 4);
+            elements_list[id] = lines;
+            max_line += lines.length - 1;
+            max_line--;
+            numText += lines.length - 1;
+            break;
+        case 'ul':
+//            console.log('Lista desordenada'); //debug
+            var lines = multiElement(max_line, 'list');
+            console.log(lines); //debug
+            var text = '<ul><li>';
+            for(x = 1; x < source.length; x++){
+//                for(l = 0; l < source[x][1].length; l++){
+                if(x == source.length-1){
+                    text += source[x][1] + '</li>';
+                }
+                else{
+                    text += source[x][1] + '</li><li>';
+                }
+//                    text += source[x][1][l] + '</li><li>';
+//                    if(source[x][1][l] == '\n'){
+//                        text += '</li><li>'
+//                    }
+//                }
+            }
+            text += '</li></ul>'
+            var top = 11.4202 + numText * 2;
+            var id = Impressionist.prototype.addFullsliderListMD(text, top, 3.66032);
+            id = id.substr(12, 4);
+            elements_list[id] = lines;
+            max_line += lines.length - 1;
+            max_line--;
+            numText += lines.length - 1;
+            break;
         case 'p':
             switch(code_img){
                 case 'code':
@@ -223,7 +279,7 @@ var process = function(source){
                     var text = '<li>';
                     for(x = 0; x < source[1].length; x++){
                         text += source[1][x];
-                        if(source[1][x] === '\n'){
+                        if(source[1][x] == '\n'){
                             text += '</li><li>'
                         }
                     }
@@ -727,6 +783,15 @@ function multiElement(line, type){
                 lines.push(l);
             }
             break;
+        case 'list':
+            for(var l = line; l < text.length; l++){
+                if(text[l] == "---" || text[l] == "----" || text[l] == "-----" || text[l] == "------" || text[l] == "-------"){
+                    lines.push(l);
+                    return lines;
+                }
+                lines.push(l);
+            }
+            break;
     }
     return lines;
 }
@@ -764,11 +829,10 @@ function deleteSpaces(){
 //  console.log('Hola');
 //}`
 //
-//c
-//cc
-//ccc
-//cccc
-//ccccc
+//* a
+//* b
+//* c
+//----
 //
 //Hola
 //
