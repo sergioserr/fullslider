@@ -489,8 +489,8 @@
         jsonml[0] = "slide" + jsonml[ 1 ].level;
         delete jsonml[ 1 ].level;
         break;
-    case "indexer":
-        jsonml[ 0 ] = "index";
+    case "optioner":
+        jsonml[ 0 ] = "options";
         break;
     case "title":
         jsonml[0] = "tl" + jsonml[ 1 ].level;
@@ -708,20 +708,20 @@
           
       },
         
-      indexer: function indexer( block, next){
-          var m = block.match( /^({index)([fp])(}$)/ );
+      optioner: function optioner( block, next){
+          var m = block.match( /^({options:)\s*(.*?)\s*#*\s*(}$)/ );
           
           if ( !m )
             return undefined;
         
            
-          var indexe = [ "indexer" ];
-          Array.prototype.push.apply(indexe, this.processInline(m[ 2 ]));
+          var optione = [ "optioner" ];
+          Array.prototype.push.apply(optione, this.processInline(m[ 2 ]));
           
           if ( m[0].length < block.length )
             next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
           
-          return [ indexe ]
+          return [ optione ]
           
       },
         
