@@ -100,14 +100,19 @@ function getOptions(type){
 function getOptionText(option, options){
     switch(option){
         case 'top':
-            options.top = default_text.top + slideNumElements[obtainSlide()].numText * 2;
+            if(slideNumElements[obtainSlide()].numText > 10){
+                options.top = default_text.top + (slideNumElements[obtainSlide()].numText - 11) * 2;
+            }
+            else{
+                options.top = default_text.top + slideNumElements[obtainSlide()].numText * 2;
+            }
             break;
         case 'left':
-            if(slideNumElements[obtainSlide()].numText <= 3){
+            if(slideNumElements[obtainSlide()].numText <= 10){
                 options.left = default_text.left;
             }
             else{
-                options.left = default_text.left + 6;
+                options.left = default_text.left + 18;
             }
             break;
     }
