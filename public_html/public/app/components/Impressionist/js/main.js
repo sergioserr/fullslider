@@ -514,12 +514,16 @@ Impressionist.prototype =
                     }
                     drawElement(this);
                     me.updateScaledSlide(me.selectedSlide);
-                }).on('dragstop', function() {
+                }).on('dragstop', function(e) {
+                    e.stopImmediatePropagation();
                     var maxwidth = calculateMaxWidth(this, $(".fullslider-slide-container"));
                     var maxheight = calculateMaxHeight(this, $(".fullslider-slide-container"));
                     $(this).css("max-width", maxwidth + "vw");
                     $(this).css("max-height", maxheight + "vw");
                     drawElement(this);
+                    if(e.isImmediatePropagationStopped){
+                        modifyElement(this);
+                    }
 //                        me.selectElement(this);
                     $(this).removeClass("grabbing");
                     changeContent();//Event for undo redo
@@ -909,12 +913,19 @@ Impressionist.prototype =
                 me.updateScaledSlide(me.selectedSlide);
             },
             addFullsliderText: function(type) {
-                var element = me.addFullsliderSlideItem(text_snippet);
+                var mText = text_snippet.replace("Sample Text", "<div> Sample Text </div>");
+                var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyle(element, type, "normal");
                 me.finishAddFile($(element));
                 addTextList(element.id, type);
             },
             addTextStyle: function(element, type, mode) {
+                if(type == 'normal'){
+                    var options = getOptions('text');
+                }
+                else{
+                    var options = getOptions(type);
+                }
                 var size = "";
                 var font = "";
                 var color = "";
@@ -958,8 +969,8 @@ Impressionist.prototype =
 
 
                 $(element).css("position", "absolute");
-                $(element).css("left", "24.6vw");//24.6
-                $(element).css("top", "5.66vw");//5.66
+                $(element).css("left", options.left + "vw");//24.6
+                $(element).css("top", options.top + "vw");//5.66
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -1381,7 +1392,7 @@ Impressionist.prototype =
 
                 $('#urlimgform').submit(function() {
                     $.post($(this).attr('action'), $(this).serialize(), function(json) {
-                        console.log(json);
+//                        console.log(json);
 //                       me.addImageToSlide(json);
                         //Clear input and preview image
                         $("#urlimageinput").val("");
@@ -2309,9 +2320,21 @@ Impressionist.prototype =
                 me.generateScaledSlide(me.selectedSlide);
             },
             addFullsliderTextMD: function(type, text, mode, top, left) {
-                var mText = text_snippet.replace("Sample Text", text);
+                text = text.split('\n');
+                var futureText = '';
+                for(p = 0; p < text.length; p++){
+                    futureText += '<div> ' + text[p] + ' </div>' + '\n';
+                }
+                var mText = text_snippet.replace("Sample Text", futureText);
                 var element = me.addFullsliderSlideItem(mText);
                 me.addTextStyleMD(element, type, mode, top, left);
+                me.finishAddFile($(element));
+                return element.id;
+            },
+            addFullsliderListMD: function(text, top, left) {
+                var mText = text_snippet.replace("Sample Text", text);
+                var element = me.addFullsliderSlideItem(mText);
+                me.addTextStyleMD(element, 'normal', 'normal', top, left, true);
                 me.finishAddFile($(element));
                 return element.id;
             },
@@ -2324,7 +2347,7 @@ Impressionist.prototype =
                 return element.id;
             },
             addFullsliderTextIndexMD: function(text, position, range, current, long) {
-                var mText = text_snippet.replace("Sample Text", text);
+                var mText = text_snippet.replace("Sample Text", '<div> ' + text + ' </div>');
                 var element = me.addFullsliderSlideItem(mText);
                 me.addIndexTextStyleMD(element, position, range, current, long);
                 me.finishAddFile($(element));
@@ -2368,7 +2391,13 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-            addTextStyleMD: function(element, type, mode, top, left) {
+            addTextStyleMD: function(element, type, mode, top, left, list=false) {
+                if(type == 'normal'){
+                    var options = getOptions('text');
+                }
+                else{
+                    var options = getOptions(type);
+                }
                 var size = "";
                 var font = "";
                 var color = "";
@@ -2396,24 +2425,43 @@ Impressionist.prototype =
                 }
 
                 $(element).css("font-size", size + "vw");
-                var text_value = $(element).text();
-                switch(mode){
-                    case "em":
-                        $(element).children().html("<i><font color='" + color + "'>" + text_value + "</font></i>");
-                        break;
-                    case "normal":
-                        $(element).children().html("<font color='" + color + "'>" + text_value + "</font>");
-                        break;
-                    case "strong":
-                        $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
-                        break;
+                var text_value = $(element).text().split('\n');
+                var h = 0;
+                if(list){
+//                    console.log($(element > ol).children());
+//                    $(element > ol).children().each(function(){
+//                        $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
+//                        h++;
+//                    });
+                }
+                else{
+                    switch(mode){
+                        case "em":
+                            $(element).children().each(function(){
+                                $(this).html("<i><font color='" + color + "'>" + text_value[h] + "</font></i>")
+                                h++;
+                            });
+                            break;
+                        case "normal":
+                            $(element).children().each(function(){
+                                $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
+                                h++;
+                            });
+                            break;
+                        case "strong":
+                            $(element).children().each(function(){
+                                $(this).html("<b><font color='" + color + "'>" + text_value[h] + "</font></b>")
+                                h++;
+                            });
+                            break;
+                    }
                 }
                 $(element).css("font-family", font);
 
 
                 $(element).css("position", "absolute");
-                $(element).css("left", left + "vw");
-                $(element).css("top", top + "vw");
+                $(element).css("left", options.left + "vw");
+                $(element).css("top", options.top + "vw");
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -2427,14 +2475,4 @@ Impressionist.prototype =
                 $(element).css("word-break", "break-word", "important");
             },
         };
-
-
-
-
-
-
-
-
-
-
 

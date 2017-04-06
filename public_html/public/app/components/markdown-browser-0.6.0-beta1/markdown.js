@@ -489,8 +489,8 @@
         jsonml[0] = "slide" + jsonml[ 1 ].level;
         delete jsonml[ 1 ].level;
         break;
-    case "indexer":
-        jsonml[ 0 ] = "index";
+    case "optioner":
+        jsonml[ 0 ] = "options";
         break;
     case "title":
         jsonml[0] = "tl" + jsonml[ 1 ].level;
@@ -708,20 +708,20 @@
           
       },
         
-      indexer: function indexer( block, next){
-          var m = block.match( /^({index)([fp])(}$)/ );
+      optioner: function optioner( block, next){
+          var m = block.match( /^({options:)\s*(.*?)\s*#*\s*(}$)/ );
           
           if ( !m )
             return undefined;
         
            
-          var indexe = [ "indexer" ];
-          Array.prototype.push.apply(indexe, this.processInline(m[ 2 ]));
+          var optione = [ "optioner" ];
+          Array.prototype.push.apply(optione, this.processInline(m[ 2 ]));
           
           if ( m[0].length < block.length )
             next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
           
-          return [ indexe ]
+          return [ optione ]
           
       },
         
@@ -759,35 +759,35 @@
           
       },
         
-      atxHeader: function atxHeader( block, next ) {
-        var m = block.match( /^(#{4,6})\s*(.*?)\s*#*\s*(?:\n|$)/ );
-
-        if ( !m )
-          return undefined;
-
-        var header = [ "header", { level: m[ 1 ].length } ];
-        Array.prototype.push.apply(header, this.processInline(m[ 2 ]));
-
-        if ( m[0].length < block.length )
-          next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
-
-        return [ header ];
-      },
-    
-      setextHeader: function setextHeader( block, next ) {
-        var m = block.match( /^(.*)\n([-=])\2\2+(?:\n|$)/ );
-
-        if ( !m )
-          return undefined;
-
-        var level = ( m[ 2 ] === "=" ) ? 1 : 2,
-            header = [ "header", { level : level }, m[ 1 ] ];
-
-        if ( m[0].length < block.length )
-          next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
-
-        return [ header ];
-      },
+//      atxHeader: function atxHeader( block, next ) {
+//        var m = block.match( /^(#{4,6})\s*(.*?)\s*#*\s*(?:\n|$)/ );
+//
+//        if ( !m )
+//          return undefined;
+//
+//        var header = [ "header", { level: m[ 1 ].length } ];
+//        Array.prototype.push.apply(header, this.processInline(m[ 2 ]));
+//
+//        if ( m[0].length < block.length )
+//          next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
+//
+//        return [ header ];
+//      },
+//    
+//      setextHeader: function setextHeader( block, next ) {
+//        var m = block.match( /^(.*)\n([-=])\2\2+(?:\n|$)/ );
+//
+//        if ( !m )
+//          return undefined;
+//
+//        var level = ( m[ 2 ] === "=" ) ? 1 : 2,
+//            header = [ "header", { level : level }, m[ 1 ] ];
+//
+//        if ( m[0].length < block.length )
+//          next.unshift( mk_block( block.substr( m[0].length ), block.trailing, block.lineNumber + 2 ) );
+//
+//        return [ header ];
+//      },
 
       code: function code( block, next ) {
         // |    Foo
@@ -873,8 +873,8 @@
       //
       lists: (function( ) {
         // Use a closure to hide a few variables.
-        var any_list = "[*+-]|\\d+\\.",
-            bullet_list = /[*+-]/,
+        var any_list = "[*+]|\\d+\\.",
+            bullet_list = /[*+]/,
             // Capture leading indent as it matters for determining nested lists.
             is_list_re = new RegExp( "^( {0,3})(" + any_list + ")[ \t]+" ),
             indent_re = "(?: {0,3}\\t| {4})";
