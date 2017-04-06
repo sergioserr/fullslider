@@ -514,12 +514,16 @@ Impressionist.prototype =
                     }
                     drawElement(this);
                     me.updateScaledSlide(me.selectedSlide);
-                }).on('dragstop', function() {
+                }).on('dragstop', function(e) {
+                    e.stopImmediatePropagation();
                     var maxwidth = calculateMaxWidth(this, $(".fullslider-slide-container"));
                     var maxheight = calculateMaxHeight(this, $(".fullslider-slide-container"));
                     $(this).css("max-width", maxwidth + "vw");
                     $(this).css("max-height", maxheight + "vw");
                     drawElement(this);
+                    if(e.isImmediatePropagationStopped){
+                        modifyElement(this);
+                    }
 //                        me.selectElement(this);
                     $(this).removeClass("grabbing");
                     changeContent();//Event for undo redo
@@ -916,6 +920,12 @@ Impressionist.prototype =
                 addTextList(element.id, type);
             },
             addTextStyle: function(element, type, mode) {
+                if(type == 'normal'){
+                    var options = getOptions('text');
+                }
+                else{
+                    var options = getOptions(type);
+                }
                 var size = "";
                 var font = "";
                 var color = "";
@@ -959,8 +969,8 @@ Impressionist.prototype =
 
 
                 $(element).css("position", "absolute");
-                $(element).css("left", "24.6vw");//24.6
-                $(element).css("top", "5.66vw");//5.66
+                $(element).css("left", options.left + "vw");//24.6
+                $(element).css("top", options.top + "vw");//5.66
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -1382,7 +1392,7 @@ Impressionist.prototype =
 
                 $('#urlimgform').submit(function() {
                     $.post($(this).attr('action'), $(this).serialize(), function(json) {
-                        console.log(json);
+//                        console.log(json);
 //                       me.addImageToSlide(json);
                         //Clear input and preview image
                         $("#urlimageinput").val("");
@@ -2382,6 +2392,12 @@ Impressionist.prototype =
                 $(element).css("word-break", "break-word", "important");
             },
             addTextStyleMD: function(element, type, mode, top, left, list=false) {
+                if(type == 'normal'){
+                    var options = getOptions('text');
+                }
+                else{
+                    var options = getOptions(type);
+                }
                 var size = "";
                 var font = "";
                 var color = "";
@@ -2444,8 +2460,8 @@ Impressionist.prototype =
 
 
                 $(element).css("position", "absolute");
-                $(element).css("left", left + "vw");
-                $(element).css("top", top + "vw");
+                $(element).css("left", options.left + "vw");
+                $(element).css("top", options.top + "vw");
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -2459,14 +2475,4 @@ Impressionist.prototype =
                 $(element).css("word-break", "break-word", "important");
             },
         };
-
-
-
-
-
-
-
-
-
-
 

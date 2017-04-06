@@ -6,12 +6,11 @@ var code_img = ''; //Variable to differentiate between code or imagen
 var id_figure = ''; //Save id for add figure a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
 var spaceLines = []; //White lines in text editor
-var max_line = 0; //max_line for add text-editor
-var manualFigure = true; //difference between graphic or text add figure
-var mainSlide = ''; //save the slide title for subslides
-var numText = 0; //quantity lines of text for organize in the slide
-var option = false; //element with options
-var element_options = {}; //elements with options
+var max_line = 0; //Max_line for add text editor
+var manualFigure = true; //Difference between graphic or text add figure
+//var mainSlide = ''; //Save the slide title for subslides
+var optionsLines = []; //Options lines in text editor
+var typeElements = {}; //Type of element for each element of the presentation
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -21,6 +20,9 @@ $(document).ready(function() {
         }
 //        modeIndex = '';
         id_slides_list = [];
+        optionsLines = [];
+        typeElements = {};
+        clearOptions();
 //        slides_list = [];
         elements_list = {};
         max_line = 0;
@@ -69,12 +71,15 @@ $(document).ready(function() {
         };
         deleteSpaces();
     });
-    $('#testing').click(function() {
-        console.log(elements_list); //debug
-        console.log("Espacios " + spaceLines); //debug
-        console.log("Max line " + max_line); //debug
-        console.log(id_slides_list); //debug
-    });
+//    $('#testing').click(function() {
+//        console.log(elements_list); //debug
+//        console.log("Espacios " + spaceLines); //debug
+//        console.log("Max line " + max_line); //debug
+//        console.log(id_slides_list); //debug
+//        console.log("Opciones " + optionsLines); //debug
+//        console.log(typeElements); //debug
+//        mostrarDatos(); //debug
+//    });
 }); 
 
 var process = function(source){
@@ -110,8 +115,8 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
-                max_line++;
-                numText = 0;
+                typeElements[id] = 'slide1';
+                addNumElementsSlide(id);
                 break;
             }
             else{
@@ -121,12 +126,13 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                addNumElementsSlide(id);
+                typeElements[id] = 'slide1';
                 id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 0.0732064, 1.02489);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
-                max_line++;
-                mainSlide = source[1];
-                numText = 0;
+//                mainSlide = source[1];
+                typeElements[id] = 'title';
                 break;
             }
             break;
@@ -135,8 +141,8 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
-                max_line++;
-                numText = 0;
+                typeElements[id] = 'slide2';
+                addNumElementsSlide(id);
                 break;
             }
             else{
@@ -146,30 +152,34 @@ var process = function(source){
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
+                addNumElementsSlide(id);
+                typeElements[id] = 'slide2';
 //                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
 //                id = id.substr(12, 4);
 //                elements_list[id] = max_line;
                 id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.13089, 3.66492);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
-                max_line++;
-                numText = 0;
+                typeElements[id] = 'subtitle';
                 break;
             }
             break;
         case 'options':
+            optionsLines.push(max_line);
 //            console.log('Options pass'); //debug
-            option = true;
+            set_temp(source[1]);
             break;
         case 'tl1':
             var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 5.66, 24.6);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
+            typeElements[id] = 'title';
             break;
         case 'tl2':
             var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.66, 24.6);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
+            typeElements[id] = 'subtitle';
             break;
         case 'figure1':
             $('#drawRect').click();
@@ -180,6 +190,7 @@ var process = function(source){
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             max_line++;
+            typeElements[id] = 'figure';
             break;
         case 'figure2':
             $('#drawLine').click();
@@ -190,6 +201,7 @@ var process = function(source){
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             max_line++;
+            typeElements[id] = 'figure';
             break;
         case 'figure3':
             $('#drawEllipse').click();
@@ -200,6 +212,7 @@ var process = function(source){
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             max_line++;
+            typeElements[id] = 'figure';
             break;
         case 'figure4':
             $('#drawArrow').click();
@@ -210,6 +223,7 @@ var process = function(source){
             var id = id_figure.substr(12, 4);
             elements_list[id] = max_line;
             max_line++;
+            typeElements[id] = 'figure';
             break;
         case 'ol':
             var lines = multiElement(max_line, 'list');
@@ -224,13 +238,13 @@ var process = function(source){
                 }
             }
             text += '</ol>'
-            var top = 11.4202 + numText * 2;
-            var id = Impressionist.prototype.addFullsliderListMD(text, top, 3.66032);
+            var id = Impressionist.prototype.addFullsliderListMD(text);
             id = id.substr(12, 4);
             elements_list[id] = lines;
             max_line += lines.length - 1;
             max_line--;
-            numText += lines.length - 1;
+            moreText(lines.length - 1);
+            typeElements[id] = 'text';
             break;
         case 'ul':
             var lines = multiElement(max_line, 'list');
@@ -245,13 +259,13 @@ var process = function(source){
                 }
             }
             text += '</li></ul>'
-            var top = 11.4202 + numText * 2;
-            var id = Impressionist.prototype.addFullsliderListMD(text, top, 3.66032);
+            var id = Impressionist.prototype.addFullsliderListMD(text);
             id = id.substr(12, 4);
             elements_list[id] = lines;
             max_line += lines.length - 1;
             max_line--;
-            numText += lines.length - 1;
+            moreText(lines.length - 1);
+            typeElements[id] = 'text';
             break;
         case 'p':
             switch(code_img){
@@ -272,23 +286,28 @@ var process = function(source){
                     max_line += lines.length;
                     max_line--;
                     code_img = '';
+                    typeElements[id] = 'code';
                     break;
                 case 'img':
                     createImageFromDataUrl(source[1].src);
                     code_img = '';
+                    typeElements[id] = 'imagen';
                     break;
                 default:
                     var lines = multiElement(max_line, 'text');
 //                    console.log(lines) //debug
-                    var top = 11.4202 + numText * 2;
-                    var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode, top, 3.66032);
+                    var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
                     id = id.substr(12, 4);
                     elements_list[id] = lines;
                     max_line += lines.length;
                     max_line--;
-                    numText += lines.length;
+                    moreText(lines.length);
+                    typeElements[id] = 'text';
                     break;
             }
+        if(source[0] != 'options'){
+            cleanDefault();
+        }
     }
 }
 
@@ -299,6 +318,8 @@ var addSlideList = function(idSlide){
     elements_list[idSlide] = max_line;
     spaceLines.push(max_line+1);
     max_line += 2;
+    addNumElementsSlide(idSlide);
+    typeElements[idSlide] = 'slide1';
 }
 var deleteSlideList = function(idSlide){
     for(var i = 0; i < id_slides_list.length; i++){
@@ -308,6 +329,8 @@ var deleteSlideList = function(idSlide){
     }
     var line = elements_list[idSlide];
     delete elements_list[idSlide];
+    removeNumElementsSlide(idSlide);
+    delete typeElements[idSlide];
     for(lock in elements_list){
         if(elements_list[lock] == line){
 //            console.log("-----") //debug
@@ -333,7 +356,16 @@ var deleteSlideList = function(idSlide){
     var locks = Object.keys(elements_list);
     var lock = '';
     var posibleTitle = false;
+    var findOption = false;
     while(l <= locks.length-1){
+        if(findOption){
+            line -= 2;
+            findOption = false;
+        }
+        if(optionsLines.includes(line)){
+            line += 2;
+            findOption = true;
+        }
 //        console.log("Tamaño"); //debug
 //        console.log(locks.length); //debug
         var lock = locks[l];
@@ -403,7 +435,21 @@ var deleteElementList = function(idElement){
     var lineElement = elements_list[idElement];
 //    console.log(lineElement.length) //debug
     if(lineElement.length != undefined){
+        lessElement(typeElements[idElement], lineElement.length);
+        delete typeElements[idElement];
         var line = lineElement[0];
+        if(optionsLines.includes(line-2)){
+            line -= 2;
+            for(op = 0; op < optionsLines.length; op++){
+                if(optionsLines[op] == line){
+                    optionsLines.splice(op,1);
+                }
+            }
+            restructureList(line, false, '');
+            max_line--;
+            restructureList(line, false, '');
+            max_line--;
+        }
         for(var i = 0; i < lineElement.length; i++){
             restructureList(line, false, '');
         }
@@ -419,6 +465,20 @@ var deleteElementList = function(idElement){
         }
     }
     else{
+        lessElement(typeElements[idElement], 1);
+        delete typeElements[idElement];
+        if(optionsLines.includes(lineElement-2)){
+            lineElement -= 2;
+            for(op = 0; op < optionsLines.length; op++){
+                if(optionsLines[op] == lineElement){
+                    optionsLines.splice(op,1);
+                }
+            }
+            restructureList(lineElement, false, '');
+            max_line--;
+            restructureList(lineElement, false, '');
+            max_line--;
+        }
         restructureList(lineElement, false, '');
         max_line--;
         if(spaceLines.includes(lineElement)){
@@ -443,6 +503,13 @@ var addTextList = function(idText, type){
     elements_list[idText] = lineSlide + 2;
     spaceLines.push(lineSlide + 3);
     max_line += 2;
+    moreText(1);
+    if(type == 'normal'){
+        typeElements[idText] = 'text';
+    }
+    else{
+        typeElements[idText] = type;
+    }
 }
 var addCodeList = function(idCode){
     var lineSlide = currentSlide();
@@ -451,6 +518,7 @@ var addCodeList = function(idCode){
     elements_list[idCode] = lineSlide + 2;
     spaceLines.push(lineSlide + 3);
     max_line += 2;
+    typeElements[idCode] = 'code';
 }
 
 //Figures
@@ -476,6 +544,49 @@ var addFigureList = function(idFigure, type){
         elements_list[idFigure] = lineSlide + 2;
         spaceLines.push(lineSlide + 3);
         max_line += 2;
+        typeElements[idFigure] = 'figure';
+    }
+}
+
+//Options
+var addOptionsList = function(idElement, options){
+    var lines = elements_list[idElement];
+    if(typeElements[idElement] == 'text'){
+        if(lines.length != undefined){
+            var line = lines[0];
+            if(optionsLines.includes(line-2)){
+                line -= 2;
+                for(op = 0; op < optionsLines.length; op++){
+                    if(optionsLines[op] == line){
+                        optionsLines.splice(op,1);
+                    }
+                }
+                restructureList(line, false, '');
+                max_line--;
+                restructureList(line, false, '');
+                max_line--;
+            }
+            restructureList(line, true, 'option', options);
+            optionsLines.push(line);
+            max_line += 2;
+        }
+        else{
+            if(optionsLines.includes(lines-2)){
+                lines -= 2;
+                for(op = 0; op < optionsLines.length; op++){
+                    if(optionsLines[op] == lines){
+                        optionsLines.splice(op,1);
+                    }
+                }
+                restructureList(lines, false, '');
+                max_line--;
+                restructureList(lines, false, '');
+                max_line--;
+            }
+            restructureList(lines, true, 'option', options);
+            optionsLines.push(lines);
+            max_line += 2;
+        }
     }
 }
 
@@ -584,6 +695,9 @@ function processingText(){
                     textLine++;
                 }
             }
+            else if(preText[preTextLine] == '' && preText[preTextLine-1] == '---'){
+                //Don't add space lines after options or list
+            }
             else{ //Added normal 
                 if (preText[preTextLine] == ''){ //Last white line of white lines consecutives
                     spaceLines.push(textLine);
@@ -601,7 +715,7 @@ function processingText(){
     }
     $('#markdown-text').val(text);
 }
-function restructureList(modified, add, type){
+function restructureList(modified, add, type, textOptions){
     var preText = $('#markdown-text').val().split('\n');
     var preElement = preText[modified];
 //    console.log(preElement); //debug
@@ -643,6 +757,9 @@ function restructureList(modified, add, type){
                             break;
                         case 'arrow':
                             text += '>>>>\n\n'
+                            break;
+                        case 'option':
+                            text += "{options: " + textOptions + "}\n---\n";
                             break;
                     }                    
                 }
@@ -709,6 +826,18 @@ function restructureList(modified, add, type){
             else{
                 if(spaceLines[s] != 0){
                     spaceLines[s] -= 1;
+                }
+            }
+        }
+    }
+    for(o = 0; o < optionsLines.length; o++){
+        if(optionsLines[o] >= modified){
+            if(add){
+                optionsLines[o] += 2;
+            }
+            else{
+                if(optionsLines[o] != 0){
+                    optionsLines[o] -= 1;
                 }
             }
         }
