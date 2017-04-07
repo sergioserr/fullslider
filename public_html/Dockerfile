@@ -14,7 +14,7 @@ RUN 	apt-get install -y libjpeg62
 RUN 	apt-get install -y libfontconfig1
 
 RUN	apt-get install -y wget
-RUN 	wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu52_52.1-3ubuntu0.4_amd64.deb
+RUN 	wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu52_52.1-3ubuntu0.5_amd64.deb
 RUN     dpkg -i libicu52_52.1-3ubuntu0.4_amd64.deb
 
 # Install app dependencies
