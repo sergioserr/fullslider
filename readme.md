@@ -23,12 +23,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	sudo docker pull sergioserr/fullslider:v0.4
+	sudo docker pull sergioserr/fullslider:v0.5
 	```
 3. Run image
 
 	```
-	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.4
+	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.5
 	```
 4. Open your browser and write url: 
 
@@ -42,12 +42,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	docker pull sergioserr/fullslider:v0.4
+	docker pull sergioserr/fullslider:v0.5
 	```
 3. Run image
 
 	```
-	docker run -p 8888:8888 sergioserr/fullslider:v0.4
+	docker run -p 8888:8888 sergioserr/fullslider:v0.5
 	```
 4. Get docker machine ip
 	
@@ -145,7 +145,7 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ## Release Notes
 
-###### v0.4 - With Fullslider, you can do: ######
+###### v0.5 - With Fullslider, you can do: ######
  - Create new presentations.
  - Download presentation as .fspf file (FullSlider Presentation File).
  - Open downloaded presentations from Fullslider, with .fspf extension.
@@ -170,7 +170,7 @@ When user click on Download button, a file with .fspf extension is automatically
  - Save presentation on session storage
  - Open recent presentations.
  - View presentation
- - And you can create presentation using a text-editor!
+ - And you can create presentation using a text-editor and continue to use manual editing too!
 
 ## Quick Guide ##
 
@@ -193,26 +193,31 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ![edit](https://cloud.githubusercontent.com/assets/6854006/15626730/12b11214-24cd-11e6-883a-120d33d3cf13.PNG)
 
-## Text-editor guide ##
+## Text-editor guide [Version 0.2] ## 
 
 * Slide without title --> #
 * Slide with title --> #Title
 * Subslide without title --> ##
 * Subslide with title --> ##Title
-* Create automatic index --> You starts the text with \[indexp\] (one slide for the index) or \[indexf\] (several slides for the index)
 * Title --> -Title-
 * Subtitle --> --Subtitle--
-* Paragraph --> Text
+* Paragraph --> Text; also in several lines
 * Bold paragraph --> \*\*Text\*\* or \_\_Text\_\_
 * Italic paragraph --> \*Text\* or \_Text\_
-* Code --> \`Code\`
+* Code --> \`Code\`; also in several lines
 * Square --> >
 * Line --> >>
 * Ellipse --> >>>
 * Arrow --> >>>>
 * Image --> !\[Alternate text\](url)
+* Order list -> 1. Order 2. List, ending with ---; also in several lines
+* Unorder list -> * Unorder * List, ending with ---; also in several lines
+* Options -> for text elements -> {options: XX:'YY',XX:'YY'}, ending with ---; where XX and YY are:
+	* [XX] top -> [YY] Distance from the element to the top of the slide
+	* [XX] left -> [YY] Distance from the element to the left of the slide
 
-![fullslider markdown](https://cloud.githubusercontent.com/assets/15110402/22182662/38d83e78-e0ab-11e6-8bd9-04c7ab4d6a51.png)
+![fullslider with in markdown](https://cloud.githubusercontent.com/assets/15110402/24818402/ab5ccc5a-1be0-11e7-8e59-a3332ed63c97.png)
+![fullslider with new in markdown](https://cloud.githubusercontent.com/assets/15110402/24817815/3aebfede-1bde-11e7-82b2-4648a8937ea9.png)
 
 ## Credits ##
 
