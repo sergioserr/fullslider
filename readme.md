@@ -210,8 +210,8 @@ When user click on Download button, a file with .fspf extension is automatically
 * Ellipse --> >>>
 * Arrow --> >>>>
 * Image --> !\[Alternate text\](url)
-* Order list -> 1. Order 2. List, ending with ---; also in several lines
-* Unorder list -> * Unorder * List, ending with ---; also in several lines
+* Ordered list -> 1. Ordered 2. List, ending with ---; also in several lines
+* Unordered list -> * Unordered * List, ending with ---; also in several lines
 * Options -> for text elements -> {options: XX:'YY',XX:'YY'}, ending with ---; where XX and YY are:
 	* [XX] top -> [YY] Distance from the element to the top of the slide
 	* [XX] left -> [YY] Distance from the element to the left of the slide
