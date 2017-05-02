@@ -128,7 +128,7 @@ var process = function(source){
                 elements_list[id] = max_line;
                 addNumElementsSlide(id);
                 typeElements[id] = 'slide1';
-                id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 0.0732064, 1.02489);
+                id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
 //                mainSlide = source[1];
@@ -157,7 +157,7 @@ var process = function(source){
 //                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
 //                id = id.substr(12, 4);
 //                elements_list[id] = max_line;
-                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.13089, 3.66492);
+                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
                 typeElements[id] = 'subtitle';
@@ -170,13 +170,13 @@ var process = function(source){
             set_temp(source[1]);
             break;
         case 'tl1':
-            var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode, 5.66, 24.6);
+            var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'title';
             break;
         case 'tl2':
-            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode, 5.66, 24.6);
+            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'subtitle';
@@ -527,10 +527,22 @@ function eventsSimulate(){
     var eventMove = document.createEvent("MouseEvents");
     var eventUp= document.createEvent("MouseEvents");
     eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 295, 210, false, false, false, false, 0, null);
+//    var options = getOptions('figure');
+//    var top = vwToPx(options.top) + 112.13542175292969;
+//    var left = vwToPx(options.left) + 206.37153625488281;
+//    var height = vwToPx(options.height);
+//    var width = vwToPx(options.width);
+//    console.log(top); //debug
+//    console.log(left); //debug
+//    console.log(height); //debug
+//    console.log(width); //debug
+//    eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, left, top, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventDown);
     eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+//    eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, left+width, top+height, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventMove);
     eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+//    eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, left+width, top+height, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventUp);
 }
 var takeIdFigure = function(id){
@@ -551,7 +563,8 @@ var addFigureList = function(idFigure, type){
 //Options
 var addOptionsList = function(idElement, options){
     var lines = elements_list[idElement];
-    if(typeElements[idElement] == 'text'){
+    if(typeElements[idElement] == 'text' || typeElements[idElement] == 'slide1' || typeElements[idElement] == 'slide2'
+      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle'){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
