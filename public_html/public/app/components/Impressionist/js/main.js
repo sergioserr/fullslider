@@ -1932,13 +1932,13 @@ Impressionist.prototype =
                                 break;
                         }
 
-                        me.addGraphicStyle(element, graphic);
-//                        if (manualFigure) {
-//                            me.addGraphicStyle(element, graphic);
-//                        }
-//                        else{
-//                            me.addGraphicStyleMD(element, graphic);
-//                        }
+//                        me.addGraphicStyle(element, graphic);
+                        if (manualFigure) {
+                            me.addGraphicStyle(element, graphic);
+                        }
+                        else{
+                            me.addGraphicStyleMD(element, graphic);
+                        }
 
                         me.finishAddFile($(element));
                         
@@ -2480,87 +2480,86 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-//            addGraphicStyleMD: function(element, graphic) {
-//                var svg_element = $(element).find("svg");
-//                var added_graphic = $(svg_element).children()[0];
-//                
-//                var options = getOptions('figure');
-//
-//                var stroke_width = pxToVw(parseFloat($(graphic).attr("stroke-width")));
-//                var is_arrow = false;
-//
-//                if ($(added_graphic).is("defs")) { //If is arrow
-//                    is_arrow = true;
-//                    var last = $($(svg_element).children()).size() - 1;
-//                    var added_graphic = $(svg_element).children()[last];
-//                    stroke_width *= 3;
-//                }
-//
-//                //After append, because before has relative modal values
-//                var width = parseFloat(pxToVw(graphic.getBBox().width));
-//                var height = parseFloat(pxToVw(graphic.getBBox().height));
-//
-//                var left = graphic.getBBox().x;
-//                var top = graphic.getBBox().y;
-//
-//                var left_translate = (left * -1);
-//                var top_translate = (top * -1);
-//
-//                switch (true) {
-//                    case (height != 0 && width != 0):
-//                        if (width > height) {
-//                            var w_rel = (stroke_width + 0 * height / width);
-//                        }
-//                        else {
-//                            var w_rel = (stroke_width + 0 * width / height);
-//                        }
-//                        width += w_rel;
-//                        left_translate += vwToPx(w_rel / 2);
-//                        height += w_rel;
-//                        top_translate += vwToPx(w_rel / 2);
-//                        break;
-//                    case(height != 0 && width == 0):
-//                        width += stroke_width + 1;
-//                        left_translate += vwToPx((stroke_width + 1) / 2);
-//                        if (is_arrow) {
-//                            height += stroke_width + 1;
-//                            top_translate += vwToPx(stroke_width / 1.75);
-//                        }
-//                        break
-//                    case(height == 0 && width != 0):
-//                        height += stroke_width + 1;
-//                        top_translate += vwToPx((stroke_width + 1) / 2);
-//                        if (is_arrow) {
-//                            width += stroke_width + 1;
-//                            left_translate += vwToPx(stroke_width / 1.75);
-//                        }
-//                        break
-//                }
-//
-//                $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
-//
+            addGraphicStyleMD: function(element, graphic) {
+                var svg_element = $(element).find("svg");
+                var added_graphic = $(svg_element).children()[0];
+                
+                var options = getOptions('figure');
+
+                var stroke_width = pxToVw(parseFloat($(graphic).attr("stroke-width")));
+                var is_arrow = false;
+
+                if ($(added_graphic).is("defs")) { //If is arrow
+                    is_arrow = true;
+                    var last = $($(svg_element).children()).size() - 1;
+                    var added_graphic = $(svg_element).children()[last];
+                    stroke_width *= 3;
+                }
+
+                //After append, because before has relative modal values
+                var width = parseFloat(pxToVw(graphic.getBBox().width));
+                var height = parseFloat(pxToVw(graphic.getBBox().height));
+
+                var left = graphic.getBBox().x;
+                var top = graphic.getBBox().y;
+
+                var left_translate = (left * -1);
+                var top_translate = (top * -1);
+
+                switch (true) {
+                    case (height != 0 && width != 0):
+                        if (width > height) {
+                            var w_rel = (stroke_width + 0 * height / width);
+                        }
+                        else {
+                            var w_rel = (stroke_width + 0 * width / height);
+                        }
+                        width += w_rel;
+                        left_translate += vwToPx(w_rel / 2);
+                        height += w_rel;
+                        top_translate += vwToPx(w_rel / 2);
+                        break;
+                    case(height != 0 && width == 0):
+                        width += stroke_width + 1;
+                        left_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            height += stroke_width + 1;
+                            top_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                    case(height == 0 && width != 0):
+                        height += stroke_width + 1;
+                        top_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            width += stroke_width + 1;
+                            left_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                }
+
+                $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
+
 //                width = options.width;
 //                height = options.height;
-//                left = options.left;
-//                top = options.top;
-//                
-//                $(svg_element).css("width", width + "vw");
-//                $(svg_element).css("height", height + "vw");
-//                $(svg_element).css("position", "absolute");
-//                $(element).css("width", width + "vw");
-//                $(element).css("height", height + "vw");
-//                $(element).css("position", "absolute");
-//                $(element).css("left", left + "vw");
-//                $(element).css("top", top + "vw");
-//
-//
-//                //Javascript insteadof Jquery because attr("viewBox") set attribute "viewbox". Case Sensitive
-//                $(svg_element)[0].setAttribute('preserveAspectRatio', "xMinYMin meet");
-//                $(svg_element)[0].setAttribute('viewBox', "0 0 " + vwToPx(width) + " " + vwToPx(height));
-//                var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
-//                var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
-//                $(element).css("max-width", maxwidth + "vw");
-//                $(element).css("max-height", maxheight + "vw");
-//            },
-        };
+                left = options.left;
+                top = options.top;
+                
+                $(svg_element).css("width", width + "vw");
+                $(svg_element).css("height", height + "vw");
+                $(svg_element).css("position", "absolute");
+                $(element).css("width", width + "vw");
+                $(element).css("height", height + "vw");
+                $(element).css("position", "absolute");
+                $(element).css("left", left + "vw");
+                $(element).css("top", top + "vw");
 
+
+                //Javascript insteadof Jquery because attr("viewBox") set attribute "viewbox". Case Sensitive
+                $(svg_element)[0].setAttribute('preserveAspectRatio', "xMinYMin meet");
+                $(svg_element)[0].setAttribute('viewBox', "0 0 " + vwToPx(width) + " " + vwToPx(height));
+                var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
+                var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
+                $(element).css("max-width", maxwidth + "vw");
+                $(element).css("max-height", maxheight + "vw");
+            },
+        };

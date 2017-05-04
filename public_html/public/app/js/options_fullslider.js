@@ -11,12 +11,12 @@ default_subtitle = {
     top: 5.13089,
     left: 3.66492,
 }
-//default_figure = {
-//    top: 6.44788,
-//    left: 5.83935,
+default_figure = {
+    top: 6.44788,
+    left: 5.83935,
 //    height: 6.918,
 //    width: 6.918,
-//}
+}
 default_temp = {
     top: undefined,
     left: undefined,
@@ -128,7 +128,7 @@ function getOptions(type){
             }
             break;
         case 'title':
-            for(option in default_text){
+            for(option in default_title){
                 if(default_temp[option] != undefined){
                     options[option] = default_temp[option];
                 }
@@ -138,7 +138,7 @@ function getOptions(type){
             }
             break;
         case 'subtitle':
-            for(option in default_text){
+            for(option in default_subtitle){
                 if(default_temp[option] != undefined){
                     options[option] = default_temp[option];
                 }
@@ -147,16 +147,16 @@ function getOptions(type){
                 }
             }
             break;
-//        case 'figure':
-//            for(option in default_figure){
-//                if(default_temp[option] != undefined){
-//                    options[option] = default_temp[option];
-//                }
-//                else{
-//                    options = getOptionFigure(option, options);
-//                }
-//            }
-//            break;
+        case 'figure':
+            for(option in default_figure){
+                if(default_temp[option] != undefined){
+                    options[option] = default_temp[option];
+                }
+                else{
+                    options = getOptionFigure(option, options);
+                }
+            }
+            break;
     }
     return options;
 }
@@ -203,23 +203,23 @@ function getOptionSubtitle(option, options){
     }
     return options;
 }
-//function getOptionFigure(option, options){
-//    switch(option){
-//        case 'top':
-//            options.top = default_figure.top;
-//            break;
-//        case 'left':
-//            options.left = default_figure.left;
-//            break;
+function getOptionFigure(option, options){
+    switch(option){
+        case 'top':
+            options.top = default_figure.top;
+            break;
+        case 'left':
+            options.left = default_figure.left;
+            break;
 //        case 'height':
 //            options.height = default_figure.height;
 //            break;
 //        case 'width':
 //            options.width = default_figure.width;
 //            break;
-//    }
-//    return options;
-//}
+    }
+    return options;
+}
 
 //Set temporal options
 function set_temp(options){

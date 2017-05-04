@@ -527,22 +527,10 @@ function eventsSimulate(){
     var eventMove = document.createEvent("MouseEvents");
     var eventUp= document.createEvent("MouseEvents");
     eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 295, 210, false, false, false, false, 0, null);
-//    var options = getOptions('figure');
-//    var top = vwToPx(options.top) + 112.13542175292969;
-//    var left = vwToPx(options.left) + 206.37153625488281;
-//    var height = vwToPx(options.height);
-//    var width = vwToPx(options.width);
-//    console.log(top); //debug
-//    console.log(left); //debug
-//    console.log(height); //debug
-//    console.log(width); //debug
-//    eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, left, top, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventDown);
     eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
-//    eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, left+width, top+height, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventMove);
     eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
-//    eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, left+width, top+height, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventUp);
 }
 var takeIdFigure = function(id){
@@ -564,7 +552,7 @@ var addFigureList = function(idFigure, type){
 var addOptionsList = function(idElement, options){
     var lines = elements_list[idElement];
     if(typeElements[idElement] == 'text' || typeElements[idElement] == 'slide1' || typeElements[idElement] == 'slide2'
-      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle'){
+      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure'){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
