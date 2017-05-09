@@ -11,6 +11,10 @@ default_subtitle = {
     top: 5.13089,
     left: 3.66492,
 }
+default_code = {
+    top: 5.66,
+    left: 24.6,
+}
 default_figure = {
     top: 6.44788,
     left: 5.83935,
@@ -26,6 +30,10 @@ default_temp = {
 function NumElements(){
     this.numText = 0;
     this.numElem = 0;
+    this.numTitle = 0;
+    this.numSub = 0;
+    this.numFigure = 0;
+    this.numCode = 0;
 }
 //Numbers of elements for slide
 slideNumElements = {};
@@ -41,6 +49,28 @@ function moreText(quantity){
     slideNumElements[obtainSlide()].numText += quantity;
     slideNumElements[obtainSlide()].numElem += quantity;
 }
+function moreTitle(quantity){
+    slideNumElements[obtainSlide()].numTitle += quantity;
+    if(slideNumElements[obtainSlide()].numTitle > 1){
+         slideNumElements[obtainSlide()].numText += quantity;   
+    }
+    slideNumElements[obtainSlide()].numElem += quantity;
+}
+function moreSub(quantity){
+    slideNumElements[obtainSlide()].numSub += quantity;
+    if(slideNumElements[obtainSlide()].numSub > 1){
+        slideNumElements[obtainSlide()].numText += quantity;         
+    }
+    slideNumElements[obtainSlide()].numElem += quantity;
+}
+function moreCode(quantity){
+    slideNumElements[obtainSlide()].numCode += quantity;
+    slideNumElements[obtainSlide()].numElem += quantity;
+}
+function moreFigure(quantity){
+    slideNumElements[obtainSlide()].numFigure += quantity;
+    slideNumElements[obtainSlide()].numElem += quantity;
+}
 function lessElement(type, quantity){
     switch(type){
         case 'text':
@@ -49,11 +79,36 @@ function lessElement(type, quantity){
                 slideNumElements[obtainSlide()].numElem -= quantity;
             }
             break;
-//        case 'figure':
-//            if(slideNumElements[obtainSlide()] != undefined){
-//                slideNumElements[obtainSlide()].numElem -= quantity;
-//            }
-//            break;
+        case 'title':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numTitle -= quantity;
+                if(slideNumElements[obtainSlide()].numSub > 1){
+                    slideNumElements[obtainSlide()].numText -= quantity;         
+                }
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
+        case 'subtitle':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numSub -= quantity;
+                if(slideNumElements[obtainSlide()].numSub > 1){
+                    slideNumElements[obtainSlide()].numText -= quantity;         
+                }
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
+        case 'code':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numCode -= quantity;
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
+        case 'figure':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numFigure -= quantity;
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
     }
 }
 
@@ -147,6 +202,16 @@ function getOptions(type){
                 }
             }
             break;
+        case 'code':
+            for(option in default_code){
+                if(default_temp[option] != undefined){
+                    options[option] = default_temp[option];
+                }
+                else{
+                    options = getOptionCode(option, options);
+                }
+            }
+            break;
         case 'figure':
             for(option in default_figure){
                 if(default_temp[option] != undefined){
@@ -184,7 +249,17 @@ function getOptionText(option, options){
 function getOptionTitle(option, options){
     switch(option){
         case 'top':
-            options.top = default_title.top;
+            if(slideNumElements[obtainSlide()].numTitle > 0){
+                if(slideNumElements[obtainSlide()].numText > 10){
+                    options.top = default_text.top + (slideNumElements[obtainSlide()].numText - 11) * 2;
+                }
+                else{
+                    options.top = default_text.top + slideNumElements[obtainSlide()].numText * 2;
+                }
+            }
+            else{
+                options.top = default_title.top;
+            }
             break;
         case 'left':
             options.left = default_title.left;
@@ -195,10 +270,30 @@ function getOptionTitle(option, options){
 function getOptionSubtitle(option, options){
     switch(option){
         case 'top':
-            options.top = default_subtitle.top;
+            if(slideNumElements[obtainSlide()].numSub > 0){
+                if(slideNumElements[obtainSlide()].numText > 10){
+                    options.top = default_text.top + (slideNumElements[obtainSlide()].numText - 11) * 2;
+                }
+                else{
+                    options.top = default_text.top + slideNumElements[obtainSlide()].numText * 2;
+                }
+            }
+            else{
+                options.top = default_subtitle.top;
+            }
             break;
         case 'left':
             options.left = default_subtitle.left;
+            break;
+    }
+    return options;
+}
+function getOptionCode(option, options){
+    switch(option){
+        case 'top':
+            options.top = default_code.top + (slideNumElements[obtainSlide()].numCode) * 2;
+        case 'left':
+            options.left = default_code.left;
             break;
     }
     return options;
@@ -323,7 +418,7 @@ function clearOptions(){
     slideNumElements = {};
 }
 
-////debug
-//function mostrarDatos(){
-//    console.log(slideNumElements);
-//}
+//debug
+function mostrarDatos(){
+    console.log(slideNumElements);
+}

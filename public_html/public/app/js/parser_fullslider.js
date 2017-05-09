@@ -71,15 +71,15 @@ $(document).ready(function() {
         };
         deleteSpaces();
     });
-//    $('#testing').click(function() {
-//        console.log(elements_list); //debug
-//        console.log("Espacios " + spaceLines); //debug
-//        console.log("Max line " + max_line); //debug
-//        console.log(id_slides_list); //debug
-//        console.log("Opciones " + optionsLines); //debug
-//        console.log(typeElements); //debug
-//        mostrarDatos(); //debug
-//    });
+    $('#testing').click(function() {
+        console.log(elements_list); //debug
+        console.log("Espacios " + spaceLines); //debug
+        console.log("Max line " + max_line); //debug
+        console.log(id_slides_list); //debug
+        console.log("Opciones " + optionsLines); //debug
+        console.log(typeElements); //debug
+        mostrarDatos(); //debug
+    });
 }); 
 
 var process = function(source){
@@ -133,6 +133,7 @@ var process = function(source){
                 elements_list[id] = max_line;
 //                mainSlide = source[1];
                 typeElements[id] = 'title';
+                moreTitle(1);
                 break;
             }
             break;
@@ -161,6 +162,7 @@ var process = function(source){
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
                 typeElements[id] = 'subtitle';
+                moreSub(1);
                 break;
             }
             break;
@@ -174,12 +176,14 @@ var process = function(source){
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'title';
+            moreTitle(1);
             break;
         case 'tl2':
             var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'subtitle';
+            moreSub(1);
             break;
         case 'figure1':
             $('#drawRect').click();
@@ -191,6 +195,7 @@ var process = function(source){
             elements_list[id] = max_line;
             max_line++;
             typeElements[id] = 'figure';
+            moreFigure(1);
             break;
         case 'figure2':
             $('#drawLine').click();
@@ -202,6 +207,7 @@ var process = function(source){
             elements_list[id] = max_line;
             max_line++;
             typeElements[id] = 'figure';
+            moreFigure(1);
             break;
         case 'figure3':
             $('#drawEllipse').click();
@@ -213,6 +219,7 @@ var process = function(source){
             elements_list[id] = max_line;
             max_line++;
             typeElements[id] = 'figure';
+            moreFigure(1);
             break;
         case 'figure4':
             $('#drawArrow').click();
@@ -224,6 +231,7 @@ var process = function(source){
             elements_list[id] = max_line;
             max_line++;
             typeElements[id] = 'figure';
+            moreFigure(1);
             break;
         case 'ol':
             var lines = multiElement(max_line, 'list');
@@ -285,6 +293,7 @@ var process = function(source){
                     elements_list[id] = lines;
                     max_line += lines.length;
                     max_line--;
+                    moreCode(lines.length - 1);
                     code_img = '';
                     typeElements[id] = 'code';
                     break;
@@ -305,9 +314,9 @@ var process = function(source){
                     typeElements[id] = 'text';
                     break;
             }
-        if(source[0] != 'options'){
-            cleanDefault();
-        }
+    }
+    if(source[0] != 'options' && source[0] != 'hr'){
+        cleanDefault();
     }
 }
 
@@ -503,22 +512,34 @@ var addTextList = function(idText, type){
     elements_list[idText] = lineSlide + 2;
     spaceLines.push(lineSlide + 3);
     max_line += 2;
-    moreText(1);
-    if(type == 'normal'){
-        typeElements[idText] = 'text';
-    }
-    else{
-        typeElements[idText] = type;
+    switch(type){
+        case 'normal':
+            moreText(1);
+            typeElements[idText] = 'text';
+            break;
+        case 'title':
+            moreTitle(1);
+            typeElements[idText] = type;
+            break;
+        case 'subtitle':
+            moreSub(1);
+            typeElements[idText] = type;
+            break;
     }
 }
 var addCodeList = function(idCode){
     var lineSlide = currentSlide();
-    restructureList(lineSlide+2, true, 'code');
+    restructureList(lineSlide+2, true, 'code', undefined, 4);
     idCode = idCode.substr(12, 4);
-    elements_list[idCode] = lineSlide + 2;
-    spaceLines.push(lineSlide + 3);
-    max_line += 2;
+    var lines = [];
+    lines.push(lineSlide + 2);
+    lines.push(lineSlide + 3);
+    lines.push(lineSlide + 4);
+    elements_list[idCode] = lines;
+    spaceLines.push(lineSlide + 5);
+    max_line += 4;
     typeElements[idCode] = 'code';
+    moreCode(3);
 }
 
 //Figures
@@ -545,6 +566,7 @@ var addFigureList = function(idFigure, type){
         spaceLines.push(lineSlide + 3);
         max_line += 2;
         typeElements[idFigure] = 'figure';
+        moreFigure(1);
     }
 }
 
@@ -552,7 +574,7 @@ var addFigureList = function(idFigure, type){
 var addOptionsList = function(idElement, options){
     var lines = elements_list[idElement];
     if(typeElements[idElement] == 'text' || typeElements[idElement] == 'slide1' || typeElements[idElement] == 'slide2'
-      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure'){
+      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure' || typeElements[idElement] == 'code'){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
@@ -716,7 +738,7 @@ function processingText(){
     }
     $('#markdown-text').val(text);
 }
-function restructureList(modified, add, type, textOptions){
+function restructureList(modified, add, type, textOptions=undefined, movesLines=undefined){
     var preText = $('#markdown-text').val().split('\n');
     var preElement = preText[modified];
 //    console.log(preElement); //debug
@@ -745,7 +767,7 @@ function restructureList(modified, add, type, textOptions){
                             text += '--Sample Text--\n\n';
                             break;
                         case 'code':
-                            text += '`function example(){ alert(); }`\n\n'
+                            text += '`function example(){\nalert();\n}`\n\n'
                             break;
                         case 'rect':
                             text += '>\n\n'
@@ -796,7 +818,12 @@ function restructureList(modified, add, type, textOptions){
             for(var m = 0; m < elements_list[lock].length; m++){
                 if(elements_list[lock][m] >= modified){
                     if(add){
-                        elements_list[lock][m] += 2;
+                        if(movesLines != undefined){
+                            elements_list[lock][m] += movesLines;
+                        }
+                        else{
+                            elements_list[lock][m] += 2;
+                        }
                     }
                     else{
                         if(elements_list[lock][m] != 0){
@@ -809,7 +836,12 @@ function restructureList(modified, add, type, textOptions){
         else{
             if(elements_list[lock] >= modified){
                 if(add){
-                    elements_list[lock] += 2;
+                    if(movesLines != undefined){
+                        elements_list[lock] += movesLines;
+                    }
+                    else{
+                        elements_list[lock] += 2;
+                    }
                 }
                 else{
                     if(elements_list[lock] != 0){
@@ -822,7 +854,12 @@ function restructureList(modified, add, type, textOptions){
     for(s = 0; s < spaceLines.length; s++){
         if(spaceLines[s] >= modified){
             if(add){
-                spaceLines[s] += 2;
+                if(movesLines != undefined){
+                    spaceLines[s] += movesLines;
+                }
+                else{
+                    spaceLines[s] += 2;
+                }
             }
             else{
                 if(spaceLines[s] != 0){
@@ -834,7 +871,12 @@ function restructureList(modified, add, type, textOptions){
     for(o = 0; o < optionsLines.length; o++){
         if(optionsLines[o] >= modified){
             if(add){
-                optionsLines[o] += 2;
+                if(movesLines != undefined){
+                    optionsLines[o] += movesLines;
+                }
+                else{
+                    optionsLines[o] += 2;
+                }
             }
             else{
                 if(optionsLines[o] != 0){

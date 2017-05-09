@@ -991,10 +991,13 @@ Impressionist.prototype =
                 addCodeList(element.id);
             },
             addCodeStyle: function(element) {
+                var options = getOptions('code');
                 $(element).css("font-size", "1.3vw");
                 $(element).css("position", "absolute");
-                $(element).css("left", "24.6vw");
-                $(element).css("top", "5.66vw");
+//                $(element).css("left", "24.6vw");
+//                $(element).css("top", "5.66vw");
+                $(element).css("left", options.left + "vw");
+                $(element).css("top", options.top + "vw");
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
@@ -2337,10 +2340,10 @@ Impressionist.prototype =
                 me.finishAddFile($(element));
                 return element.id;
             },
-            addFullsliderListMD: function(text, top, left) {
+            addFullsliderListMD: function(text) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyleMD(element, 'normal', 'normal', top, left, true);
+                me.addTextStyleMD(element, 'normal', 'normal', true);
                 me.finishAddFile($(element));
                 return element.id;
             },
