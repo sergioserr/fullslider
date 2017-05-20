@@ -4,13 +4,16 @@ var code_img = ''; //Variable to differentiate between code or imagen
 //var slides_list = []; //Slides list for to create index
 //var modeIndex = ''; //Full or parcial index
 var id_figure = ''; //Save id for add figure a elements_list
+var url_image = ''; //Save id for add image a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
 var spaceLines = []; //White lines in text editor
 var max_line = 0; //Max_line for add text editor
 var manualFigure = true; //Difference between graphic or text add figure
+var manualImage = true; //Difference between graphic or text add image
 //var mainSlide = ''; //Save the slide title for subslides
 var optionsLines = []; //Options lines in text editor
 var typeElements = {}; //Type of element for each element of the presentation
+var imagesListProcess = {}; //Save the images for adding later
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
@@ -19,6 +22,7 @@ $(document).ready(function() {
             Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
         }
 //        modeIndex = '';
+        url_image = '';
         id_slides_list = [];
         optionsLines = [];
         typeElements = {};
@@ -27,6 +31,7 @@ $(document).ready(function() {
         elements_list = {};
         max_line = 0;
         spaceLines = [];
+        imagesListProcess = {};
         // Preprocessing
         processingText();
         // Markdown
@@ -79,6 +84,7 @@ $(document).ready(function() {
         console.log("Opciones " + optionsLines); //debug
         console.log(typeElements); //debug
         mostrarDatos(); //debug
+        console.log(imagesListProcess) //debug
     });
 }); 
 
@@ -298,9 +304,15 @@ var process = function(source){
                     typeElements[id] = 'code';
                     break;
                 case 'img':
-                    createImageFromDataUrl(source[1].src);
+                    manualImage = false;
+                    imagesListProcess[source[1].src] = [];
+                    imagesListProcess[source[1].src].push(Impressionist.prototype.getSelectedSlide());
+                    imagesListProcess[source[1].src].push(getOptions('image'));
+                    imagesListProcess[source[1].src].push(max_line);
+                    moreImage(1, Impressionist.prototype.getSelectedSlide());
+                    $("#urlimageinput").val(source[1].src);
+                    $("#urlimgform").submit();
                     code_img = '';
-                    typeElements[id] = 'imagen';
                     break;
                 default:
                     var lines = multiElement(max_line, 'text');
@@ -570,11 +582,37 @@ var addFigureList = function(idFigure, type){
     }
 }
 
+//Images
+var takeUrlImage = function(url){
+    url_image = url;
+}
+var addImagesList = function(idElement, url=undefined){    
+    if(manualImage){
+        var lineSlide = currentSlide();
+        restructureList(lineSlide+2, true, 'image');
+        url_image = '';
+        idElement = idElement.substr(12, 4);
+        elements_list[idElement] = lineSlide + 2;
+        spaceLines.push(lineSlide + 3);
+        max_line += 2;
+        typeElements[idElement] = 'image';
+    }
+    else{
+        idElement = idElement.substr(12, 4);
+        elements_list[idElement] = imagesListProcess[url].shift();
+        delete imagesListProcess[url];
+        typeElements[idElement] = 'image';
+        if(Object.keys(imagesListProcess).length == 0){
+            manualImage = true;
+        }
+    }
+}
+
 //Options
 var addOptionsList = function(idElement, options){
     var lines = elements_list[idElement];
     if(typeElements[idElement] == 'text' || typeElements[idElement] == 'slide1' || typeElements[idElement] == 'slide2'
-      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure' || typeElements[idElement] == 'code'){
+      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure' || typeElements[idElement] == 'code' || typeElements[idElement] == 'image'){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
@@ -783,6 +821,9 @@ function restructureList(modified, add, type, textOptions=undefined, movesLines=
                             break;
                         case 'option':
                             text += "{options: " + textOptions + "}\n---\n";
+                            break;
+                        case 'image':
+                            text += "![](" + url_image + ")\n\n";
                             break;
                     }                    
                 }

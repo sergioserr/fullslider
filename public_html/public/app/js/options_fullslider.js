@@ -15,6 +15,10 @@ default_code = {
     top: 5.66,
     left: 24.6,
 }
+default_image = {
+    top: 5.66,
+    left: 24.6,
+}
 default_figure = {
     top: 6.44788,
     left: 5.83935,
@@ -34,6 +38,7 @@ function NumElements(){
     this.numSub = 0;
     this.numFigure = 0;
     this.numCode = 0;
+    this.numImage = 0;
 }
 //Numbers of elements for slide
 slideNumElements = {};
@@ -66,6 +71,15 @@ function moreSub(quantity){
 function moreCode(quantity){
     slideNumElements[obtainSlide()].numCode += quantity;
     slideNumElements[obtainSlide()].numElem += quantity;
+}
+function moreImage(quantity, slide){
+    slide = slide.attr('id');
+    if(slide == undefined){
+        return undefined;
+    }
+    slide = slide.substr(17, 4);
+    slideNumElements[slide].numImage += quantity;
+    slideNumElements[slide].numElem += quantity;
 }
 function moreFigure(quantity){
     slideNumElements[obtainSlide()].numFigure += quantity;
@@ -103,6 +117,12 @@ function lessElement(type, quantity){
                 slideNumElements[obtainSlide()].numElem -= quantity;
             }
             break;
+        case 'image':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numImage -= quantity;
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
         case 'figure':
             if(slideNumElements[obtainSlide()] != undefined){
                 slideNumElements[obtainSlide()].numFigure -= quantity;
@@ -124,7 +144,7 @@ function modifyElement(element){
             case 'top':
                 textOptions += option + ':' + " '"; 
                 var n = 0;
-                while(options[option][n] != 'v'){
+                while(options[option][n] != 'v' && options[option][n] != 'p'){
                     textOptions += options[option][n];
                     n++;
                 }
@@ -133,7 +153,7 @@ function modifyElement(element){
             case 'left':
                 textOptions += option + ':' + " '"; 
                 var n = 0;
-                while(options[option][n] != 'v'){
+                while(options[option][n] != 'v' && options[option][n] != 'p'){
                     textOptions += options[option][n];
                     n++;
                 }
@@ -209,6 +229,16 @@ function getOptions(type){
                 }
                 else{
                     options = getOptionCode(option, options);
+                }
+            }
+            break;
+        case 'image':
+            for(option in default_image){
+                if(default_temp[option] != undefined){
+                    options[option] = default_temp[option];
+                }
+                else{
+                    options = getOptionImage(option, options);
                 }
             }
             break;
@@ -294,6 +324,16 @@ function getOptionCode(option, options){
             options.top = default_code.top + (slideNumElements[obtainSlide()].numCode) * 2;
         case 'left':
             options.left = default_code.left;
+            break;
+    }
+    return options;
+}
+function getOptionImage(option, options){
+    switch(option){
+        case 'top':
+            options.top = default_image.top + (slideNumElements[obtainSlide()].numImage) * 2;
+        case 'left':
+            options.left = default_image.left;
             break;
     }
     return options;

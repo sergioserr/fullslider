@@ -1390,6 +1390,7 @@ Impressionist.prototype =
                 //Upload image from url
                 $("#addurlimgbtn").on("click", function(e)
                 {
+                    takeUrlImage($("#urlimageinput").val());
                     $("#urlimgform").submit();
                 });
 
@@ -1870,26 +1871,41 @@ Impressionist.prototype =
                 }, 'json');
 
             },
-            addImageToSlide: function(data)
+            addImageToSlide: function(data, url=undefined)
             {
-                var element = me.addFullsliderSlideItem(image_snippet);
+                if(manualImage){
+                    var element = me.addFullsliderSlideItem(image_snippet);
+                }
+                else{
+                    var element = me.addFullsliderSlideItemMD(image_snippet, url);
+                }
+                
                 var id = $(element).attr("id");
 
                 data.element = $("#" + id);
-                me.addImageStyle(data);
+                me.addImageStyle(data, url);
 
                 me.finishAddFile($("#" + id));
+                addImagesList(id, url);
             },
-            addImageStyle: function(data) {
+            addImageStyle: function(data, url=undefined) {
                 var element = data.element;
-
+                if(manualImage){
+                    var options = getOptions('image');
+                }
+                else{
+                    var options = imagesListProcess[url].shift();
+                }
+                
                 var src = data.src;
                 var im_width = data.width;
                 var im_height = data.height;
                 $(element).find("img").attr("src", src);
                 element.css("position", "absolute");
-                element.css("left", "15vw");
-                element.css("top", "15vw");
+//                element.css("left", "15vw");
+//                element.css("top", "15vw");
+                element.css("left", options.left + "vw");
+                element.css("top", options.top + "vw");
                 var scale;
                 if (im_height < im_width) {
                     scale = im_width / im_height;
@@ -2437,11 +2453,7 @@ Impressionist.prototype =
                 var text_value = $(element).text().split('\n');
                 var h = 0;
                 if(list){
-//                    console.log($(element > ol).children());
-//                    $(element > ol).children().each(function(){
-//                        $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
-//                        h++;
-//                    });
+                    //Not added more
                 }
                 else{
                     switch(mode){
@@ -2564,5 +2576,11 @@ Impressionist.prototype =
                 var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
                 $(element).css("max-width", maxwidth + "vw");
                 $(element).css("max-height", maxheight + "vw");
+            },
+            addFullsliderSlideItemMD: function(template, url=undefined){
+                var id = "slidelement_" + me.generateUID();
+                template = template.split("slidelement_id").join(id);
+                $(imagesListProcess[url].shift()).append(template);
+                return (document.getElementById(id));
             },
         };
