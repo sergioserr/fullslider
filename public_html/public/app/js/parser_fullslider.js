@@ -651,6 +651,210 @@ var addOptionsList = function(idElement, options){
     }
 }
 
+//Paste elements
+var pasteElements = function(element, newElement){
+//    console.log(newElement); //debug
+    var id = element.attr("id").substr(12, 4);
+    var newId = newElement.attr("id").substr(12, 4);
+    var type = typeElements[id];
+    var lineSlide = currentSlide();
+//    console.log(id); //debug
+//    console.log(newId); //debug
+//    console.log(type); //debug
+    var lines = elements_list[id];
+//    console.log(lines); //debug
+    if(lines.length != undefined){
+        var text = $('#markdown-text').val().split('\n');
+        var copyText = '';
+        for(cp = lines[0]; cp <= lines[lines.length-1]; cp++){
+            if(cp == lines[lines.length-1]){
+                copyText += text[cp];
+            }
+            else{
+                copyText += text[cp] + '\n';
+            }
+        }
+//        console.log(copyText); //debug
+        restructureList(lineSlide+2, true, 'paste', copyText, lines.length+1);
+        newLines = [];
+        for(cp = 0; cp < lines.length; cp++){
+            newLines.push(lineSlide + cp + 2);
+        }
+        elements_list[newId] = newLines;
+        spaceLines.push(lineSlide + lines.length + 2);
+        max_line += lines.length + 1;
+    }
+    else{
+        var text = $('#markdown-text').val().split('\n');
+        var copyText = text[lines];
+//        console.log(copyText); //debug
+        restructureList(lineSlide+2, true, 'paste', copyText);
+        elements_list[newId] = lineSlide + 2;
+        spaceLines.push(lineSlide + 3);
+        max_line += 2;
+    }
+    switch(type){
+        case 'figure':
+            moreFigure(1);
+            typeElements[newId] = 'figure';
+            break;
+        case 'code':
+            moreCode(lines.length)
+            typeElements[newId] = 'code';
+            break;
+        case 'image':
+            moreImage(1, Impressionist.prototype.getSelectedSlide());
+            typeElements[newId] = 'image';
+            break;
+        case 'text':
+            if(lines.length != undefined){
+                moreText(lines.length)
+            }
+            else{
+                moreText(1)
+            }
+            typeElements[newId] = 'text';
+            break;
+        case 'title':
+            moreTitle(1)
+            typeElements[newId] = 'title';
+            break;
+        case 'subtitle':
+            moreSub(1)
+            typeElements[newId] = 'subtitle';
+            break;
+        }
+}
+var pasteSlides = function(slide, newSlide){
+    var id = slide.attr("id").substr(17, 4);
+    var newId = newSlide.attr("id").substr(17, 4);
+//    console.log(id); //debug
+//    console.log(newId); //debug
+    var newElements = document.getElementById(newSlide.attr('id')).children;
+//    console.log(newElements); //debug
+    var text = $('#markdown-text').val().split('\n');
+    var lineSlide = elements_list[id];
+    if(text[lineSlide] == '#'){
+        typeElements[newId] = 'slide1';
+    }
+    if(text[lineSlide] == '##'){
+        typeElements[newId] = 'slide2';
+    }
+    addNumElementsSlide(newId);
+    var copyText = text[lineSlide] + '\n';
+    var cp = lineSlide + 1;
+    var cs = newElements.length-1;
+    var futureLines = [];
+    var futureLine = max_line + 1;
+    var found = false;
+    var oldElement = '';
+    while(text[cp] != '#' && text[cp] != '##' && text[cp] != undefined){
+        for(key in elements_list){
+            if(elements_list[key].length != undefined){
+                if(elements_list[key].includes(cp)){
+                    futureLines.push(futureLine);
+                    oldElement = key;
+                    found = true;
+                }
+            }
+            else{
+                if(elements_list[key] == cp){
+                    futureLines.push(futureLine);
+                    oldElement = key;
+                    found = true;
+                }
+            }
+        }
+        if(found){
+            if(text[cp+1] == '#' || text[cp+1] == '##' || text[cp+1] == undefined){
+                copyText += text[cp];
+            }
+            else{
+                copyText += text[cp] + '\n';
+            }
+            futureLine++;
+            cp++;
+            found = false;
+        }
+        else{
+            if(futureLines.length == 0){
+                if(optionsLines.includes(cp)){
+                    optionsLines.push(futureLine);
+                }
+                else if(optionsLines.includes(cp-1)){
+                    //Nothing
+                }
+                else{
+                    spaceLines.push(futureLine);
+                }
+                futureLines = [];
+                oldElement = '';
+            }
+            else{
+                identifyElement(newElements[cs], futureLines, oldElement);
+                spaceLines.push(futureLine);
+                futureLines = [];
+                oldElement = '';
+                cs--;
+            }
+            if(text[cp+1] == '#' || text[cp+1] == '##' || text[cp+1] == undefined){
+                copyText += text[cp];
+            }
+            else{
+                copyText += text[cp] + '\n';
+            }
+            futureLine++;
+            cp++;
+        }
+    }
+//    console.log(copyText); //debug
+//    console.log(copyText.split('\n').length - 1); //debug
+    id_slides_list.push(newId);
+    restructureList(max_line, true, 'paste', copyText, 0);
+//    processingText();
+    deleteSpaces();
+    elements_list[newId] = max_line;
+    max_line += copyText.split('\n').length;
+}
+var identifyElement = function(newElement, lines, oldId){
+    console.log(newElement); //debug
+    var newId = newElement["id"].substr(12, 4);
+    console.log(newId); //debug
+    var type = typeElements[oldId];
+    console.log(type); //debug
+    elements_list[newId] = lines;
+    switch(type){
+        case 'figure':
+            moreFigure(1);
+            typeElements[newId] = 'figure';
+            break;
+        case 'code':
+            moreCode(lines.length)
+            typeElements[newId] = 'code';
+            break;
+        case 'image':
+            moreImage(1, Impressionist.prototype.getSelectedSlide());
+            typeElements[newId] = 'image';
+            break;
+        case 'text':
+            if(lines.length != undefined){
+                moreText(lines.length)
+            }
+            else{
+                moreText(1)
+            }
+            typeElements[newId] = 'text';
+            break;
+        case 'title':
+            moreTitle(1)
+            typeElements[newId] = 'title';
+            break;
+        case 'subtitle':
+            moreSub(1)
+            typeElements[newId] = 'subtitle';
+            break;
+        }
+}
 //Index
 //function createSlideIndex(name, orden){
 //    var position = 0; //Number of slide
@@ -776,7 +980,7 @@ function processingText(){
     }
     $('#markdown-text').val(text);
 }
-function restructureList(modified, add, type, textOptions=undefined, movesLines=undefined){
+function restructureList(modified, add, type, textAdd=undefined, movesLines=undefined){
     var preText = $('#markdown-text').val().split('\n');
     var preElement = preText[modified];
 //    console.log(preElement); //debug
@@ -820,10 +1024,13 @@ function restructureList(modified, add, type, textOptions=undefined, movesLines=
                             text += '>>>>\n\n'
                             break;
                         case 'option':
-                            text += "{options: " + textOptions + "}\n---\n";
+                            text += "{options: " + textAdd + "}\n---\n";
                             break;
                         case 'image':
                             text += "![](" + url_image + ")\n\n";
+                            break;
+                        case 'paste':
+                            text += textAdd + "\n\n"
                             break;
                     }                    
                 }

@@ -304,6 +304,7 @@ Impressionist.prototype =
                 me.selectThumb(uid);
                 me.enableDrag();
                 me.selectCurrentClicked($("#slidethumb_" + uid));
+                return clonedSlide;
             },
             copySlideToSlide: function(slide) {
                 var slideUid = me.currentClicked.attr("id").replace("slidethumb_", "");
