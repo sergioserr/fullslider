@@ -428,7 +428,7 @@ var deleteSlideList = function(idSlide){
             l = 0;
         }
     }
-    deleteSpaces();
+//    deleteSpaces();
 }
 function compareLines(lineElement, line){
     if(lineElement.length != undefined){
@@ -811,17 +811,16 @@ var pasteSlides = function(slide, newSlide){
 //    console.log(copyText.split('\n').length - 1); //debug
     id_slides_list.push(newId);
     restructureList(max_line, true, 'paste', copyText, 0);
-//    processingText();
-    deleteSpaces();
     elements_list[newId] = max_line;
+    deleteSpaces();
     max_line += copyText.split('\n').length;
 }
 var identifyElement = function(newElement, lines, oldId){
-    console.log(newElement); //debug
+//    console.log(newElement); //debug
     var newId = newElement["id"].substr(12, 4);
-    console.log(newId); //debug
+//    console.log(newId); //debug
     var type = typeElements[oldId];
-    console.log(type); //debug
+//    console.log(type); //debug
     elements_list[newId] = lines;
     switch(type){
         case 'figure':
@@ -855,6 +854,11 @@ var identifyElement = function(newElement, lines, oldId){
             break;
         }
 }
+var pasteSlideToSlide = function(copySlide, newSlide){
+    deleteSlideList(newSlide.attr("id").substr(17, 4));
+    pasteSlides(copySlide, newSlide);
+}
+
 //Index
 //function createSlideIndex(name, orden){
 //    var position = 0; //Number of slide

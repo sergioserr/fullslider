@@ -42,7 +42,8 @@ function pasteEl() {
         case "slidethumb":
             if (isInElement($(".slidethumbholder"), currentClicked)) {
                 if (isElementByClass("slidethumb", currentClicked)) {
-                    me.copySlideToSlide(elClipboard.value);
+                    var newSlide = me.copySlideToSlide(elClipboard.value);
+                    pasteSlideToSlide(elClipboard.value, newSlide);
                     changeContent();//Event for undo redo  
                 }
                 else {

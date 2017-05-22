@@ -320,6 +320,7 @@ Impressionist.prototype =
                 me.selectThumb(slideUid);
                 me.enableDrag();
                 me.selectCurrentClicked($("#slidethumb_" + slideUid));
+                return targetSlide;
 
             },
             reArrangeFullsliderSlides: function()
