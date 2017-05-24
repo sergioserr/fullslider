@@ -373,6 +373,9 @@ function set_temp(options){
                 case 'left':
                     default_temp.left = parseInt(value);
                     break;
+                case 'index':
+                    prepocessing(value);
+                    break;
 //                case 'height':
 //                    default_temp.height = parseInt(value);
 //                    break;
@@ -382,6 +385,28 @@ function set_temp(options){
             }
         }
     }
+}
+
+//Index
+function prepocessing(indexType){
+        for(var pre = 2 ; pre < source.length; ++pre ){
+            if(source[pre][1] != undefined){
+                switch(source[pre][0]){
+                    case 'slide1':
+                        slides_list.push(1);
+                        slides_list.push(source[pre][1]);
+                        break;
+                    case 'slide2':
+                        slides_list.push(2);
+                        slides_list.push(source[pre][1]);
+                        break;
+                }
+            }
+        }
+        modeIndex = indexType;
+        max_line += 2;
+        createSlideIndex("first", 0);
+        max_line -= 2;
 }
 
 //Data obtain

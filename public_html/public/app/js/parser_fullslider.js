@@ -1,8 +1,10 @@
 // Environment Variables
+var source = undefined; //Content for process markdown
 var id_slides_list = []; //Save the slides id for to delete all slides
 var code_img = ''; //Variable to differentiate between code or imagen
-//var slides_list = []; //Slides list for to create index
-//var modeIndex = ''; //Full or parcial index
+var slides_list = []; //Slides list for to create index
+var modeIndex = ''; //Full or parcial index
+var id_index_slides = []; //Save id for index slides control
 var id_figure = ''; //Save id for add figure a elements_list
 var url_image = ''; //Save id for add image a elements_list
 var elements_list = {}; //Elements id list for to locate in text editor
@@ -21,13 +23,14 @@ $(document).ready(function() {
         for(var x = 0; x < id_slides_list.length; x++){
             Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
         }
-//        modeIndex = '';
+        modeIndex = '';
         url_image = '';
         id_slides_list = [];
         optionsLines = [];
         typeElements = {};
+        id_index_slides = [];
         clearOptions();
-//        slides_list = [];
+        slides_list = [];
         elements_list = {};
         max_line = 0;
         spaceLines = [];
@@ -36,33 +39,13 @@ $(document).ready(function() {
         processingText();
         // Markdown
         var content = $('#markdown-text').val();
-        var source = markdown.toHTML(content);
+        source = markdown.toHTML(content);
 //        console.log(source); //debug
         // Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
             return;
         }
-        // Index preprocessing
-//        if(source[1][0] == 'index'){
-//            for(var pre = 2 ; pre < source.length; ++pre ){
-//                if(source[pre][1] != undefined){
-//                    switch(source[pre][0]){
-//                        case 'slide1':
-//                            slides_list.push(1);
-//                            slides_list.push(source[pre][1]);
-//                            break;
-//                        case 'slide2':
-//                            slides_list.push(2);
-//                            slides_list.push(source[pre][1]);
-//                            break;
-//                    }
-//                }
-//            };
-//            modeIndex = source[1][1];
-//            createSlideIndex("first", 0);
-//        };
-//        console.log(slides_list); //debug
         // Processing
         for (var i = 1 ; i < source.length; ++i ) {
             process(source[i]);
@@ -76,16 +59,18 @@ $(document).ready(function() {
         };
         deleteSpaces();
     });
-    $('#testing').click(function() {
-        console.log(elements_list); //debug
-        console.log("Espacios " + spaceLines); //debug
-        console.log("Max line " + max_line); //debug
-        console.log(id_slides_list); //debug
-        console.log("Opciones " + optionsLines); //debug
-        console.log(typeElements); //debug
-        mostrarDatos(); //debug
-        console.log(imagesListProcess) //debug
-    });
+//    $('#testing').click(function() {
+//        console.log(elements_list); //debug
+//        console.log("Espacios " + spaceLines); //debug
+//        console.log("Max line " + max_line); //debug
+//        console.log(id_slides_list); //debug
+//        console.log("Opciones " + optionsLines); //debug
+//        console.log(typeElements); //debug
+//        mostrarDatos(); //debug
+//        console.log(imagesListProcess) //debug
+//        console.log(slides_list); //debug
+//        console.log(id_index_slides) //deug
+//    });
 }); 
 
 var process = function(source){
@@ -126,9 +111,9 @@ var process = function(source){
                 break;
             }
             else{
-//                if(modeIndex == 'f'){
-//                    createSlideIndex(source[1], 1);                   
-//                }
+                if(modeIndex == 'f'){
+                    createSlideIndex(source[1], 1);                   
+                }
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
@@ -153,9 +138,9 @@ var process = function(source){
                 break;
             }
             else{
-//                if(modeIndex == 'f'){
-//                    createSlideIndex(source[1], 2);
-//                }
+                if(modeIndex == 'f'){
+                    createSlideIndex(source[1], 2);
+                }
                 var id = Impressionist.prototype.addSlideMD();
                 id_slides_list.push(id);
                 elements_list[id] = max_line;
@@ -348,6 +333,19 @@ var deleteSlideList = function(idSlide){
             id_slides_list.splice(i,1);
         }
     }
+    if(id_index_slides.length != 0){
+        for(var i = 0; i < id_index_slides.length; i++){
+            if(id_index_slides[i] == idSlide){
+                id_index_slides = [];
+                restructureList(0, false, '');
+                max_line--;
+                restructureList(0, false, '');
+                max_line--;
+                optionsLines.splice(0,1);
+                modeIndex = '';
+            }
+        }
+    }
     var line = elements_list[idSlide];
     delete elements_list[idSlide];
     removeNumElementsSlide(idSlide);
@@ -384,8 +382,13 @@ var deleteSlideList = function(idSlide){
             findOption = false;
         }
         if(optionsLines.includes(line)){
-            line += 2;
-            findOption = true;
+            if(modeIndex != '' && line == 0){
+                
+            }
+            else{
+                line += 2;
+                findOption = true;
+            }
         }
 //        console.log("Tamaño"); //debug
 //        console.log(locks.length); //debug
@@ -460,16 +463,21 @@ var deleteElementList = function(idElement){
         delete typeElements[idElement];
         var line = lineElement[0];
         if(optionsLines.includes(line-2)){
-            line -= 2;
-            for(op = 0; op < optionsLines.length; op++){
-                if(optionsLines[op] == line){
-                    optionsLines.splice(op,1);
-                }
+            if(modeIndex != '' && line-2 == 0){
+                
             }
-            restructureList(line, false, '');
-            max_line--;
-            restructureList(line, false, '');
-            max_line--;
+            else{
+                line -= 2;
+                for(op = 0; op < optionsLines.length; op++){
+                    if(optionsLines[op] == line){
+                        optionsLines.splice(op,1);
+                    }
+                }
+                restructureList(line, false, '');
+                max_line--;
+                restructureList(line, false, '');
+                max_line--;
+            }
         }
         for(var i = 0; i < lineElement.length; i++){
             restructureList(line, false, '');
@@ -481,7 +489,7 @@ var deleteElementList = function(idElement){
                     spaceLines.splice(s, 1);
                 }
             }
-            restructureList(line, false, 'slide');
+            restructureList(line, false, '');
             max_line--;
         }
     }
@@ -489,16 +497,21 @@ var deleteElementList = function(idElement){
         lessElement(typeElements[idElement], 1);
         delete typeElements[idElement];
         if(optionsLines.includes(lineElement-2)){
-            lineElement -= 2;
-            for(op = 0; op < optionsLines.length; op++){
-                if(optionsLines[op] == lineElement){
-                    optionsLines.splice(op,1);
-                }
+            if(modeIndex != '' && lineElement-2 == 0){
+                
             }
-            restructureList(lineElement, false, '');
-            max_line--;
-            restructureList(lineElement, false, '');
-            max_line--;
+            else{
+                lineElement -= 2;
+                for(op = 0; op < optionsLines.length; op++){
+                    if(optionsLines[op] == lineElement){
+                        optionsLines.splice(op,1);
+                    }
+                }
+                restructureList(lineElement, false, '');
+                max_line--;
+                restructureList(lineElement, false, '');
+                max_line--;
+            }
         }
         restructureList(lineElement, false, '');
         max_line--;
@@ -517,9 +530,9 @@ var deleteElementList = function(idElement){
 }
 
 //Text, code
-var addTextList = function(idText, type){
+var addTextList = function(idText, type, text='Sample Text'){
     var lineSlide = currentSlide();
-    restructureList(lineSlide+2, true, type);
+    restructureList(lineSlide+2, true, type, text);
     idText = idText.substr(12, 4);
     elements_list[idText] = lineSlide + 2;
     spaceLines.push(lineSlide + 3);
@@ -616,16 +629,21 @@ var addOptionsList = function(idElement, options){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
-                line -= 2;
-                for(op = 0; op < optionsLines.length; op++){
-                    if(optionsLines[op] == line){
-                        optionsLines.splice(op,1);
-                    }
+                if(modeIndex != '' && line-2 == 0){
+                    
                 }
-                restructureList(line, false, '');
-                max_line--;
-                restructureList(line, false, '');
-                max_line--;
+                else{
+                    line -= 2;
+                    for(op = 0; op < optionsLines.length; op++){
+                        if(optionsLines[op] == line){
+                            optionsLines.splice(op,1);
+                        }
+                    }
+                    restructureList(line, false, '');
+                    max_line--;
+                    restructureList(line, false, '');
+                    max_line--;
+                }
             }
             restructureList(line, true, 'option', options);
             optionsLines.push(line);
@@ -633,16 +651,21 @@ var addOptionsList = function(idElement, options){
         }
         else{
             if(optionsLines.includes(lines-2)){
-                lines -= 2;
-                for(op = 0; op < optionsLines.length; op++){
-                    if(optionsLines[op] == lines){
-                        optionsLines.splice(op,1);
-                    }
+                if(modeIndex != '' && lines-2 == 0){
+                    
                 }
-                restructureList(lines, false, '');
-                max_line--;
-                restructureList(lines, false, '');
-                max_line--;
+                else{
+                    lines -= 2;
+                    for(op = 0; op < optionsLines.length; op++){
+                        if(optionsLines[op] == lines){
+                            optionsLines.splice(op,1);
+                        }
+                    }
+                    restructureList(lines, false, '');
+                    max_line--;
+                    restructureList(lines, false, '');
+                    max_line--;
+                }
             }
             restructureList(lines, true, 'option', options);
             optionsLines.push(lines);
@@ -748,7 +771,7 @@ var pasteSlides = function(slide, newSlide){
     var futureLine = max_line + 1;
     var found = false;
     var oldElement = '';
-    while(text[cp] != '#' && text[cp] != '##' && text[cp] != undefined){
+    while(!(text[cp].includes('#')) && !(text[cp].includes('##')) && text[cp] != undefined){
         for(key in elements_list){
             if(elements_list[key].length != undefined){
                 if(elements_list[key].includes(cp)){
@@ -766,7 +789,7 @@ var pasteSlides = function(slide, newSlide){
             }
         }
         if(found){
-            if(text[cp+1] == '#' || text[cp+1] == '##' || text[cp+1] == undefined){
+            if(text[cp+1].includes('#') || text[cp+1].includes('##') || text[cp+1] == undefined){
                 copyText += text[cp];
             }
             else{
@@ -860,71 +883,67 @@ var pasteSlideToSlide = function(copySlide, newSlide){
 }
 
 //Index
-//function createSlideIndex(name, orden){
-//    var position = 0; //Number of slide
-//    var range = 0; //Slide level
-//    var y = 0;
-//    var current = false;
-//    var open = false;
-//    var level = false;
-//    var long = (slides_list.length / 2); //Slide space
-//    
-//    var id = Impressionist.prototype.addSlideMD();
-//    id_slides_list.push(id);
-//    //elements_list[id] = max_line;
-//    //max_line += 2;
-//    
-//    while (y <= slides_list.length - 1){
-//        var j = y;
-//        while (slides_list[j] == 2){
-//            if(slides_list[j+1] == name){
-//                level = true;
-//            }
-//            j += 2;
-//        }
-//        if(slides_list[y+1] == name){
-//            current = true;
-//            open = true;
-//        }
-//        range = moreRange(slides_list[y]);
-//        
-//        if(open && (orden == 1)){
-//            Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-//            position = morePosition(position, long);
-//            if(slides_list[y+2] == 1){
-//                open = false;
-//            }
-//        }
-//        else if(level && orden == 2){
-//                id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-//                //id = id.substr(12, 4);
-//                //elements_list[id] = max_line;
-//                //max_line += 2;
-//                position = morePosition(position, long);
-//                if(slides_list[y+2] == 1){
-//                    level = false;
-//                }
-//            }
-//            else{
-//                if(slides_list[y] != 2){
-//                    id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
-//                    //id = id.substr(12, 4);
-//                    //elements_list[id] = max_line;
-//                    //max_line += 2;
-//                    position = morePosition(position, long);
-//                }
-//            }
-//        range = 0;
-//        current = false;
-//        y += 2;
-//    } 
-//}
-//function morePosition(position, long){
-//    return position += (30 / long);
-//}
-//function moreRange(num){
-//    return Math.pow(2, num);
-//}
+function createSlideIndex(name, orden){
+    var position = 0; //Number of slide
+    var range = 0; //Slide level
+    var y = 0;
+    var current = false;
+    var open = false;
+    var level = false;
+    var long = (slides_list.length / 2); //Slide space
+    
+    var id = Impressionist.prototype.addSlideMD();
+    addSlideList(id);
+    id_index_slides.push(id);
+    
+    while (y <= slides_list.length - 1){
+        var j = y;
+        while (slides_list[j] == 2){
+            if(slides_list[j+1] == name){
+                level = true;
+            }
+            j += 2;
+        }
+        if(slides_list[y+1] == name){
+            current = true;
+            open = true;
+        }
+        range = moreRange(slides_list[y]);
+        
+        if(open && (orden == 1)){
+            id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+            addTextList(id, 'normal', slides_list[y+1]);
+            position = morePosition(position, long);
+            if(slides_list[y+2] == 1){
+                open = false;
+            }
+        }
+        else if(level && orden == 2){
+                id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                addTextList(id, 'normal', slides_list[y+1]);
+                position = morePosition(position, long);
+                if(slides_list[y+2] == 1){
+                    level = false;
+                }
+            }
+            else{
+                if(slides_list[y] != 2){
+                    id = Impressionist.prototype.addFullsliderTextIndexMD(slides_list[y+1], position, range, current, long);
+                    addTextList(id, 'normal', slides_list[y+1]);
+                    position = morePosition(position, long);
+                }
+            }
+        range = 0;
+        current = false;
+        y += 2;
+    } 
+}
+function morePosition(position, long){
+    return position += (30 / long);
+}
+function moreRange(num){
+    return Math.pow(2, num);
+}
 
 //Text-editor
 function processingText(){
@@ -933,46 +952,53 @@ function processingText(){
     var text = '';
     var preTextLine = 0;
     var textLine = 0;
-    var firstElement = false;
+    var firstElement = true;
     var last = preText.length - 1;
 //    console.log(preText.length); //debug
     while(preTextLine <= last){
-        if(preText[preTextLine] != '' || firstElement){ //This avoid white line in first position
-            firstElement = true;
-            if(preText[preTextLine] == '' && preText[preTextLine+1] == '' && preTextLine != (last)){ //This avoid white lines consecutives
-                // To delete
-            }
-            else if(preText[preTextLine][0] == '#'){ //This add a white line after slides
-                if(preText[preTextLine+1] != ''){
-                    text += preText[preTextLine] + '\n\n';
-                    textLine++;
-                    spaceLines.push(textLine++);
-                }
-                else{
-                    text += preText[preTextLine] + '\n';
-                    textLine++;
-                }
-            }
-            else if(preText[preTextLine][0] == '>'){ //This add a white line after figures
-                if(preText[preTextLine+1] != ''){
-                    text += preText[preTextLine] + '\n\n';
-                    textLine++;
-                    spaceLines.push(textLine++);
-                }
-                else{
-                    text += preText[preTextLine] + '\n';
-                    textLine++;
-                }
-            }
-            else if(preText[preTextLine] == '' && preText[preTextLine-1] == '---'){
-                //Don't add space lines after options or list
-            }
-            else{ //Added normal 
-                if (preText[preTextLine] == ''){ //Last white line of white lines consecutives
-                    spaceLines.push(textLine);
-                }
-                text += preText[preTextLine] + '\n';
+        if(preText[preTextLine] != '' || !firstElement){ //This avoid white line in first position
+            if(preText[preTextLine].includes('{options') && preText[preTextLine].includes('}') && firstElement){//This add a white line after presentation options
+                text += preText[preTextLine] + '\n\n';
                 textLine++;
+                spaceLines.push(textLine++);
+            }
+            else{
+                firstElement = false;
+                if(preText[preTextLine] == '' && preText[preTextLine+1] == '' && preTextLine != (last)){ //This avoid white lines consecutives
+                    // To delete
+                }
+                else if(preText[preTextLine][0] == '#'){ //This add a white line after slides
+                    if(preText[preTextLine+1] != ''){
+                        text += preText[preTextLine] + '\n\n';
+                        textLine++;
+                        spaceLines.push(textLine++);
+                    }
+                    else{
+                        text += preText[preTextLine] + '\n';
+                        textLine++;
+                    }
+                }
+                else if(preText[preTextLine][0] == '>'){ //This add a white line after figures
+                    if(preText[preTextLine+1] != ''){
+                        text += preText[preTextLine] + '\n\n';
+                        textLine++;
+                        spaceLines.push(textLine++);
+                    }
+                    else{
+                        text += preText[preTextLine] + '\n';
+                        textLine++;
+                    }
+                }
+                else if(preText[preTextLine] == '' && preText[preTextLine-1] == '---'){
+                    //Don't add space lines after options or list
+                }
+                else{ //Added normal 
+                    if (preText[preTextLine] == ''){ //Last white line of white lines consecutives
+                        spaceLines.push(textLine);
+                    }
+                    text += preText[preTextLine] + '\n';
+                    textLine++;
+                }
             }
         }
 //        console.log(text); //debug
@@ -1004,7 +1030,7 @@ function restructureList(modified, add, type, textAdd=undefined, movesLines=unde
                             text += '#\n\n';
                             break;
                         case 'normal':
-                            text += 'Sample Text\n\n';
+                            text += textAdd + '\n\n';
                             break;
                         case 'title':
                             text += '-Sample Text-\n\n';
@@ -1233,5 +1259,22 @@ function deleteSpaces(){
 //>>
 //
 //>>>
+//
+//#5
+
+
+//{options: index:'f'}
+//
+//#1
+//
+//#2
+//
+//##3
+//
+//#4
+//
+//Hola
+//
+//#
 //
 //#5
