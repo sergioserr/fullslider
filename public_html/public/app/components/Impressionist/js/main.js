@@ -2346,7 +2346,7 @@ Impressionist.prototype =
                 }
                 me.generateScaledSlide(me.selectedSlide);
             },
-            addFullsliderTextMD: function(type, text, mode) {
+            addFullsliderTextMD: function(type, text) {
                 text = text.split('\n');
                 var futureText = '';
                 for(p = 0; p < text.length; p++){
@@ -2354,7 +2354,7 @@ Impressionist.prototype =
                 }
                 var mText = text_snippet.replace("Sample Text", futureText);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyleMD(element, type, mode);
+                me.addTextStyleMD(element, type, false, text);
                 me.finishAddFile($(element));
                 return element.id;
             },
@@ -2418,7 +2418,7 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-            addTextStyleMD: function(element, type, mode, list=false) {
+            addTextStyleMD: function(element, type, list=false, text_value = undefined) {
                 if(type == 'normal'){
                     var options = getOptions('text');
                 }
@@ -2452,32 +2452,18 @@ Impressionist.prototype =
                 }
 
                 $(element).css("font-size", size + "vw");
-                var text_value = $(element).text().split('\n');
+                if(text_value == undefined){
+                    var text_value = $(element).text().split('\n');
+                }                
                 var h = 0;
                 if(list){
                     //Not added more
                 }
                 else{
-                    switch(mode){
-                        case "em":
-                            $(element).children().each(function(){
-                                $(this).html("<i><font color='" + color + "'>" + text_value[h] + "</font></i>")
-                                h++;
-                            });
-                            break;
-                        case "normal":
-                            $(element).children().each(function(){
-                                $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
-                                h++;
-                            });
-                            break;
-                        case "strong":
-                            $(element).children().each(function(){
-                                $(this).html("<b><font color='" + color + "'>" + text_value[h] + "</font></b>")
-                                h++;
-                            });
-                            break;
-                    }
+                    $(element).children().each(function(){
+                        $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
+                        h++;
+                    });
                 }
                 $(element).css("font-family", font);
 

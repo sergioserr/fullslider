@@ -77,14 +77,6 @@ var process = function(source){
     // Mode text (italic text, bold text, code, imagen, normal text)
     if(source[1] != undefined){
         switch(source[1][0]) {
-            case "em":
-                var mode = "em";
-                source[1] = source[1][1];
-                break;
-            case "strong":
-                var mode = "strong"
-                source[1] = source[1][1];
-                break;
             case "code":
                 var mode = "normal";
                 code_img = 'code';
@@ -119,7 +111,14 @@ var process = function(source){
                 elements_list[id] = max_line;
                 addNumElementsSlide(id);
                 typeElements[id] = 'slide1';
-                id = Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
+                var proText = '';
+                if((typeof source[1]) != "string"){
+                    proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                }
+                else{
+                    proText += source[1];
+                }
+                id = Impressionist.prototype.addFullsliderTextMD("title", proText);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
 //                mainSlide = source[1];
@@ -149,7 +148,14 @@ var process = function(source){
 //                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
 //                id = id.substr(12, 4);
 //                elements_list[id] = max_line;
-                id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
+                var proText = '';
+                if((typeof source[1]) != "string"){
+                    proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                }
+                else{
+                    proText += source[1];
+                }
+                id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
                 typeElements[id] = 'subtitle';
@@ -163,14 +169,30 @@ var process = function(source){
             set_temp(source[1]);
             break;
         case 'tl1':
-            var id =Impressionist.prototype.addFullsliderTextMD("title", source[1], mode);
+            var proText = '';
+            if((typeof source[1]) != "string"){
+                proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+            }
+            else{
+                proText += source[1];
+            }
+//            console.log(proText); //debug
+            var id = Impressionist.prototype.addFullsliderTextMD("title", proText);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'title';
             moreTitle(1);
             break;
         case 'tl2':
-            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", source[1], mode);
+            var proText = '';
+            if((typeof source[1]) != "string"){
+                proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+            }
+            else{
+                proText += source[1];
+            }
+//            console.log(proText); //debug
+            var id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
             typeElements[id] = 'subtitle';
@@ -302,7 +324,24 @@ var process = function(source){
                 default:
                     var lines = multiElement(max_line, 'text');
 //                    console.log(lines) //debug
-                    var id = Impressionist.prototype.addFullsliderTextMD("normal", source[1], mode);
+                    var p = 1;
+                    var proText = '';
+                    while(source[p] != undefined){
+                        if((typeof source[p]) != "string"){
+//                            console.log(source[p]); //debug
+                            proText += '<' + source[p][0] + '>' + source[p][1] + '</' + source[p][0] + '>';
+                            if(source[p+1] == '\n'){
+                                proText += '\n';
+                                p++;
+                            }
+                        }
+                        else{
+                            proText += source[p];
+                        }
+                        p++;
+                    }
+//                    console.log(proText) //debug
+                    var id = Impressionist.prototype.addFullsliderTextMD("normal", proText);
                     id = id.substr(12, 4);
                     elements_list[id] = lines;
                     max_line += lines.length;
@@ -698,6 +737,7 @@ var pasteElements = function(element, newElement){
             }
         }
 //        console.log(copyText); //debug
+        copyText += '\n';
         restructureList(lineSlide+2, true, 'paste', copyText, lines.length+1);
         newLines = [];
         for(cp = 0; cp < lines.length; cp++){
@@ -711,6 +751,7 @@ var pasteElements = function(element, newElement){
         var text = $('#markdown-text').val().split('\n');
         var copyText = text[lines];
 //        console.log(copyText); //debug
+        copyText += '\n';
         restructureList(lineSlide+2, true, 'paste', copyText);
         elements_list[newId] = lineSlide + 2;
         spaceLines.push(lineSlide + 3);
@@ -748,7 +789,7 @@ var pasteElements = function(element, newElement){
             break;
         }
 }
-var pasteSlides = function(slide, newSlide){
+var pasteSlides = function(slide, newSlide, copyLine = undefined){
     var id = slide.attr("id").substr(17, 4);
     var newId = newSlide.attr("id").substr(17, 4);
 //    console.log(id); //debug
@@ -757,39 +798,59 @@ var pasteSlides = function(slide, newSlide){
 //    console.log(newElements); //debug
     var text = $('#markdown-text').val().split('\n');
     var lineSlide = elements_list[id];
-    if(text[lineSlide] == '#'){
+    var textSize = 1;
+    var pTSize = lineSlide + 1;
+    while(pTSize != text.length-1 && text[pTSize] != undefined && !(text[pTSize].includes('#')) && !(text[pTSize].includes('##'))){
+        pTSize++;
+        textSize++;
+    }
+    if(text[lineSlide].includes('#')){
         typeElements[newId] = 'slide1';
     }
-    if(text[lineSlide] == '##'){
+    if(text[lineSlide].includes('##')){
         typeElements[newId] = 'slide2';
     }
     addNumElementsSlide(newId);
-    var copyText = text[lineSlide] + '\n';
-    var cp = lineSlide + 1;
+    var copyText = '';
+    var cp = lineSlide;
     var cs = newElements.length-1;
     var futureLines = [];
-    var futureLine = max_line + 1;
+    if(copyLine == undefined){
+        var futureLine = max_line;
+    }    
+    else{
+        var futureLine = copyLine;
+        restructureList(copyLine, true, '', '', textSize);
+    }
+//    console.log($('#markdown-text').val().split('\n')); //debug
     var found = false;
     var oldElement = '';
-    while(!(text[cp].includes('#')) && !(text[cp].includes('##')) && text[cp] != undefined){
+    var firstElement = true;
+    while(text[cp] != undefined && !(text[cp].includes('#')) && !(text[cp].includes('##')) || firstElement){
         for(key in elements_list){
             if(elements_list[key].length != undefined){
                 if(elements_list[key].includes(cp)){
-                    futureLines.push(futureLine);
-                    oldElement = key;
-                    found = true;
+                    if(typeElements[key] != 'slide1' && typeElements[key] != 'slide2'){
+                        futureLines.push(futureLine);
+//                        console.log(futureLine); //debug
+                        oldElement = key;
+                        found = true;
+                    }
                 }
             }
             else{
-                if(elements_list[key] == cp){
-                    futureLines.push(futureLine);
-                    oldElement = key;
-                    found = true;
+                if(typeElements[key] != 'slide1' && typeElements[key] != 'slide2'){
+                    if(elements_list[key] == cp){
+                        futureLines.push(futureLine);
+//                        console.log(futureLine); //debug
+                        oldElement = key;
+                        found = true;
+                    }
                 }
             }
         }
         if(found){
-            if(text[cp+1].includes('#') || text[cp+1].includes('##') || text[cp+1] == undefined){
+            if(text[cp+1] == undefined || text[cp+1].includes('#') || text[cp+1].includes('##')){
                 copyText += text[cp];
             }
             else{
@@ -798,6 +859,7 @@ var pasteSlides = function(slide, newSlide){
             futureLine++;
             cp++;
             found = false;
+            firstElement = false;
         }
         else{
             if(futureLines.length == 0){
@@ -808,19 +870,23 @@ var pasteSlides = function(slide, newSlide){
                     //Nothing
                 }
                 else{
-                    spaceLines.push(futureLine);
+                    if(!spaceLines.includes(futureLine) && !firstElement){
+                        spaceLines.push(futureLine);
+                    }
                 }
                 futureLines = [];
                 oldElement = '';
             }
             else{
                 identifyElement(newElements[cs], futureLines, oldElement);
-                spaceLines.push(futureLine);
+                if(!spaceLines.includes(futureLine)){
+                    spaceLines.push(futureLine);
+                }
                 futureLines = [];
                 oldElement = '';
                 cs--;
             }
-            if(text[cp+1] == '#' || text[cp+1] == '##' || text[cp+1] == undefined){
+            if(cp == text.length-1 || text[cp+1] == undefined || text[cp+1].includes('#') || text[cp+1].includes('##')){
                 copyText += text[cp];
             }
             else{
@@ -828,13 +894,21 @@ var pasteSlides = function(slide, newSlide){
             }
             futureLine++;
             cp++;
+            firstElement = false;
         }
     }
 //    console.log(copyText); //debug
 //    console.log(copyText.split('\n').length - 1); //debug
     id_slides_list.push(newId);
-    restructureList(max_line, true, 'paste', copyText, 0);
-    elements_list[newId] = max_line;
+//    console.log(copyText); //debug
+    if(copyLine == undefined){
+        restructureList(max_line, true, 'paste', copyText, 0);
+        elements_list[newId] = max_line;
+    }
+    else{
+        restructureList(copyLine, true, 'paste', copyText, 0);
+        elements_list[newId] = copyLine;
+    }
     deleteSpaces();
     max_line += copyText.split('\n').length;
 }
@@ -878,8 +952,9 @@ var identifyElement = function(newElement, lines, oldId){
         }
 }
 var pasteSlideToSlide = function(copySlide, newSlide){
+    var oldLine = elements_list[newSlide.attr("id").substr(17, 4)];
     deleteSlideList(newSlide.attr("id").substr(17, 4));
-    pasteSlides(copySlide, newSlide);
+    pasteSlides(copySlide, newSlide, oldLine);
 }
 
 //Index
@@ -1060,7 +1135,10 @@ function restructureList(modified, add, type, textAdd=undefined, movesLines=unde
                             text += "![](" + url_image + ")\n\n";
                             break;
                         case 'paste':
-                            text += textAdd + "\n\n"
+                            text += textAdd + "\n";
+                            break;
+                        default:
+                            text += preText[rL] + "\n";
                             break;
                     }                    
                 }
@@ -1069,7 +1147,7 @@ function restructureList(modified, add, type, textAdd=undefined, movesLines=unde
                 } 
             }
             else{
-                if(rL > modified && add){
+                if(rL > modified && add && type != ''){
                     text += preElement + '\n';
                     preElement = preText[rL];
                 }
