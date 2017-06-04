@@ -560,6 +560,7 @@ function handleMouseup(e) {
     this.mode = null;
 //    this.save();
     $(".slideviewport").css("-webkit-user-select", "auto");
+    modifyElementSize(me.selectedElement);
     changeContent();
 }
 function getTouch(e) {

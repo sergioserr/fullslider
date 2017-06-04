@@ -608,14 +608,17 @@ var addCodeList = function(idCode){
 
 //Figures
 function eventsSimulate(){
+    var options = getOptions('figure');
     var eventDown = document.createEvent("MouseEvents");
     var eventMove = document.createEvent("MouseEvents");
     var eventUp= document.createEvent("MouseEvents");
     eventDown.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 295, 210, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventDown);
-    eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+    var x = vwToPx(options.height - 0.5411255411255411) + 210;
+    var y = vwToPx(options.width - 0.5411255411255411) + 295;
+    eventMove.initMouseEvent("mousemove", false, true, window, 0, 0, 0, y, x, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventMove);
-    eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, 395, 310, false, false, false, false, 0, null);
+    eventUp.initMouseEvent("mouseup", false, true, window, 0, 0, 0, y, x, false, false, false, false, 0, null);
     document.getElementById('canvas').dispatchEvent(eventUp);
 }
 var takeIdFigure = function(id){
@@ -678,10 +681,13 @@ var addOptionsList = function(idElement, options){
                             optionsLines.splice(op,1);
                         }
                     }
+                    var textOp = $('#markdown-text').val().split('\n');
+                    var oldOp = oldOp = markdown.toHTML(textOp[line]);
                     restructureList(line, false, '');
                     max_line--;
                     restructureList(line, false, '');
                     max_line--;
+                    options = mergeOptions(oldOp[1][1], options);
                 }
             }
             restructureList(line, true, 'option', options);
@@ -700,10 +706,13 @@ var addOptionsList = function(idElement, options){
                             optionsLines.splice(op,1);
                         }
                     }
+                    var textOp = $('#markdown-text').val().split('\n');
+                    var oldOp = markdown.toHTML(textOp[lines]);
                     restructureList(lines, false, '');
                     max_line--;
                     restructureList(lines, false, '');
                     max_line--;
+                    options = mergeOptions(oldOp[1][1], options);
                 }
             }
             restructureList(lines, true, 'option', options);
@@ -1296,6 +1305,56 @@ function deleteSpaces(){
         else{
             sp++;
         }
+    }
+}
+function modifyTextCode(textElement, idElement){
+    var idElement = idElement.substr(12, 4);
+    var lines = elements_list[idElement];
+    var countLines = lines.length;
+    //Delete element
+    var line = lines[0];
+    var lastLine = lines[lines.length-1];
+//    console.log(textElement[0].textContent); //debug
+    for(var mT = line; mT <= lastLine; mT++){
+        restructureList(line, false, '');
+        max_line--;
+    }
+    if(spaceLines.includes(line)){
+        for(s = 0; s < spaceLines.length; s++){
+            if(line == spaceLines[s]){
+                spaceLines.splice(s, 1);
+            }
+        }
+        restructureList(line, false, '');
+        max_line--;
+    }
+    //write same element modified
+    elements_list[idElement] = [];
+    for(var tA = 0; tA < textElement.length; tA++){
+        if(tA == 0){
+            restructureList(line, true, 'paste', '`' + textElement[tA].textContent, 1);
+            max_line++;
+            elements_list[idElement].push(line);
+            line++;
+        }
+        else if(tA == textElement.length-1){
+            restructureList(line, true, 'paste', textElement[tA].textContent + '`' + '\n', 2);
+            max_line++;
+            elements_list[idElement].push(line);
+            line++;
+            max_line++;
+            spaceLines.push(line);
+        }
+        else{
+            restructureList(line, true, 'paste', textElement[tA].textContent, 1);
+            max_line++;
+            elements_list[idElement].push(line);
+            line++;
+        }
+    }
+    var newCountLines = elements_list[idElement].length;
+    if(newCountLines > countLines){
+        moreCode(newCountLines - countLines)
     }
 }
 

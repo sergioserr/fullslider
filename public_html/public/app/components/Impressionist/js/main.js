@@ -276,6 +276,7 @@ Impressionist.prototype =
                     {
                         me.assignSlideNumbers();
                         me.reArrangeFullsliderSlides();
+                        console.log('opcion'); //debug
                         changeContent();//Event for undo redo
                     }
                 });
@@ -500,12 +501,16 @@ Impressionist.prototype =
                                 if ($(this).html() == "" || $(this).html() == "<br>" || $($(this).children("div")[0]).html() == "<br>" || ($($(this).find["font"]).size() > 1 && $($(this).find["font"][0]).html() == "<br>")) {
                                     $(this).html(text_inner);
                                 }
+                                console.log('opcion'); //debug
                                 break;
                             case "code":
                                 var code = $(this).find("code")[0];
                                 if (typeof $(code).find("ol")[0] == "undefined" || $(this).html() == "" || $(this).html() == "<br>") {
                                     $(this).html(code_inner);
                                 }
+                                var elementId = $(this).attr('id');
+                                var textEdit = $(this).context.getElementsByTagName('li');
+                                modifyTextCode(textEdit, elementId)
                                 break;
                         }
                     }
@@ -524,7 +529,7 @@ Impressionist.prototype =
                     $(this).css("max-height", maxheight + "vw");
                     drawElement(this);
                     if(e.isImmediatePropagationStopped){
-                        modifyElement(this);
+                        modifyElementPosition(this);
                     }
 //                        me.selectElement(this);
                     $(this).removeClass("grabbing");
@@ -928,33 +933,31 @@ Impressionist.prototype =
                 else{
                     var options = getOptions(type);
                 }
-                var size = "";
                 var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
-                        size = me.normalSize;
                         color = me.normalColor;
                         font = me.normalFont;
                         break;
                     case "title":
-                        size = me.titleSize;
                         color = me.titleColor;
                         font = me.titleFont;
                         break;
                     case "subtitle":
-                        size = me.subtitleSize;
                         color = me.subtitleColor;
                         font = me.subtitleFont;
                         break;
                     default:
-                        size = "1.75vw";
                         color = "#000";
                         font = "'Montserrat', sans-serif";
                         break;
                 }
-
-                $(element).css("font-size", size + "vw");
+                $(element).css("font-size", options.fontsize + "vw");
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
+                
                 var text_value = $(element).text();
                 switch(mode){
                     case "em":
@@ -994,10 +997,8 @@ Impressionist.prototype =
             },
             addCodeStyle: function(element) {
                 var options = getOptions('code');
-                $(element).css("font-size", "1.3vw");
+                $(element).css("font-size", options.fontsize + "vw");
                 $(element).css("position", "absolute");
-//                $(element).css("left", "24.6vw");
-//                $(element).css("top", "5.66vw");
                 $(element).css("left", options.left + "vw");
                 $(element).css("top", options.top + "vw");
                 $(element).css("line-height", "initial", "important");
@@ -1005,12 +1006,33 @@ Impressionist.prototype =
                 $(element).css("height", "initial");
                 $(element).css("width", "auto");
                 $(element).css("white-space", "normal");
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
                 var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
                 var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
                 $(element).css("max-width", maxwidth + "vw");
                 $(element).css("max-height", maxheight + "vw");
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
+                me.addStyleCode(element, options.style);
+                me.changeNumbersCode(element, options.numbers)
+            },
+            addStyleCode: function(element, value){
+                elementToChange = $(element.children);
+                var current = elementToChange.attr("data-class");
+                elementToChange.removeClass(current);
+                elementToChange.addClass(value);
+                elementToChange.attr("data-class", value);
+            },
+            changeNumbersCode: function(element, value){
+                var ol = $(element.getElementsByTagName('ol'));
+                if(value == 'true'){
+                    ol.css("list-style-type", "decimal");
+                }
+                else{
+                    ol.css("list-style-type", "none");
+                }
             },
             prettifyCode: function() {
                 $($(me.selectedforedit).find("code")[0]).removeClass();
@@ -1925,9 +1947,12 @@ Impressionist.prototype =
                         im_width = 7;
                     }
                 }
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
 
-                element.css("height", im_height + "vw");
-                element.css("width", im_width + "vw");
+                element.css("height", options.height + "vw");
+                element.css("width", options.width + "vw");
             },
             addGraphics: function() {
                 var graphic_list = $("#canvas").find("svg").children();
@@ -1965,6 +1990,7 @@ Impressionist.prototype =
                         
                         addFigureList(element.id, svgtype);
                         takeIdFigure(element.id);
+                        addOptionsNewFigure(element)
                     }
                 }
             },
@@ -2425,33 +2451,30 @@ Impressionist.prototype =
                 else{
                     var options = getOptions(type);
                 }
-                var size = "";
                 var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
-                        size = me.normalSize;
                         color = me.normalColor;
                         font = me.normalFont;
                         break;
                     case "title":
-                        size = me.titleSize;
                         color = me.titleColor;
                         font = me.titleFont;
                         break;
                     case "subtitle":
-                        size = me.subtitleSize;
                         color = me.subtitleColor;
                         font = me.subtitleFont;
                         break;
                     default:
-                        size = "1.75vw";
                         color = "#000";
                         font = "'Montserrat', sans-serif";
                         break;
                 }
-
-                $(element).css("font-size", size + "vw");
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
+                $(element).css("font-size", options.fontsize + "vw");
                 if(text_value == undefined){
                     var text_value = $(element).text().split('\n');
                 }                
@@ -2539,7 +2562,9 @@ Impressionist.prototype =
                         }
                         break
                 }
-
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
                 $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
 
 //                width = options.width;

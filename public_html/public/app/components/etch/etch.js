@@ -219,21 +219,25 @@ function initializeTextColorChooser(color) {
         clearFormatting: function(e) {
             e.preventDefault();
             document.execCommand('removeFormat', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleBold: function(e) {
             e.preventDefault();
             document.execCommand('bold', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleItalic: function(e) {
             e.preventDefault();
             document.execCommand('italic', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleUnderline: function(e) {
             e.preventDefault();
             document.execCommand('underline', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleHeading: function(e) {
@@ -246,6 +250,7 @@ function initializeTextColorChooser(color) {
             }
             var h3 = document.createElement('h3');
             range.surroundContents(h3);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         urlPrompt: function(callback) {
@@ -279,16 +284,19 @@ function initializeTextColorChooser(color) {
                     document.execCommand('createLink', false, url);
                 });
             }
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleUnorderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertUnorderedList', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleOrderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertOrderedList', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleUndo: function(e) {
@@ -302,16 +310,19 @@ function initializeTextColorChooser(color) {
         justifyLeft: function(e) {
             e.preventDefault();
             document.execCommand('justifyLeft', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         justifyCenter: function(e) {
             e.preventDefault();
             document.execCommand('justifyCenter', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         justifyRight: function(e) {
             e.preventDefault();
             document.execCommand('justifyRight', false, null);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         getImage: function(e) {
@@ -319,6 +330,7 @@ function initializeTextColorChooser(color) {
 
             // call startUploader with callback to handle inserting it once it is uploded/cropped
             this.startUploader(this.insertImage);
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         startUploader: function(cb) {
@@ -359,6 +371,7 @@ function initializeTextColorChooser(color) {
             e.preventDefault();
             var editableModel = this.model.get('editableModel');
             editableModel.trigger('save');
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         shownumbers: function(e) {
@@ -366,9 +379,11 @@ function initializeTextColorChooser(color) {
             var ol = $($(elementToChange).find("ol"));
             if (ol.css("list-style-type") == "decimal") {
                 ol.css("list-style-type", "none");
+                modifyCode(elementToChange, 'numbers', 'false');
             }
             else {
                 ol.css("list-style-type", "decimal");
+                modifyCode(elementToChange, 'numbers', 'true');
             }
             changeContent();//Event for undo redo
         },
@@ -452,8 +467,8 @@ function initializeTextColorChooser(color) {
         },
         setCodeStyle: function(e) {
             e.preventDefault();
-            var elementToChange = getElementEditing();
-            elementToChange = $(elementToChange.find("pre"));
+            var elementToChanger = getElementEditing();
+            elementToChange = $(elementToChanger.find("pre"));
 
             var current = elementToChange.attr("data-class");
             var value = extractValue(e);
@@ -463,6 +478,7 @@ function initializeTextColorChooser(color) {
             var codestyle = document.getElementsByClassName('codeStyleReadout')[0];
             codestyle.innerHTML = value;
             me.prettifyCode();
+            modifyCode(elementToChanger, 'style', value);
             changeContent();//Event for undo redo
         },
         setFontFamily: function(e) {
@@ -481,6 +497,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 face: value_name
             });
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         setFontSize: function(e) {
@@ -499,6 +516,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 size: value
             });
+            console.log('options'); //debug
             changeContent();//Event for undo redo
         }
 

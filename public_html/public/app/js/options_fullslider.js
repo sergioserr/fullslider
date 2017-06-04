@@ -2,34 +2,52 @@
 default_text = {
     top: 11.4202,
     left: 3.66032,
+    fontsize: 1.75,
+    transform: 0,
 }
 default_title = {
     top: 0.0732064,
     left: 1.02489,
+    fontsize: 3.5,
+    transform: 0,
 }
 default_subtitle = {
     top: 5.13089,
     left: 3.66492,
+    fontsize: 2.75,
+    transform: 0,
 }
 default_code = {
     top: 5.66,
     left: 24.6,
+    fontsize: 1.3,
+    style: 'idea',
+    numbers: 'true',
+    transform: 0,
 }
 default_image = {
     top: 5.66,
     left: 24.6,
+    height: 7,
+    width: 7.49235,
+    transform: 0,
 }
 default_figure = {
     top: 6.44788,
     left: 5.83935,
-//    height: 6.918,
-//    width: 6.918,
+    height: 11.3636363636363631,
+    width: 11.3636363636363631,
+    transform: 0,
 }
 default_temp = {
     top: undefined,
     left: undefined,
-//    height: undefined,
-//    width: undefined,
+    height: undefined,
+    width: undefined,
+    fontsize: undefined,
+    transform: undefined,
+    style: undefined,
+    numbers: undefined,
 }
 function NumElements(){
     this.numText = 0;
@@ -133,8 +151,21 @@ function lessElement(type, quantity){
 }
 
 //Modify elements
-function modifyElement(element){
-    var options = parserElement(element);
+function modifyCode(element, option, value){
+    var textOptions = '';
+    switch(option){
+        case 'style':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+        case 'numbers':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+    }
+    var id = element.attr("id").substr(12, 4);
+    addOptionsList(id, textOptions);
+}
+function modifyElementPosition(element){
+    var options = parserElement(element, 'position');
     var type = element.getAttribute('data-type')
 //    console.log(type); //debug
     var textOptions = '';
@@ -159,33 +190,89 @@ function modifyElement(element){
                 }
                  textOptions += "',";
                 break;
-//            case 'width':
-//                if(type == 'graphic'){
-//                    textOptions += option + ':' + " '"; 
-//                    var n = 0;
-//                    while(options[option][n] != 'v'){
-//                        textOptions += options[option][n];
-//                        n++;
-//                    }
-//                     textOptions += "',";
-//                }
-//                break;
-//            case 'height':
-//                if(type == 'graphic'){
-//                    textOptions += option + ':' + " '"; 
-//                    var n = 0;
-//                    while(options[option][n] != 'v'){
-//                        textOptions += options[option][n];
-//                        n++;
-//                    }
-//                     textOptions += "',";
-//                }
-//                break;
         }
     }
 //    console.log(textOptions) //debug
     var id = element.getAttribute("id").substr(12, 4);
     addOptionsList(id, textOptions);
+}
+function modifyElementSize(element){
+    var options = parserElement(element, 'size');
+    var type = element.attr('data-type')
+//    console.log(type); //debug
+    var textOptions = '';
+//    console.log(options); //debug
+    for(option in options){
+        switch(option){
+            case 'width':
+                if(type == 'graphic' || type == 'image'){
+                    textOptions += option + ':' + " '"; 
+                    var n = 0;
+                    while(options[option][n] != 'v'){
+                        textOptions += options[option][n];
+                        n++;
+                    }
+                    textOptions += "',";
+                }
+                break;
+            case 'height':
+                if(type == 'graphic' || type == 'image'){
+                    textOptions += option + ':' + " '"; 
+                    var n = 0;
+                    while(options[option][n] != 'v'){
+                        textOptions += options[option][n];
+                        n++;
+                    }
+                    textOptions += "',";
+                }
+                break;
+            case 'font-size':
+                if(type != 'graphic' && type != 'image'){
+                    textOptions += option + ':' + " '"; 
+                    var n = 0;
+                    while(options[option][n] != 'v'){
+                        textOptions += options[option][n];
+                        n++;
+                    }
+                    textOptions += "',";
+                }
+                break;
+            case 'transform':
+                var n = 0;
+                var number = '';
+                while(options[option][n] != 'd'){
+                    if(options[option][n] == '"' && options[option][n+1] != 'r'){
+                        break;
+                    }
+                    number += options[option][n];
+                    n++;
+                }
+                textOptions += option + ':' + " '";
+                number = number.substr(7);
+                textOptions += number + "',";
+                break;
+        }
+    }
+//    console.log(textOptions) //debug
+    var id = element.attr("id").substr(12, 4);
+    addOptionsList(id, textOptions);
+}
+function mergeOptions(oldOp, newOp){
+    var options = oldOp.split(',');
+//    console.log(options) //debug
+    var option = '';
+    var value = '';
+    var textOptions = newOp;
+    for(var op = 0; op < options.length; op++){
+        if(options[op] != ''){
+            option = obtainOption(options[op]);
+            value = obtainValue(options[op]);
+            if(!textOptions.includes(option)){
+                textOptions += option + ": '" + value + "',";
+            }
+        }
+    }
+    return textOptions;
 }
 
 //Get options
@@ -253,6 +340,7 @@ function getOptions(type){
             }
             break;
     }
+//    console.log(options) //debug
     return options;
 }
 function getOptionText(option, options){
@@ -272,6 +360,12 @@ function getOptionText(option, options){
             else{
                 options.left = default_text.left + 18;
             }
+            break;
+        case 'fontsize':
+            options.fontsize = default_text.fontsize;
+            break;
+        case 'transform':
+            options.transform = default_text.transform;
             break;
     }
     return options;
@@ -294,6 +388,12 @@ function getOptionTitle(option, options){
         case 'left':
             options.left = default_title.left;
             break;
+        case 'fontsize':
+            options.fontsize = default_title.fontsize;
+            break;
+        case 'transform':
+            options.transform = default_title.transform;
+            break;
     }
     return options;
 }
@@ -315,6 +415,12 @@ function getOptionSubtitle(option, options){
         case 'left':
             options.left = default_subtitle.left;
             break;
+        case 'fontsize':
+            options.fontsize = default_subtitle.fontsize;
+            break;
+        case 'transform':
+            options.transform = default_subtitle.transform;
+            break;
     }
     return options;
 }
@@ -325,6 +431,18 @@ function getOptionCode(option, options){
         case 'left':
             options.left = default_code.left;
             break;
+        case 'fontsize':
+            options.fontsize = default_code.fontsize;
+            break;
+        case 'style':
+            options.style = default_code.style;
+            break;
+        case 'numbers':
+            options.numbers = default_code.numbers;
+            break;
+        case 'transform':
+            options.transform = default_code.transform;
+            break;
     }
     return options;
 }
@@ -334,6 +452,15 @@ function getOptionImage(option, options){
             options.top = default_image.top + (slideNumElements[obtainSlide()].numImage) * 2;
         case 'left':
             options.left = default_image.left;
+            break;
+        case 'height':
+            options.height = default_image.height;
+            break;
+        case 'width':
+            options.width = default_image.width;
+            break;
+        case 'transform':
+            options.transform = default_image.transform;
             break;
     }
     return options;
@@ -346,12 +473,15 @@ function getOptionFigure(option, options){
         case 'left':
             options.left = default_figure.left;
             break;
-//        case 'height':
-//            options.height = default_figure.height;
-//            break;
-//        case 'width':
-//            options.width = default_figure.width;
-//            break;
+        case 'height':
+            options.height = default_figure.height;
+            break;
+        case 'width':
+            options.width = default_figure.width;
+            break;
+        case 'transform':
+            options.transform = default_figure.transform;
+            break;
     }
     return options;
 }
@@ -368,23 +498,86 @@ function set_temp(options){
             value = obtainValue(options[op]);
             switch(option){
                 case 'top':
-                    default_temp.top = parseInt(value);
+                    default_temp.top = parseFloat(value);
                     break;
                 case 'left':
-                    default_temp.left = parseInt(value);
+                    default_temp.left = parseFloat(value);
                     break;
                 case 'index':
                     prepocessing(value);
                     break;
-//                case 'height':
-//                    default_temp.height = parseInt(value);
-//                    break;
-//                case 'width':
-//                    default_temp.width = parseInt(value);
-//                    break;
+                case 'font-size':
+                    default_temp.fontsize = parseFloat(value);
+                    break;
+                case 'height':
+                    default_temp.height = parseFloat(value);
+                    break;
+                case 'width':
+                    default_temp.width = parseFloat(value);
+                    break;
+                case 'style':
+                    default_temp.style = value;
+                    break;
+                case 'numbers':
+                    default_temp.numbers = value;
+                    break;
+                case 'transform':
+                    default_temp.transform = parseFloat(value);
+                    break;
             }
         }
     }
+}
+
+//Figures
+function addOptionsNewFigure(element){
+    var options = parserElement(element, 'position');
+    var textOptions = '';
+//    console.log(options); //debug
+    for(option in options){
+        switch(option){
+            case 'top':
+                textOptions += option + ':' + " '"; 
+                var n = 0;
+                while(options[option][n] != 'v' && options[option][n] != 'p'){
+                    textOptions += options[option][n];
+                    n++;
+                }
+                textOptions += "',";
+                break;
+            case 'left':
+                textOptions += option + ':' + " '"; 
+                var n = 0;
+                while(options[option][n] != 'v' && options[option][n] != 'p'){
+                    textOptions += options[option][n];
+                    n++;
+                }
+                textOptions += "',";
+                break;
+            case 'width':
+                textOptions += option + ':' + " '"; 
+                var n = 0;
+                while(options[option][n] != 'v'){
+                    textOptions += options[option][n];
+                    n++;
+                }
+                textOptions += "',";
+                
+                break;
+            case 'height':
+                textOptions += option + ':' + " '"; 
+                var n = 0;
+                while(options[option][n] != 'v'){
+                    textOptions += options[option][n];
+                    n++;
+                }
+                textOptions += "',";
+                break;
+        }
+    }
+//    console.log(textOptions) //debug
+    var id = element.getAttribute("id").substr(12, 4);
+    addOptionsList(id, textOptions);
 }
 
 //Index
@@ -440,8 +633,13 @@ var obtainSlide = function(){
     slide = slide.substr(17, 4);
     return slide;
 }
-var parserElement = function(element){
-    var parseText = element.getAttribute("style").split(';');
+var parserElement = function(element, type){
+    if(type == 'position'){
+        var parseText = element.getAttribute("style").split(';');
+    }
+    else if(type == 'size'){
+        var parseText = element.attr("style").split(';');
+    }
 //    console.log(parseText); //debug
     var options = {};
     var option = '';
@@ -476,6 +674,12 @@ function cleanDefault(){
     default_temp = {
         top: undefined,
         left: undefined,
+        height: undefined,
+        width: undefined,
+        fontsize: undefined,
+        transform: undefined,
+        style: undefined,
+        numbers: undefined,
     }  
 }
 function clearOptions(){

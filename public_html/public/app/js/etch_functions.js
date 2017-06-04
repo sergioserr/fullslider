@@ -24,6 +24,7 @@ function updateCurrentStrokeWidth() {
 function changeFillColor(color) {
     var graphic = getGraphicEditableElement();
     $(graphic).attr("fill", color);
+    console.log('options'); //debug
     changeContent();
 }
 
@@ -36,6 +37,7 @@ function changeStrokeColor(color) {
         head = $(head).attr("href");
         $(head).attr("fill", color);//Arrowhead is fill instead of stroke
     }
+    console.log('options'); //debug
     changeContent();
 }
 
@@ -46,6 +48,7 @@ function changeStrokeWidth() {
     var element = me.selectedforedit;
 
     me.addGraphicStyle(element, graphic);
+    console.log('options'); //debug
     changeContent();
 }
 
@@ -54,6 +57,7 @@ function changeStrokeOpacity() {
 }
 function changeFillOpacity() {
     changeOpacity(this, "fill-opacity");
+    console.log('options'); //debug
 }
 
 function changeOpacity(el, type) {
@@ -149,5 +153,6 @@ function getCurrentEtchBackgroundColor() {
 function changeBackgroundColor(color) {
     var element = me.selectedforedit;
     $(element).css("background", color, "important");
+    console.log('options'); //debug
     changeContent();
 }
