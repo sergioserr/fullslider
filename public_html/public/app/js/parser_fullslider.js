@@ -23,18 +23,7 @@ $(document).ready(function() {
         for(var x = 0; x < id_slides_list.length; x++){
             Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
         }
-        modeIndex = '';
-        url_image = '';
-        id_slides_list = [];
-        optionsLines = [];
-        typeElements = {};
-        id_index_slides = [];
-        clearOptions();
-        slides_list = [];
-        elements_list = {};
-        max_line = 0;
-        spaceLines = [];
-        imagesListProcess = {};
+        resetAll();
         // Preprocessing
         processingText();
         // Markdown
@@ -69,7 +58,7 @@ $(document).ready(function() {
 //        mostrarDatos(); //debug
 //        console.log(imagesListProcess) //debug
 //        console.log(slides_list); //debug
-//        console.log(id_index_slides) //deug
+//        console.log(id_index_slides) //debug
 //    });
 }); 
 
@@ -1358,6 +1347,20 @@ function modifyTextCode(textElement, idElement){
     }
 }
 
+function resetAll(){
+    modeIndex = '';
+    url_image = '';
+    id_slides_list = [];
+    optionsLines = [];
+    typeElements = {};
+    id_index_slides = [];
+    clearOptions();
+    slides_list = [];
+    elements_list = {};
+    max_line = 0;
+    spaceLines = [];
+    imagesListProcess = {};
+}
 //Ejemplo debug
 
 //#1

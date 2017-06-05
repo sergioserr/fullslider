@@ -1200,10 +1200,14 @@ Impressionist.prototype =
 
                     if (me.mode == "create")
                     {
+                        $('#markdown-text').val('');
+                        resetAll();
                         me.createNewPresentation();
                     }
                     else
                     {
+                        $('#markdown-text').val('');
+                        resetAll();
                         $("#presentationmetatitle").html($("#titleinput").val());
                         me.currentPresentation.title = $("#titleinput").val();
                         me.savePresentation();
