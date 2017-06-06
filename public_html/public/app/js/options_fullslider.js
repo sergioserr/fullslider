@@ -40,7 +40,7 @@ default_figure = {
     transform: 0,
     fill: "#007fff",
     stroke: "#000000",
-    strokeSize: 3,
+    lineSize: 3,
     Opacity: 1,
 }
 default_temp = {
@@ -54,7 +54,7 @@ default_temp = {
     numbers: undefined,
     fill: undefined,
     stroke: undefined,
-    strokeSize: undefined,
+    lineSize: undefined,
     Opacity: undefined,
 }
 function NumElements(){
@@ -168,7 +168,7 @@ function modifyFigure(element, option, value){
         case 'stroke':
             textOptions += option + ':' + " '" + value + "',";
             break;
-        case 'strokeSize':
+        case 'lineSize':
             textOptions += option + ':' + " '" + value + "',";
             break;
         case 'Opacity':
@@ -515,8 +515,8 @@ function getOptionFigure(option, options){
         case 'stroke':
             options.stroke = default_figure.stroke;
             break;
-        case 'strokeSize':
-            options.strokeSize = default_figure.strokeSize;
+        case 'lineSize':
+            options.lineSize = default_figure.lineSize;
             break;
         case 'Opacity':
             options.Opacity = default_figure.Opacity;
@@ -569,8 +569,8 @@ function set_temp(options){
                 case 'stroke':
                     default_temp.stroke = value;
                     break;
-                case 'strokeSize':
-                    default_temp.strokeSize = parseFloat(value);
+                case 'lineSize':
+                    default_temp.lineSize = parseFloat(value);
                     break;
                 case 'Opacity':
                     default_temp.Opacity = parseFloat(value);

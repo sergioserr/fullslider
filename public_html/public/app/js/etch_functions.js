@@ -50,7 +50,7 @@ function changeStrokeWidth() {
     var element = me.selectedforedit;
 
     me.addGraphicStyle(element, graphic);
-    modifyFigure(element, 'strokeSize', graphic.getAttribute("stroke-width"));
+    modifyFigure(element, 'lineSize', graphic.getAttribute("stroke-width"));
     changeContent();
 }
 

@@ -14,7 +14,7 @@ function VectorEditor(elem, width, height) {
     //cant think of any better way to do it
     this.prop = {
         "src": "http://upload.wikimedia.org/wikipedia/commons/a/a5/ComplexSinInATimeAxe.gif",
-        "stroke-width": options.strokeSize,
+        "stroke-width": options.lineSize,
         "stroke": options.stroke,
         "fill": options.fill,
         "stroke-opacity": 1,
@@ -306,7 +306,7 @@ VectorEditor.prototype.onMouseDown = function(x, y, target) {
             shape.attr({
                 "fill": options.fill,
                 "stroke": options.stroke,
-                "stroke-width": options.strokeSize,
+                "stroke-width": options.lineSize,
                 "fill-opacity": options.Opacity,
                 "stroke-opacity": this.prop["stroke-opacity"],
             });
