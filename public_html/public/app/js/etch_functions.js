@@ -24,7 +24,8 @@ function updateCurrentStrokeWidth() {
 function changeFillColor(color) {
     var graphic = getGraphicEditableElement();
     $(graphic).attr("fill", color);
-    console.log('options'); //debug
+    var element = me.selectedforedit;
+    modifyFigure(element, 'fill', graphic.getAttribute("fill"));
     changeContent();
 }
 
@@ -37,7 +38,8 @@ function changeStrokeColor(color) {
         head = $(head).attr("href");
         $(head).attr("fill", color);//Arrowhead is fill instead of stroke
     }
-    console.log('options'); //debug
+    var element = me.selectedforedit;
+    modifyFigure(element, 'stroke', graphic.getAttribute("stroke"));
     changeContent();
 }
 
@@ -48,7 +50,7 @@ function changeStrokeWidth() {
     var element = me.selectedforedit;
 
     me.addGraphicStyle(element, graphic);
-    console.log('options'); //debug
+    modifyFigure(element, 'strokeSize', graphic.getAttribute("stroke-width"));
     changeContent();
 }
 
@@ -57,7 +59,9 @@ function changeStrokeOpacity() {
 }
 function changeFillOpacity() {
     changeOpacity(this, "fill-opacity");
-    console.log('options'); //debug
+    var graphic = getGraphicEditableElement();
+    var element = me.selectedforedit;
+    modifyFigure(element, 'Opacity', graphic.getAttribute("style").substring(61,64));
 }
 
 function changeOpacity(el, type) {

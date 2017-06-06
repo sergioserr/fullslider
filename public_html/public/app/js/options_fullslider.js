@@ -38,6 +38,10 @@ default_figure = {
     height: 11.3636363636363631,
     width: 11.3636363636363631,
     transform: 0,
+    fill: "#007fff",
+    stroke: "#000000",
+    strokeSize: 3,
+    Opacity: 1,
 }
 default_temp = {
     top: undefined,
@@ -48,6 +52,10 @@ default_temp = {
     transform: undefined,
     style: undefined,
     numbers: undefined,
+    fill: undefined,
+    stroke: undefined,
+    strokeSize: undefined,
+    Opacity: undefined,
 }
 function NumElements(){
     this.numText = 0;
@@ -151,6 +159,25 @@ function lessElement(type, quantity){
 }
 
 //Modify elements
+function modifyFigure(element, option, value){
+    var textOptions = '';
+    switch(option){
+        case 'fill':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+        case 'stroke':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+        case 'strokeSize':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+        case 'Opacity':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+    }
+    var id = element.getAttribute("id").substr(12, 4);
+    addOptionsList(id, textOptions);
+}
 function modifyCode(element, option, value){
     var textOptions = '';
     switch(option){
@@ -482,6 +509,18 @@ function getOptionFigure(option, options){
         case 'transform':
             options.transform = default_figure.transform;
             break;
+        case 'fill':
+            options.fill = default_figure.fill;
+            break;
+        case 'stroke':
+            options.stroke = default_figure.stroke;
+            break;
+        case 'strokeSize':
+            options.strokeSize = default_figure.strokeSize;
+            break;
+        case 'Opacity':
+            options.Opacity = default_figure.Opacity;
+            break;
     }
     return options;
 }
@@ -523,6 +562,18 @@ function set_temp(options){
                     break;
                 case 'transform':
                     default_temp.transform = parseFloat(value);
+                    break;
+                case 'fill':
+                    default_temp.fill = value;
+                    break;
+                case 'stroke':
+                    default_temp.stroke = value;
+                    break;
+                case 'strokeSize':
+                    default_temp.strokeSize = parseFloat(value);
+                    break;
+                case 'Opacity':
+                    default_temp.Opacity = parseFloat(value);
                     break;
             }
         }
@@ -680,6 +731,10 @@ function cleanDefault(){
         transform: undefined,
         style: undefined,
         numbers: undefined,
+        fill: undefined,
+        stroke: undefined,
+        strokeSize: undefined,
+        Opacity: undefined,
     }  
 }
 function clearOptions(){
