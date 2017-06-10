@@ -225,13 +225,21 @@ function initializeTextColorChooser(color) {
         toggleBold: function(e) {
             e.preventDefault();
             document.execCommand('bold', false, null);
-            console.log('options'); //debug
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleItalic: function(e) {
             e.preventDefault();
             document.execCommand('italic', false, null);
-            console.log('options'); //debug
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleUnderline: function(e) {

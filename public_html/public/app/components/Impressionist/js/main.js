@@ -501,7 +501,9 @@ Impressionist.prototype =
                                 if ($(this).html() == "" || $(this).html() == "<br>" || $($(this).children("div")[0]).html() == "<br>" || ($($(this).find["font"]).size() > 1 && $($(this).find["font"][0]).html() == "<br>")) {
                                     $(this).html(text_inner);
                                 }
-                                console.log('opcion'); //debug
+                                var elementId = $(this).attr('id');
+                                var textEdit = $(this).context.getElementsByTagName('div');
+                                modifyTextText(textEdit, elementId);
                                 break;
                             case "code":
                                 var code = $(this).find("code")[0];

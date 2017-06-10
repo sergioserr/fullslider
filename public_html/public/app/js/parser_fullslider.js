@@ -100,9 +100,20 @@ var process = function(source){
                 elements_list[id] = max_line;
                 addNumElementsSlide(id);
                 typeElements[id] = 'slide1';
+                var p = 1;
                 var proText = '';
+                var temText = '';
                 if((typeof source[1]) != "string"){
-                    proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                    while(p < source[1].length){
+                        if((typeof source[1][p]) != "string"){
+                            temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                        }
+                        else{
+                            temText += source[1][p];
+                        }
+                        p++;
+                    }
+                    proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
                 }
                 else{
                     proText += source[1];
@@ -111,7 +122,7 @@ var process = function(source){
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
 //                mainSlide = source[1];
-                typeElements[id] = 'title';
+                typeElements[id] = 'titleS';
                 moreTitle(1);
                 break;
             }
@@ -137,9 +148,20 @@ var process = function(source){
 //                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
 //                id = id.substr(12, 4);
 //                elements_list[id] = max_line;
+                var p = 1;
                 var proText = '';
+                var temText = '';
                 if((typeof source[1]) != "string"){
-                    proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                    while(p < source[1].length){
+                        if((typeof source[1][p]) != "string"){
+                            temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                        }
+                        else{
+                            temText += source[1][p];
+                        }
+                        p++;
+                    }
+                    proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
                 }
                 else{
                     proText += source[1];
@@ -147,7 +169,7 @@ var process = function(source){
                 id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
-                typeElements[id] = 'subtitle';
+                typeElements[id] = 'subtitleS';
                 moreSub(1);
                 break;
             }
@@ -158,9 +180,20 @@ var process = function(source){
             set_temp(source[1]);
             break;
         case 'tl1':
+            var p = 1;
             var proText = '';
+            var temText = '';
             if((typeof source[1]) != "string"){
-                proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                while(p < source[1].length){
+                    if((typeof source[1][p]) != "string"){
+                        temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                    }
+                    else{
+                        temText += source[1][p];
+                    }
+                    p++;
+                }
+                proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
             }
             else{
                 proText += source[1];
@@ -173,9 +206,20 @@ var process = function(source){
             moreTitle(1);
             break;
         case 'tl2':
+            var p = 1;
             var proText = '';
+            var temText = '';
             if((typeof source[1]) != "string"){
-                proText += '<' + source[1][0] + '>' + source[1][1] + '</' + source[1][0] + '>';
+                while(p < source[1].length){
+                    if((typeof source[1][p]) != "string"){
+                        temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                    }
+                    else{
+                        temText += source[1][p];
+                    }
+                    p++;
+                }
+                proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
             }
             else{
                 proText += source[1];
@@ -238,16 +282,50 @@ var process = function(source){
         case 'ol':
             var lines = multiElement(max_line, 'list');
 //            console.log(lines); //debug
+            var p = 1;
+            var temText = '';
             var text = '<ol><li>';
+            var preText = '';
             for(x = 1; x < source.length; x++){
-                if(x == source.length-1){
-                    text += source[x][1] + '</li>';
+                if(x != source.length-1){
+                    if((typeof source[x][1]) != "string"){
+                        while(p < source[x][1].length){
+                            if((typeof source[x][1][p]) != "string"){
+                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                            }
+                            else{
+                                temText += source[x][1][p];
+                            }
+                            p++;
+                        }
+                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                    }
+                    else{
+                        preText += source[x][1];
+                    }
+                    text += preText + '</li><li>';
                 }
                 else{
-                    text += source[x][1] + '</li><li>';
+                    if((typeof source[x][1]) != "string"){
+                        while(p < source[x][1].length){
+                            if((typeof source[x][1][p]) != "string"){
+                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                            }
+                            else{
+                                temText += source[x][1][p];
+                            }
+                            p++;
+                        }
+                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                    }
+                    else{
+                        preText += source[x][1];
+                    }
+                    text += preText + '</li>';
                 }
+                preText = '';
             }
-            text += '</ol>'
+            text += '</li></ol>'
             var id = Impressionist.prototype.addFullsliderListMD(text);
             id = id.substr(12, 4);
             elements_list[id] = lines;
@@ -259,14 +337,48 @@ var process = function(source){
         case 'ul':
             var lines = multiElement(max_line, 'list');
 //            console.log(lines); //debug
+            var p = 1;
+            var temText = '';
             var text = '<ul><li>';
+            var preText = '';
             for(x = 1; x < source.length; x++){
-                if(x == source.length-1){
-                    text += source[x][1] + '</li>';
+                if(x != source.length-1){
+                    if((typeof source[x][1]) != "string"){
+                        while(p < source[x][1].length){
+                            if((typeof source[x][1][p]) != "string"){
+                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                            }
+                            else{
+                                temText += source[x][1][p];
+                            }
+                            p++;
+                        }
+                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                    }
+                    else{
+                        preText += source[x][1];
+                    }
+                    text += preText + '</li><li>';
                 }
                 else{
-                    text += source[x][1] + '</li><li>';
+                    if((typeof source[x][1]) != "string"){
+                        while(p < source[x][1].length){
+                            if((typeof source[x][1][p]) != "string"){
+                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                            }
+                            else{
+                                temText += source[x][1][p];
+                            }
+                            p++;
+                        }
+                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                    }
+                    else{
+                        preText += source[x][1];
+                    }
+                    text += preText + '</li>';
                 }
+                preText = '';
             }
             text += '</li></ul>'
             var id = Impressionist.prototype.addFullsliderListMD(text);
@@ -314,11 +426,23 @@ var process = function(source){
                     var lines = multiElement(max_line, 'text');
 //                    console.log(lines) //debug
                     var p = 1;
+                    var p1 = 1;
                     var proText = '';
+                    var temText = '';
                     while(source[p] != undefined){
                         if((typeof source[p]) != "string"){
-//                            console.log(source[p]); //debug
-                            proText += '<' + source[p][0] + '>' + source[p][1] + '</' + source[p][0] + '>';
+                            while(p1 < source[p].length){
+                                if((typeof source[p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                    temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                                }
+                                else{
+                                    temText += source[p][p1];
+                                }
+                                p1++;
+                            }
+                            proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
                             if(source[p+1] == '\n'){
                                 proText += '\n';
                                 p++;
@@ -656,7 +780,7 @@ var addImagesList = function(idElement, url=undefined){
 var addOptionsList = function(idElement, options){
     var lines = elements_list[idElement];
     if(typeElements[idElement] == 'text' || typeElements[idElement] == 'slide1' || typeElements[idElement] == 'slide2'
-      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure' || typeElements[idElement] == 'code' || typeElements[idElement] == 'image'){
+      || typeElements[idElement] == 'title' || typeElements[idElement] == 'subtitle' || typeElements[idElement] == 'figure' || typeElements[idElement] == 'code' || typeElements[idElement] == 'image' || typeElements[idElement] == 'titleS' || typeElements[idElement] == 'subtitleS'){
         if(lines.length != undefined){
             var line = lines[0];
             if(optionsLines.includes(line-2)){
@@ -784,6 +908,14 @@ var pasteElements = function(element, newElement){
         case 'subtitle':
             moreSub(1)
             typeElements[newId] = 'subtitle';
+            break;
+        case 'titleS':
+            moreTitle(1)
+            typeElements[newId] = 'titleS';
+            break;
+        case 'subtitleS':
+            moreSub(1)
+            typeElements[newId] = 'subtitleS';
             break;
         }
 }
@@ -946,6 +1078,14 @@ var identifyElement = function(newElement, lines, oldId){
         case 'subtitle':
             moreSub(1)
             typeElements[newId] = 'subtitle';
+            break;
+        case 'titleS':
+            moreTitle(1)
+            typeElements[newId] = 'titleS';
+            break;
+        case 'subtitleS':
+            moreSub(1)
+            typeElements[newId] = 'subtitleS';
             break;
         }
 }
@@ -1346,7 +1486,164 @@ function modifyTextCode(textElement, idElement){
         moreCode(newCountLines - countLines)
     }
 }
-
+function modifyTextText(textElement, idElement){
+//    console.log(textElement); //debug
+    var idElement = idElement.substr(12, 4);
+    var type = typeElements[idElement];
+    var lines = elements_list[idElement];
+    var linesC = elements_list[idElement];
+    var countLines = lines.length;
+    if(countLines != undefined){
+        //Delete element
+        var line = lines[0];
+        var lastLine = lines[lines.length-1];
+        for(var mT = line; mT <= lastLine; mT++){
+            restructureList(line, false, '');
+            max_line--;
+        }
+        if(spaceLines.includes(line)){
+            for(s = 0; s < spaceLines.length; s++){
+                if(line == spaceLines[s]){
+                    spaceLines.splice(s, 1);
+                }
+            }
+            restructureList(line, false, '');
+            max_line--;
+        }
+        //Create modified element again
+        elements_list[idElement] = [];
+        var chi = 0;
+        var modT = '';
+        for(var mTT = 0; mTT < textElement.length; mTT++){
+            if(textElement[mTT].children.length != 1){
+                while(chi < textElement[mTT].children.length){
+                    modT += textElement[mTT].children.item(chi).innerHTML;
+                    chi++;
+                }
+                chi = 0;
+            }
+            else{
+                modT = textElement[mTT].children.item(0).innerHTML;
+            }
+            var modifiedText = replaceStyleText(modT);
+//            console.log(modifiedText); //debug
+            if(mTT == textElement.length-1){
+                restructureList(line, true, 'paste', modifiedText + '\n', 2);
+                max_line++;
+                elements_list[idElement].push(line);
+                line++;
+                max_line++;
+                spaceLines.push(line);
+            }
+            else{
+                restructureList(line, true, 'paste', modifiedText, 1);
+                max_line++;
+                elements_list[idElement].push(line);
+                line++;
+            }
+        }
+        var newCountLines = elements_list[idElement].length;
+        if(newCountLines > countLines){
+            moreText(newCountLines - countLines)
+        }
+    }
+    else{
+        //Delete element
+        restructureList(lines, false, '');
+        max_line--;
+        if(spaceLines.includes(lines)){
+            for(s = 0; s < spaceLines.length; s++){
+                if(lines == spaceLines[s]){
+                    spaceLines.splice(s, 1);
+                }
+            }
+            restructureList(line, false, '');
+            max_line--;
+        }
+        //Create modified element again
+        elements_list[idElement] = [];
+        var chi = 0;
+        var modT = '';
+        for(var mTT = 0; mTT < textElement.length; mTT++){
+            if(textElement[mTT].children.length != 1){
+                while(chi < textElement[mTT].children.length){
+                    modT += textElement[mTT].children.item(chi).innerHTML;
+                    chi++;
+                }
+                chi = 0;
+            }
+            else{
+                modT = textElement[mTT].children.item(0).innerHTML;
+            }
+            var modifiedText = '';
+            switch(type){
+                case 'title':
+                    modifiedText += '-' + replaceStyleText(modT) + '-';
+                    break;
+                case 'subtitle':
+                    modifiedText += '--' + replaceStyleText(modT) + '--';
+                    break;
+                case 'titleS':
+                    modifiedText += '#' + replaceStyleText(modT);
+                    break;
+                case 'subtitleS':
+                    modifiedText += '##' + replaceStyleText(modT);
+                    break;
+                default:
+                    modifiedText += replaceStyleText(modT);
+                    break;
+            }
+//            console.log(modifiedText); //debug
+            if(mTT == textElement.length-1){
+                restructureList(lines, true, 'paste', modifiedText, 2);
+                max_line++;
+                elements_list[idElement].push(lines);
+                lines++;
+                max_line++;
+                spaceLines.push(lines);
+            }
+            else{
+                restructureList(lines, true, 'paste', modifiedText, 1);
+                max_line++;
+                elements_list[idElement].push(lines);
+                lines++;
+            }
+        }
+        if(type == "titleS" || type == "subtitleS" || type == "title" || type == "subtitle"){
+            var lock = '';
+            for(lock in elements_list){
+                if(elements_list[lock].length != undefined){
+                    if(elements_list[lock].includes(linesC)){
+                        elements_list[lock] = linesC;
+                    }
+                }
+                else{
+                    if(elements_list[lock] == linesC+2){
+                        elements_list[lock] = linesC;
+                    }
+                }
+            }
+        }
+        var newCountLines = elements_list[idElement].length;
+        if(newCountLines > countLines){
+            moreText(newCountLines - countLines)
+        }
+    }
+}
+function replaceStyleText(text){
+    var modifiedText = text.replace(/^\s+/g, '');
+    modifiedText = modifiedText.replace(/<br>*/g, '');
+    modifiedText = modifiedText.replace(/&nbsp;\s*/g, ' ');
+    modifiedText = modifiedText.replace(/<b>*\s*/g, '**');
+    modifiedText = modifiedText.replace(/<\/b>*/g, '**');
+    modifiedText = modifiedText.replace(/<i>*\s*/g, '_');
+    modifiedText = modifiedText.replace(/<\/i>*/g, '_');
+    modifiedText = modifiedText.replace(/<strong>*\s*/g, '**');
+    modifiedText = modifiedText.replace(/<\/strong>*/g, '**');
+    modifiedText = modifiedText.replace(/<em>*\s*/g, '_');
+    modifiedText = modifiedText.replace(/<\/em>*/g, '_');
+    return modifiedText;
+}
 function resetAll(){
     modeIndex = '';
     url_image = '';

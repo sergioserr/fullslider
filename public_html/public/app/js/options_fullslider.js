@@ -155,6 +155,24 @@ function lessElement(type, quantity){
                 slideNumElements[obtainSlide()].numElem -= quantity;
             }
             break;
+        case 'titleS':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numTitle -= quantity;
+                if(slideNumElements[obtainSlide()].numSub > 1){
+                    slideNumElements[obtainSlide()].numText -= quantity;         
+                }
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
+        case 'subtitleS':
+            if(slideNumElements[obtainSlide()] != undefined){
+                slideNumElements[obtainSlide()].numSub -= quantity;
+                if(slideNumElements[obtainSlide()].numSub > 1){
+                    slideNumElements[obtainSlide()].numText -= quantity;         
+                }
+                slideNumElements[obtainSlide()].numElem -= quantity;
+            }
+            break;
     }
 }
 
