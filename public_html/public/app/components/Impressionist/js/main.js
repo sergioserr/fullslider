@@ -806,7 +806,6 @@ Impressionist.prototype =
                 me.assignSlideNumbers(true);
                 me.addFullsliderSlide(uid);
                 $("#presentationmetatitle").html($("#titleinput").val());
-                changeContent();//Event for undo redo
                 addSlideList(uid);
             },
             
@@ -877,7 +876,6 @@ Impressionist.prototype =
                         me.selectSlide("#fullslider_slide_" + newslideid);
                         me.selectThumb(newslideid);
                     });
-                    changeContent();//Event for undo redo
                 });
                 $(".slidemask").on("click", function(e)
                 {
@@ -2356,7 +2354,6 @@ Impressionist.prototype =
                 me.assignSlideNumbers(true);
                 me.addFullsliderSlideMD(uid);
                 $("#presentationmetatitle").html($("#titleinput").val());
-                changeContent();//Event for undo redo
                 return uid;
             },
             addFullsliderSlideMD: function(id){

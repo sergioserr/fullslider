@@ -19,6 +19,8 @@ var imagesListProcess = {}; //Save the images for adding later
 
 $(document).ready(function() {   
     $('#markdown-text').on('change', function() { 
+        change = false;
+        old_slides = id_slides_list.slice();
         // Resetting
         for(var x = 0; x < id_slides_list.length; x++){
             Impressionist.prototype.deleteIdSlide(id_slides_list[x]);
@@ -47,6 +49,8 @@ $(document).ready(function() {
 //            console.log(id_slides_list); //debug
         };
         deleteSpaces();
+        initializeUndoRedo();
+        change = true;
     });
 //    $('#testing').click(function() {
 //        console.log(elements_list); //debug
@@ -59,6 +63,13 @@ $(document).ready(function() {
 //        console.log(imagesListProcess) //debug
 //        console.log(slides_list); //debug
 //        console.log(id_index_slides) //debug
+//        console.log(copiesTextEditor); //debug
+//        console.log(futureCopiesTextEditor); //debug
+//        console.log(presentTextEditor); //debug
+//        console.log(copiesVariables); //debug
+//        console.log(futureCopiesVariables); //debug
+//        console.log(presentVariables); //debug
+//        console.log(old_slides); //debug
 //    });
 }); 
 
@@ -478,6 +489,8 @@ var addSlideList = function(idSlide){
     max_line += 2;
     addNumElementsSlide(idSlide);
     typeElements[idSlide] = 'slide1';
+    changeContent();
+    changeTextEditor();
 }
 var deleteSlideList = function(idSlide){
     for(var i = 0; i < id_slides_list.length; i++){
@@ -557,7 +570,7 @@ var deleteSlideList = function(idSlide){
             }
             if(notSlide){
                 if(posibleTitle){
-                    deleteElementList(lock);
+                    deleteElementList(lock, true);
                     locks = Object.keys(elements_list);
                     l = 0;
                     posibleTitle = false;
@@ -583,7 +596,7 @@ var deleteSlideList = function(idSlide){
             l = 0;
         }
     }
-//    deleteSpaces();
+    changeTextEditor();
 }
 function compareLines(lineElement, line){
     if(lineElement.length != undefined){
@@ -604,7 +617,7 @@ function currentSlide(){
 }
 
 //Elements
-var deleteElementList = function(idElement){
+var deleteElementList = function(idElement, fromSlide = false){
     if(idElement.length > 4){
         idElement = idElement.substr(12, 4);
     }
@@ -679,6 +692,9 @@ var deleteElementList = function(idElement){
     }
     deleteSpaces();
     delete elements_list[idElement];
+    if(!fromSlide){
+        changeTextEditor();
+    }
 }
 
 //Text, code
@@ -703,6 +719,7 @@ var addTextList = function(idText, type, text='Sample Text'){
             typeElements[idText] = type;
             break;
     }
+    changeTextEditor();
 }
 var addCodeList = function(idCode){
     var lineSlide = currentSlide();
@@ -717,6 +734,7 @@ var addCodeList = function(idCode){
     max_line += 4;
     typeElements[idCode] = 'code';
     moreCode(3);
+    changeTextEditor();
 }
 
 //Figures
@@ -764,6 +782,7 @@ var addImagesList = function(idElement, url=undefined){
         spaceLines.push(lineSlide + 3);
         max_line += 2;
         typeElements[idElement] = 'image';
+        changeTextEditor();
     }
     else{
         idElement = idElement.substr(12, 4);
@@ -833,6 +852,7 @@ var addOptionsList = function(idElement, options){
             max_line += 2;
         }
     }
+    changeTextEditor();
 }
 
 //Paste elements
@@ -918,6 +938,7 @@ var pasteElements = function(element, newElement){
             typeElements[newId] = 'subtitleS';
             break;
         }
+    changeTextEditor();
 }
 var pasteSlides = function(slide, newSlide, copyLine = undefined){
     var id = slide.attr("id").substr(17, 4);
@@ -1041,6 +1062,7 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
     }
     deleteSpaces();
     max_line += copyText.split('\n').length;
+    changeTextEditor();
 }
 var identifyElement = function(newElement, lines, oldId){
 //    console.log(newElement); //debug
@@ -1485,6 +1507,7 @@ function modifyTextCode(textElement, idElement){
     if(newCountLines > countLines){
         moreCode(newCountLines - countLines)
     }
+    changeTextEditor();
 }
 function modifyTextText(textElement, idElement){
 //    console.log(textElement); //debug
@@ -1629,6 +1652,7 @@ function modifyTextText(textElement, idElement){
             moreText(newCountLines - countLines)
         }
     }
+    changeTextEditor();
 }
 function replaceStyleText(text){
     var modifiedText = text.replace(/^\s+/g, '');
