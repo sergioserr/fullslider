@@ -219,7 +219,6 @@ function initializeTextColorChooser(color) {
         clearFormatting: function(e) {
             e.preventDefault();
             document.execCommand('removeFormat', false, null);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleBold: function(e) {
@@ -245,7 +244,6 @@ function initializeTextColorChooser(color) {
         toggleUnderline: function(e) {
             e.preventDefault();
             document.execCommand('underline', false, null);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleHeading: function(e) {
@@ -258,7 +256,6 @@ function initializeTextColorChooser(color) {
             }
             var h3 = document.createElement('h3');
             range.surroundContents(h3);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         urlPrompt: function(callback) {
@@ -292,7 +289,6 @@ function initializeTextColorChooser(color) {
                     document.execCommand('createLink', false, url);
                 });
             }
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         toggleUnorderedList: function(e) {
@@ -326,19 +322,16 @@ function initializeTextColorChooser(color) {
         justifyLeft: function(e) {
             e.preventDefault();
             document.execCommand('justifyLeft', false, null);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         justifyCenter: function(e) {
             e.preventDefault();
             document.execCommand('justifyCenter', false, null);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         justifyRight: function(e) {
             e.preventDefault();
             document.execCommand('justifyRight', false, null);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         getImage: function(e) {
@@ -346,7 +339,6 @@ function initializeTextColorChooser(color) {
 
             // call startUploader with callback to handle inserting it once it is uploded/cropped
             this.startUploader(this.insertImage);
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         startUploader: function(cb) {
@@ -387,7 +379,6 @@ function initializeTextColorChooser(color) {
             e.preventDefault();
             var editableModel = this.model.get('editableModel');
             editableModel.trigger('save');
-            console.log('options'); //debug
             changeContent();//Event for undo redo
         },
         shownumbers: function(e) {
@@ -467,6 +458,7 @@ function initializeTextColorChooser(color) {
             $(elementToChange).css("font-size", new_fontsize + "vw");
             var fontSizeReadout = document.getElementsByClassName('fontSizeReadout')[0];
             fontSizeReadout.innerHTML = new_fontsize.toFixed(2) + " vw";
+            modifyElementSize(elementToChange);
         },
         fontSizeDown: function(e) {
             var elementToChange = getElementEditing();
@@ -480,6 +472,7 @@ function initializeTextColorChooser(color) {
             $(elementToChange).css("font-size", new_fontsize + "vw");
             var fontSizeReadout = document.getElementsByClassName('fontSizeReadout')[0];
             fontSizeReadout.innerHTML = new_fontsize.toFixed(2) + " vw";
+            modifyElementSize(elementToChange);
         },
         setCodeStyle: function(e) {
             e.preventDefault();
@@ -513,7 +506,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 face: value_name
             });
-            console.log('options'); //debug
+            modifyCode(elementToChange, 'format', value)
             changeContent();//Event for undo redo
         },
         setFontSize: function(e) {
@@ -532,7 +525,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 size: value
             });
-            console.log('options'); //debug
+            modifyElementSize(elementToChange);
             changeContent();//Event for undo redo
         }
 

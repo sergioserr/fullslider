@@ -157,6 +157,5 @@ function getCurrentEtchBackgroundColor() {
 function changeBackgroundColor(color) {
     var element = me.selectedforedit;
     $(element).css("background", color, "important");
-    console.log('options'); //debug
     changeContent();
 }

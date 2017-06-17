@@ -933,24 +933,19 @@ Impressionist.prototype =
                 else{
                     var options = getOptions(type);
                 }
-                var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
                         color = me.normalColor;
-                        font = me.normalFont;
                         break;
                     case "title":
                         color = me.titleColor;
-                        font = me.titleFont;
                         break;
                     case "subtitle":
                         color = me.subtitleColor;
-                        font = me.subtitleFont;
                         break;
                     default:
                         color = "#000";
-                        font = "'Montserrat', sans-serif";
                         break;
                 }
                 $(element).css("font-size", options.fontsize + "vw");
@@ -970,7 +965,7 @@ Impressionist.prototype =
                         $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
                         break;
                 }
-                $(element).css("font-family", font);
+                $(element).css("font-family", options.format);
 
 
                 $(element).css("position", "absolute");
@@ -2454,24 +2449,19 @@ Impressionist.prototype =
                 else{
                     var options = getOptions(type);
                 }
-                var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
                         color = me.normalColor;
-                        font = me.normalFont;
                         break;
                     case "title":
                         color = me.titleColor;
-                        font = me.titleFont;
                         break;
                     case "subtitle":
                         color = me.subtitleColor;
-                        font = me.subtitleFont;
                         break;
                     default:
                         color = "#000";
-                        font = "'Montserrat', sans-serif";
                         break;
                 }
                 if(options.transform != 0){
@@ -2491,7 +2481,7 @@ Impressionist.prototype =
                         h++;
                     });
                 }
-                $(element).css("font-family", font);
+                $(element).css("font-family", options.format);
 
 
                 $(element).css("position", "absolute");

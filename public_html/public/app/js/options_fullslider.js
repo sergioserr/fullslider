@@ -4,18 +4,21 @@ default_text = {
     left: 3.66032,
     fontsize: 1.75,
     transform: 0,
+    format: '\'Montserrat\', sans serif',
 }
 default_title = {
     top: 0.0732064,
     left: 1.02489,
     fontsize: 3.5,
     transform: 0,
+    format: '\'Montserrat\', sans serif',
 }
 default_subtitle = {
     top: 5.13089,
     left: 3.66492,
     fontsize: 2.75,
     transform: 0,
+    format: '\'Montserrat\', sans serif',
 }
 default_code = {
     top: 5.66,
@@ -56,6 +59,7 @@ default_temp = {
     stroke: undefined,
     lineSize: undefined,
     Opacity: undefined,
+    format: undefined,
 }
 function NumElements(){
     this.numText = 0;
@@ -319,6 +323,16 @@ function mergeOptions(oldOp, newOp){
     }
     return textOptions;
 }
+function modifyCode(element, option, value){
+    var textOptions = '';
+    switch(option){
+        case 'format':
+            textOptions += option + ':' + " '" + value + "',";
+            break;
+    }
+    var id = element.attr("id").substr(12, 4);
+    addOptionsList(id, textOptions);
+}
 
 //Get options
 function getOptions(type){
@@ -412,6 +426,9 @@ function getOptionText(option, options){
         case 'transform':
             options.transform = default_text.transform;
             break;
+        case 'format':
+            options.format = default_text.format;
+            break;
     }
     return options;
 }
@@ -439,6 +456,9 @@ function getOptionTitle(option, options){
         case 'transform':
             options.transform = default_title.transform;
             break;
+        case 'format':
+            options.format = default_title.format;
+            break;
     }
     return options;
 }
@@ -465,6 +485,9 @@ function getOptionSubtitle(option, options){
             break;
         case 'transform':
             options.transform = default_subtitle.transform;
+            break;
+        case 'format':
+            options.format = default_subtitle.format;
             break;
     }
     return options;
@@ -593,8 +616,115 @@ function set_temp(options){
                 case 'Opacity':
                     default_temp.Opacity = parseFloat(value);
                     break;
+                case 'format':
+                    value = obtainValue(options[op]);
+                    default_temp.format = "'" + value + "', " + addFormat(value);
+                    console.log(default_temp.format)
+                    op++;
+                    break;
             }
         }
+    }
+}
+function addFormat(value){
+    console.log(value); //debug
+    switch(value){
+        case 'Abril Fatface':
+            return 'cursive';
+            break;
+        case 'Architects Daughter':
+            return 'cursive';
+            break;
+        case 'Bangers':
+            return 'cursive';
+            break;
+        case 'Black Ops One':
+            return 'cursive';
+            break;
+        case 'Cabin Sketch':
+            return 'cursive';
+            break;
+        case 'Cookie':
+            return 'cursive';
+            break;
+        case 'Courgette':
+            return 'cursive';
+            break;
+        case 'Crimson Text':
+            return 'serif';
+            break;
+        case 'Dancing Script':
+            return 'cursive';
+            break;
+        case 'Droid Sans Mono':
+            return 'monospace';
+            break;
+        case 'Fredoka One':
+            return 'cursive';
+            break;
+        case 'Gorditas':
+            return 'cursive';
+            break;
+        case 'Great Vibes':
+            return 'cursive';
+            break;
+        case 'Hammersmith One':
+            return 'sans-serif';
+            break;
+        case 'Inconsolata':
+            return 'sans-serif';
+            break;
+        case 'Indie Flower':
+            return 'cursive';
+            break;
+        case 'Lato':
+            return 'sans-serif';
+            break;
+        case 'League Gothic':
+            return 'sans-serif';
+            break;
+        case 'Lobster':
+            return 'serif';
+            break;
+        case 'Miltonian':
+            return 'cursive';
+            break;
+        case 'Montserrat':
+            return 'sans serif';
+            break;
+        case 'Niconne':
+            return 'cursive';
+            break;
+        case 'Open Sans':
+            return 'sans-serif';
+            break;
+        case 'Pacifico':
+            return 'cursive';
+            break;
+        case 'Playfair Display':
+            return 'cursive';
+            break;
+        case 'Press Start 2P':
+            return 'cursive';
+            break;
+        case 'Quicksand':
+            return 'sans-serif';
+            break;
+        case 'Satisfy':
+            return 'cursive';
+            break;
+        case 'Shadows Into Light':
+            return 'cursive';
+            break;
+        case 'Special Elite':
+            return 'cursive';
+            break;
+        case 'Tangerine':
+            return 'cursive';
+            break;
+        case 'Ubuntu':
+            return 'sans-serif';
+            break;
     }
 }
 
@@ -684,7 +814,7 @@ function obtainOption(line){
 function obtainValue(line){
     var v = 0;
     var value = '';
-    while(line[v] != "'"){
+    while(line[v] != "'" || line[v+1] == "'"){
         v++;
     }
     v++;
