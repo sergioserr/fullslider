@@ -298,13 +298,21 @@ function initializeTextColorChooser(color) {
         toggleUnorderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertUnorderedList', false, null);
-            console.log('options'); //debug
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleOrderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertOrderedList', false, null);
-            console.log('options'); //debug
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleUndo: function(e) {

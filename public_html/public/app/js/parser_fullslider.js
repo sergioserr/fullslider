@@ -112,22 +112,30 @@ var process = function(source){
                 addNumElementsSlide(id);
                 typeElements[id] = 'slide1';
                 var p = 1;
+                var p1 = 1;
                 var proText = '';
                 var temText = '';
-                if((typeof source[1]) != "string"){
-                    while(p < source[1].length){
-                        if((typeof source[1][p]) != "string"){
-                            temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                while(source[p] != undefined){
+                    if((typeof source[p]) != "string"){
+                        while(p1 < source[p].length){
+                            if((typeof source[p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                            }
+                            else{
+                                temText += source[p][p1];
+                            }
+                            p1++;
                         }
-                        else{
-                            temText += source[1][p];
-                        }
-                        p++;
+                        p1 = 1;
+                        proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
+                        temText = '';
                     }
-                    proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
-                }
-                else{
-                    proText += source[1];
+                    else{
+                        proText += source[p];
+                    }
+                    p++;
                 }
                 id = Impressionist.prototype.addFullsliderTextMD("title", proText);
                 id = id.substr(12, 4);
@@ -160,22 +168,30 @@ var process = function(source){
 //                id = id.substr(12, 4);
 //                elements_list[id] = max_line;
                 var p = 1;
+                var p1 = 1;
                 var proText = '';
                 var temText = '';
-                if((typeof source[1]) != "string"){
-                    while(p < source[1].length){
-                        if((typeof source[1][p]) != "string"){
-                            temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+                while(source[p] != undefined){
+                    if((typeof source[p]) != "string"){
+                        while(p1 < source[p].length){
+                            if((typeof source[p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                            }
+                            else{
+                                temText += source[p][p1];
+                            }
+                            p1++;
                         }
-                        else{
-                            temText += source[1][p];
-                        }
-                        p++;
+                        p1 = 1;
+                        proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
+                        temText = '';
                     }
-                    proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
-                }
-                else{
-                    proText += source[1];
+                    else{
+                        proText += source[p];
+                    }
+                    p++;
                 }
                 id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
                 id = id.substr(12, 4);
@@ -192,22 +208,30 @@ var process = function(source){
             break;
         case 'tl1':
             var p = 1;
+            var p1 = 1;
             var proText = '';
             var temText = '';
-            if((typeof source[1]) != "string"){
-                while(p < source[1].length){
-                    if((typeof source[1][p]) != "string"){
-                        temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+            while(source[p] != undefined){
+                if((typeof source[p]) != "string"){
+                    while(p1 < source[p].length){
+                        if((typeof source[p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                            temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                        }
+                        else{
+                            temText += source[p][p1];
+                        }
+                        p1++;
                     }
-                    else{
-                        temText += source[1][p];
-                    }
-                    p++;
+                    p1 = 1;
+                    proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
+                    temText = '';
                 }
-                proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
-            }
-            else{
-                proText += source[1];
+                else{
+                    proText += source[p];
+                }
+                p++;
             }
 //            console.log(proText); //debug
             var id = Impressionist.prototype.addFullsliderTextMD("title", proText);
@@ -218,22 +242,30 @@ var process = function(source){
             break;
         case 'tl2':
             var p = 1;
+            var p1 = 1;
             var proText = '';
             var temText = '';
-            if((typeof source[1]) != "string"){
-                while(p < source[1].length){
-                    if((typeof source[1][p]) != "string"){
-                        temText += '<' + source[1][p][0] + '>' + source[1][p][1] + '</' + source[1][p][0] + '>';
+            while(source[p] != undefined){
+                if((typeof source[p]) != "string"){
+                    while(p1 < source[p].length){
+                        if((typeof source[p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                            temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                        }
+                        else{
+                            temText += source[p][p1];
+                        }
+                        p1++;
                     }
-                    else{
-                        temText += source[1][p];
-                    }
-                    p++;
+                    p1 = 1;
+                    proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
+                    temText = '';
                 }
-                proText += '<' + source[1][0] + '>' + temText + '</' + source[1][0] + '>';
-            }
-            else{
-                proText += source[1];
+                else{
+                    proText += source[p];
+                }
+                p++;
             }
 //            console.log(proText); //debug
             var id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
@@ -294,47 +326,64 @@ var process = function(source){
             var lines = multiElement(max_line, 'list');
 //            console.log(lines); //debug
             var p = 1;
+            var p1 = 1;
             var temText = '';
             var text = '<ol><li>';
-            var preText = '';
+            var proText = '';
             for(x = 1; x < source.length; x++){
                 if(x != source.length-1){
-                    if((typeof source[x][1]) != "string"){
-                        while(p < source[x][1].length){
-                            if((typeof source[x][1][p]) != "string"){
-                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                    while(source[x][p] != undefined){
+                        if((typeof source[x][p]) != "string"){
+                            while(p1 < source[x][p].length){
+                                if((typeof source[x][p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                    temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                                }
+                                else{
+                                    temText += source[x][p][p1];
+                                }
+                                p1++;
                             }
-                            else{
-                                temText += source[x][1][p];
-                            }
-                            p++;
+                            p1 = 1;
+                            proText += '<' + source[x][p][0] + '>' + temText + '</' + source[x][p][0] + '>';
+                            temText = '';
                         }
-                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                        else{
+                            proText += source[x][p];
+                        }
+                        p++;
                     }
-                    else{
-                        preText += source[x][1];
-                    }
-                    text += preText + '</li><li>';
+                    text += proText + '</li><li>';
+                    proText = '';
                 }
                 else{
-                    if((typeof source[x][1]) != "string"){
-                        while(p < source[x][1].length){
-                            if((typeof source[x][1][p]) != "string"){
-                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                    while(source[x][p] != undefined){
+                        if((typeof source[x][p]) != "string"){
+                            while(p1 < source[x][p].length){
+                                if((typeof source[x][p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                    temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                                }
+                                else{
+                                    temText += source[x][p][p1];
+                                }
+                                p1++;
                             }
-                            else{
-                                temText += source[x][1][p];
-                            }
-                            p++;
+                            p1 = 1;
+                            proText += '<' + source[x][p][0] + '>' + temText + '</' + source[x][p][0] + '>';
+                            temText = '';
                         }
-                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                        else{
+                            proText += source[x][p];
+                        }
+                        p++;
                     }
-                    else{
-                        preText += source[x][1];
-                    }
-                    text += preText + '</li>';
+                    text += proText + '</li>';
+                    proText = '';
                 }
-                preText = '';
+                p = 1;
             }
             text += '</li></ol>'
             var id = Impressionist.prototype.addFullsliderListMD(text);
@@ -349,47 +398,64 @@ var process = function(source){
             var lines = multiElement(max_line, 'list');
 //            console.log(lines); //debug
             var p = 1;
+            var p1 = 1;
             var temText = '';
             var text = '<ul><li>';
-            var preText = '';
+            var proText = '';
             for(x = 1; x < source.length; x++){
                 if(x != source.length-1){
-                    if((typeof source[x][1]) != "string"){
-                        while(p < source[x][1].length){
-                            if((typeof source[x][1][p]) != "string"){
-                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                    while(source[x][p] != undefined){
+                        if((typeof source[x][p]) != "string"){
+                            while(p1 < source[x][p].length){
+                                if((typeof source[x][p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                    temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                                }
+                                else{
+                                    temText += source[x][p][p1];
+                                }
+                                p1++;
                             }
-                            else{
-                                temText += source[x][1][p];
-                            }
-                            p++;
+                            p1 = 1;
+                            proText += '<' + source[x][p][0] + '>' + temText + '</' + source[x][p][0] + '>';
+                            temText = '';
                         }
-                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                        else{
+                            proText += source[x][p];
+                        }
+                        p++;
                     }
-                    else{
-                        preText += source[x][1];
-                    }
-                    text += preText + '</li><li>';
+                    text += proText + '</li><li>';
+                    proText = '';
                 }
                 else{
-                    if((typeof source[x][1]) != "string"){
-                        while(p < source[x][1].length){
-                            if((typeof source[x][1][p]) != "string"){
-                                temText += '<' + source[x][1][p][0] + '>' + source[x][1][p][1] + '</' + source[x][1][p][0] + '>';
+                    while(source[x][p] != undefined){
+                        if((typeof source[x][p]) != "string"){
+                            while(p1 < source[x][p].length){
+                                if((typeof source[x][p][p1]) != "string"){
+//                                    console.log(source[p]); //debug
+                                    temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
+//                                    console.log(source[p]); //debug
+                                }
+                                else{
+                                    temText += source[x][p][p1];
+                                }
+                                p1++;
                             }
-                            else{
-                                temText += source[x][1][p];
-                            }
-                            p++;
+                            p1 = 1;
+                            proText += '<' + source[x][p][0] + '>' + temText + '</' + source[x][p][0] + '>';
+                            temText = '';
                         }
-                        preText += '<' + source[x][1][0] + '>' + temText + '</' + source[x][1][0] + '>';
+                        else{
+                            proText += source[x][p];
+                        }
+                        p++;
                     }
-                    else{
-                        preText += source[x][1];
-                    }
-                    text += preText + '</li>';
+                    text += proText + '</li>';
+                    proText = '';
                 }
-                preText = '';
+                p = 1;
             }
             text += '</li></ul>'
             var id = Impressionist.prototype.addFullsliderListMD(text);
@@ -453,7 +519,9 @@ var process = function(source){
                                 }
                                 p1++;
                             }
+                            p1 = 1;
                             proText += '<' + source[p][0] + '>' + temText + '</' + source[p][0] + '>';
+                            temText = '';
                             if(source[p+1] == '\n'){
                                 proText += '\n';
                                 p++;
@@ -1516,6 +1584,7 @@ function modifyTextText(textElement, idElement){
     var lines = elements_list[idElement];
     var linesC = elements_list[idElement];
     var countLines = lines.length;
+    var linesList = 0;
     if(countLines != undefined){
         //Delete element
         var line = lines[0];
@@ -1537,33 +1606,81 @@ function modifyTextText(textElement, idElement){
         elements_list[idElement] = [];
         var chi = 0;
         var modT = '';
+        console.log(textElement); //debug
         for(var mTT = 0; mTT < textElement.length; mTT++){
             if(textElement[mTT].children.length != 1){
-                while(chi < textElement[mTT].children.length){
-                    modT += textElement[mTT].children.item(chi).innerHTML;
-                    chi++;
+                if(textElement[mTT].innerHTML.includes('<ul>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 0);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
                 }
-                chi = 0;
+                else if(textElement[mTT].innerHTML.includes('<ol>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 1);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else{
+                    while(chi < textElement[mTT].children.length){
+                        modT += textElement[mTT].children.item(chi).innerHTML;
+                        chi++;
+                    }
+                    chi = 0;
+                }
             }
             else{
-                modT = textElement[mTT].children.item(0).innerHTML;
+                if(textElement[mTT].innerHTML.includes('<ul>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 0);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else if(textElement[mTT].innerHTML.includes('<ol>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 1);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else{
+                    modT = textElement[mTT].children.item(0).innerHTML;      
+                }
             }
+            console.log(linesList); //debug
+            console.log(modT); //debug
             var modifiedText = replaceStyleText(modT);
-//            console.log(modifiedText); //debug
-            if(mTT == textElement.length-1){
-                restructureList(line, true, 'paste', modifiedText + '\n', 2);
-                max_line++;
-                elements_list[idElement].push(line);
-                line++;
-                max_line++;
-                spaceLines.push(line);
+            console.log(modifiedText); //debug
+            if(modifiedText != ''){
+                if(linesList != 0){
+                    if(mTT == textElement.length-1){
+                        restructureList(line, true, 'paste', modifiedText, linesList+1);
+                        max_line += linesList;
+                        for(var sl = 1; sl <= linesList; sl++){
+                            elements_list[idElement].push(line);
+                            line++;
+                        }
+                        max_line++;
+                        spaceLines.push(line);
+                    }
+                    else{
+                        restructureList(line, true, 'paste', modifiedText, linesList);
+                        max_line += linesList;
+                        for(var sl = 1; sl <= linesList; sl++){
+                            elements_list[idElement].push(line);
+                            line++;
+                        }
+                    }
+                }
+                else{
+                    if(mTT == textElement.length-1){
+                        restructureList(line, true, 'paste', modifiedText + '\n', 2);
+                        max_line++;
+                        elements_list[idElement].push(line);
+                        line++;
+                        max_line++;
+                        spaceLines.push(line);
+                    }
+                    else{
+                        restructureList(line, true, 'paste', modifiedText, 1);
+                        max_line++;
+                        elements_list[idElement].push(line);
+                        line++;
+                    }
+                }
             }
-            else{
-                restructureList(line, true, 'paste', modifiedText, 1);
-                max_line++;
-                elements_list[idElement].push(line);
-                line++;
-            }
+            linesList = 0;
         }
         var newCountLines = elements_list[idElement].length;
         if(newCountLines > countLines){
@@ -1589,15 +1706,37 @@ function modifyTextText(textElement, idElement){
         var modT = '';
         for(var mTT = 0; mTT < textElement.length; mTT++){
             if(textElement[mTT].children.length != 1){
-                while(chi < textElement[mTT].children.length){
-                    modT += textElement[mTT].children.item(chi).innerHTML;
-                    chi++;
+                if(textElement[mTT].innerHTML.includes('<ul>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 0);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
                 }
-                chi = 0;
+                else if(textElement[mTT].innerHTML.includes('<ol>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 1);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else{
+                    while(chi < textElement[mTT].children.length){
+                        modT += textElement[mTT].children.item(chi).innerHTML;
+                        chi++;
+                    }
+                    chi = 0;
+                }
             }
             else{
-                modT = textElement[mTT].children.item(0).innerHTML;
+                if(textElement[mTT].innerHTML.includes('<ul>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 0);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else if(textElement[mTT].innerHTML.includes('<ol>')){
+                    modT = toList(textElement[mTT].children.item(0).children, 1);
+                    linesList = textElement[mTT].children.item(0).children.length + 1;
+                }
+                else{
+                    modT = textElement[mTT].children.item(0).innerHTML;      
+                }
             }
+            console.log(linesList); //debug
+            console.log(modT); //debug
             var modifiedText = '';
             switch(type){
                 case 'title':
@@ -1616,21 +1755,46 @@ function modifyTextText(textElement, idElement){
                     modifiedText += replaceStyleText(modT);
                     break;
             }
-//            console.log(modifiedText); //debug
-            if(mTT == textElement.length-1){
-                restructureList(lines, true, 'paste', modifiedText, 2);
-                max_line++;
-                elements_list[idElement].push(lines);
-                lines++;
-                max_line++;
-                spaceLines.push(lines);
+            console.log(modifiedText); //debug
+            if(modifiedText != ''){
+                if(linesList != 0){
+                    if(mTT == textElement.length-1){
+                        restructureList(lines, true, 'paste', modifiedText, linesList+1);
+                        max_line += linesList;
+                        for(var sl = 1; sl <= linesList; sl++){
+                            elements_list[idElement].push(lines);
+                            lines++;
+                        }
+                        max_line++;
+                        spaceLines.push(lines);
+                    }
+                    else{
+                        restructureList(lines, true, 'paste', modifiedText, linesList);
+                        max_line += linesList;
+                        for(var sl = 1; sl <= linesList; sl++){
+                            elements_list[idElement].push(lines);
+                            lines++;
+                        }
+                    }
+                }
+                else{
+                    if(mTT == textElement.length-1){
+                        restructureList(lines, true, 'paste', modifiedText, 2);
+                        max_line++;
+                        elements_list[idElement].push(lines);
+                        lines++;
+                        max_line++;
+                        spaceLines.push(lines);
+                    }
+                    else{
+                        restructureList(lines, true, 'paste', modifiedText, 1);
+                        max_line++;
+                        elements_list[idElement].push(lines);
+                        lines++;
+                    }
+                }
             }
-            else{
-                restructureList(lines, true, 'paste', modifiedText, 1);
-                max_line++;
-                elements_list[idElement].push(lines);
-                lines++;
-            }
+            linesList = 0;
         }
         if(type == "titleS" || type == "subtitleS" || type == "title" || type == "subtitle"){
             var lock = '';
@@ -1656,18 +1820,37 @@ function modifyTextText(textElement, idElement){
 }
 function replaceStyleText(text){
     var modifiedText = text.replace(/^\s+/g, '');
-    modifiedText = modifiedText.replace(/<br>*/g, '');
-    modifiedText = modifiedText.replace(/&nbsp;\s*/g, ' ');
-    modifiedText = modifiedText.replace(/<b>*\s*/g, '**');
-    modifiedText = modifiedText.replace(/<\/b>*/g, '**');
-    modifiedText = modifiedText.replace(/<i>*\s*/g, '_');
-    modifiedText = modifiedText.replace(/<\/i>*/g, '_');
-    modifiedText = modifiedText.replace(/<strong>*\s*/g, '**');
-    modifiedText = modifiedText.replace(/<\/strong>*/g, '**');
-    modifiedText = modifiedText.replace(/<em>*\s*/g, '_');
-    modifiedText = modifiedText.replace(/<\/em>*/g, '_');
+    modifiedText = modifiedText.replace(/<br>/g, '.');
+    modifiedText = modifiedText.replace(/&nbsp;*/g, ' ');
+    modifiedText = modifiedText.replace(/<b>\s*/g, '**');
+    modifiedText = modifiedText.replace(/<\/b>/g, '**');
+    modifiedText = modifiedText.replace(/<i>\s*/g, '_');
+    modifiedText = modifiedText.replace(/<\/i>/g, '_');
+    modifiedText = modifiedText.replace(/<strong>\s*/g, '**');
+    modifiedText = modifiedText.replace(/<\/strong>/g, '**');
+    modifiedText = modifiedText.replace(/<em>\s*/g, '_');
+    modifiedText = modifiedText.replace(/<\/em>/g, '_');
     return modifiedText;
 }
+function toList(textElement, mode){
+//    console.log(textElement); //debug
+    var textList = '';
+    var ind = 1;
+    for(var l = 0; l < textElement.length; l++){
+//        console.log(textElement[l].innerHTML); //debug
+        if(mode == 0){ //unorder
+            textList += '* ' + textElement[l].innerHTML + '\n';
+        }
+        else{ //order
+            textList += ind + '. ' + textElement[l].innerHTML + '\n';
+            ind++;
+        }
+    }
+    textList += '---'
+//    console.log(textList); //debug
+    return textList;
+}
+
 function resetAll(){
     modeIndex = '';
     url_image = '';
