@@ -274,9 +274,11 @@ Impressionist.prototype =
                 $(".slidethumbholder").sortable({
                     update: function(event, ui)
                     {
+                        var slidesViews = document.getElementsByClassName('slidethumbholder')[0].children;
                         me.assignSlideNumbers();
                         me.reArrangeFullsliderSlides();
-                        console.log('opcion'); //debug
+                        var element = event.srcElement;
+                        moveSlideMD(slidesViews, element)
                         changeContent();//Event for undo redo
                     }
                 });
@@ -1419,7 +1421,6 @@ Impressionist.prototype =
 
                 $('#urlimgform').submit(function() {
                     $.post($(this).attr('action'), $(this).serialize(), function(json) {
-//                        console.log(json);
 //                       me.addImageToSlide(json);
                         //Clear input and preview image
                         $("#urlimageinput").val("");

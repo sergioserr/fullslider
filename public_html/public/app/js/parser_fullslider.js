@@ -1606,7 +1606,7 @@ function modifyTextText(textElement, idElement){
         elements_list[idElement] = [];
         var chi = 0;
         var modT = '';
-        console.log(textElement); //debug
+//        console.log(textElement); //debug
         for(var mTT = 0; mTT < textElement.length; mTT++){
             if(textElement[mTT].children.length != 1){
                 if(textElement[mTT].innerHTML.includes('<ul>')){
@@ -1638,10 +1638,10 @@ function modifyTextText(textElement, idElement){
                     modT = textElement[mTT].children.item(0).innerHTML;      
                 }
             }
-            console.log(linesList); //debug
-            console.log(modT); //debug
+//            console.log(linesList); //debug
+//            console.log(modT); //debug
             var modifiedText = replaceStyleText(modT);
-            console.log(modifiedText); //debug
+//            console.log(modifiedText); //debug
             if(modifiedText != ''){
                 if(linesList != 0){
                     if(mTT == textElement.length-1){
@@ -1735,8 +1735,8 @@ function modifyTextText(textElement, idElement){
                     modT = textElement[mTT].children.item(0).innerHTML;      
                 }
             }
-            console.log(linesList); //debug
-            console.log(modT); //debug
+//            console.log(linesList); //debug
+//            console.log(modT); //debug
             var modifiedText = '';
             switch(type){
                 case 'title':
@@ -1755,7 +1755,7 @@ function modifyTextText(textElement, idElement){
                     modifiedText += replaceStyleText(modT);
                     break;
             }
-            console.log(modifiedText); //debug
+//            console.log(modifiedText); //debug
             if(modifiedText != ''){
                 if(linesList != 0){
                     if(mTT == textElement.length-1){
@@ -1849,6 +1849,112 @@ function toList(textElement, mode){
     textList += '---'
 //    console.log(textList); //debug
     return textList;
+}
+function moveSlideMD(slides, slide){
+//    console.log(slides); //debug
+//    console.log('Slide moved: ' + slide.id); //debug
+    for(var mS = 0; mS < slides.length; mS++){
+//        console.log(slides[mS].id); //debug
+        if(slides[mS].id.includes(slide.id)){
+//            console.log('Yeah, ' + slides[mS].id + ' == ' + slide.id); //debug
+            if(slides[mS+1] != undefined){
+                var s = slides[mS+1].id.substr(11,4);
+//                console.log('Line next slide: ' + elements_list[s]); //debug
+                moveSlide(slide.id, elements_list[s]);
+            }
+            else{
+//                console.log('Last slide'); //debug
+                moveSlide(slide.id, max_line);
+            }
+        }
+    }
+}
+var moveSlide = function(idSlide, line){
+    var newElements = document.getElementById(idSlide).children;
+    idSlide = idSlide.substr(11,4);
+    newElements = newElements[3].children;
+//    console.log(newElements); //debug
+    var text = $('#markdown-text').val().split('\n');
+//    console.log(text); //debug
+    var lineSlide = elements_list[idSlide];
+    var lineText = lineSlide;
+    var moveText = text[lineText] + '\n';
+    lineText++;
+    while(lineText != text.length-1 && text[lineText] != undefined && !(text[lineText].includes('#')) && !(text[lineText].includes('##'))){
+//        console.log(lineText); //debug
+        if(lineText+1 != text.length-1 && text[lineText+1] != undefined && !(text[lineText+1].includes('#')) && !(text[lineText+1].includes('##'))){
+            moveText += text[lineText] + '\n';
+        }
+        else{
+            moveText += text[lineText];
+        }
+        lineText++;
+    }
+//    console.log(moveText); //debug
+//    console.log('line: ' + line); //debug
+    // Delete old position
+    var lT = moveText.split('\n').length;
+    var oldLine = elements_list[idSlide];
+//    console.log(oldLine); //debug
+    for(var dT = 0; dT < lT; dT++){
+//        console.log(dT); //debug
+        if(spaceLines.includes(oldLine)){
+            for(s = 0; s < spaceLines.length; s++){
+                if(oldLine == spaceLines[s]){
+                    spaceLines.splice(s, 1);
+                }
+            }
+            restructureList(oldLine, false, 'slide');
+        }
+        else{
+            if(optionsLines.includes(oldLine)){
+                if(modeIndex != '' && oldLine == 0){
+
+                }
+                else{
+                    for(s = 0; s < optionsLines.length; s++){
+                        if(oldLine == optionsLines[s]){
+                            optionsLines.splice(s, 1);
+                        }
+                    }
+                }
+            }
+            restructureList(oldLine, false, '');
+        }
+    }
+//    console.log(spaceLines); //debug
+//    console.log(newElements); //debug
+//    console.log('line: ' + line + ' y restará: ' + moveText.split('\n').length); //debug
+    // Add again
+    if(line != 0){
+        line = line - (moveText.split('\n').length);
+    }
+//    console.log('line: ' + line); //debug
+    restructureList(line, true, 'paste', moveText, lT);
+    var nE = 1;
+    moveText = moveText.split('\n');
+    elements_list[idSlide] = line;
+    line++;
+    var idE = '';
+    for(var movedT = 1; movedT < moveText.length; movedT++){
+        if(moveText[movedT].includes('{options')){
+//            console.log('options'); //debug
+            optionsLines.push(line);
+            line++;
+            movedT++;
+        }
+        else if(moveText[movedT] != ''){
+//            console.log(newElements[nE]); //debug
+            idE = newElements[nE].id.substr(12,4);
+            elements_list[idE] = line;
+            nE++;
+        }
+        else{
+//            console.log(line); //debug
+            spaceLines.push(line);
+        }
+        line++;
+    }
 }
 
 function resetAll(){
