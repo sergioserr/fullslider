@@ -23,26 +23,26 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 }
 
 
-function createImageFromDataUrl(data_url) {
+function createImageFromDataUrl(data_url, url=undefined) {
     var i = new Image();
     i.onload = function() {
-        me.addImageToSlide({src: this.src, width: this.width, height: this.height});
+        me.addImageToSlide({src: this.src, width: this.width, height: this.height}, url);
         changeContent();//Event for undo redo 
     };
     i.src = data_url;
 }
 
-function blobAsDataUrl(blob, func) {
+function blobAsDataUrl(blob, func, url=undefined) {
     var reader = new FileReader();
     reader.onloadend = function() {
-        func(reader.result);
+        func(reader.result, url);
     };
 
     reader.readAsDataURL(blob);
 }
 
-function createImageFromBlob(blob) {
-    blobAsDataUrl(blob, createImageFromDataUrl);
+function createImageFromBlob(blob, url=undefined) {
+    blobAsDataUrl(blob, createImageFromDataUrl, url);
 }
 
 function fileAsDataUrl(file, func) {
@@ -60,7 +60,7 @@ function createImageFromFile(file) {
 //JSON File is defined in loadimage.js module
 function createImageFromJSONFile(json) {
     var blob = b64toBlob(json.file, json.type);
-    createImageFromBlob(blob);
+    createImageFromBlob(blob, json.url);
 }
 
 function SvgToDataUrl(svg) {

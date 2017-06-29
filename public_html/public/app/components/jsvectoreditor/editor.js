@@ -3,6 +3,7 @@ function VectorEditor(elem, width, height) {
     if (typeof (Raphael) != "function") { //check for the renderer
         return alert("Error! Renderer is Missing!"); //if renderer isn't there, return false;
     }
+    var options = getOptions('figure');
 
     this.container = elem;
     this.draw = Raphael(elem, width, height);
@@ -13,11 +14,11 @@ function VectorEditor(elem, width, height) {
     //cant think of any better way to do it
     this.prop = {
         "src": "http://upload.wikimedia.org/wikipedia/commons/a/a5/ComplexSinInATimeAxe.gif",
-        "stroke-width": getFloatValue($("#strokewidth").val()),
-        "stroke": $("#strokecolor").attr("data-dfcolor"),
-        "fill": $("#fillcolor").attr("data-dfcolor"),
+        "stroke-width": options.lineSize,
+        "stroke": options.stroke,
+        "fill": options.fill,
         "stroke-opacity": 1,
-        "fill-opacity": 1,
+        "fill-opacity": options.Opacity,
         "text": "Text"
     };
     this.mode = "select";
@@ -222,6 +223,7 @@ VectorEditor.prototype.set = function(name, value) {
 VectorEditor.prototype.onMouseDown = function(x, y, target) {
     this.fire("mousedown");
     this.tmpXY = this.onHitXY = [x, y];
+    var options = getOptions('figure');
     if (this.mode == "select" && !this.selectbox) {
 
         var shape_object = null;
@@ -302,10 +304,10 @@ VectorEditor.prototype.onMouseDown = function(x, y, target) {
         if (shape) {
             shape.id = this.generateUUID();
             shape.attr({
-                "fill": this.prop.fill,
-                "stroke": this.prop.stroke,
-                "stroke-width": this.prop["stroke-width"],
-                "fill-opacity": this.prop['fill-opacity'],
+                "fill": options.fill,
+                "stroke": options.stroke,
+                "stroke-width": options.lineSize,
+                "fill-opacity": options.Opacity,
                 "stroke-opacity": this.prop["stroke-opacity"],
             });
             this.addShape(shape);

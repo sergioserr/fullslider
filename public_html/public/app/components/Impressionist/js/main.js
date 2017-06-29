@@ -274,8 +274,11 @@ Impressionist.prototype =
                 $(".slidethumbholder").sortable({
                     update: function(event, ui)
                     {
+                        var slidesViews = document.getElementsByClassName('slidethumbholder')[0].children;
                         me.assignSlideNumbers();
                         me.reArrangeFullsliderSlides();
+                        var element = event.srcElement;
+                        moveSlideMD(slidesViews, element)
                         changeContent();//Event for undo redo
                     }
                 });
@@ -304,6 +307,7 @@ Impressionist.prototype =
                 me.selectThumb(uid);
                 me.enableDrag();
                 me.selectCurrentClicked($("#slidethumb_" + uid));
+                return clonedSlide;
             },
             copySlideToSlide: function(slide) {
                 var slideUid = me.currentClicked.attr("id").replace("slidethumb_", "");
@@ -319,6 +323,7 @@ Impressionist.prototype =
                 me.selectThumb(slideUid);
                 me.enableDrag();
                 me.selectCurrentClicked($("#slidethumb_" + slideUid));
+                return targetSlide;
 
             },
             reArrangeFullsliderSlides: function()
@@ -498,12 +503,18 @@ Impressionist.prototype =
                                 if ($(this).html() == "" || $(this).html() == "<br>" || $($(this).children("div")[0]).html() == "<br>" || ($($(this).find["font"]).size() > 1 && $($(this).find["font"][0]).html() == "<br>")) {
                                     $(this).html(text_inner);
                                 }
+                                var elementId = $(this).attr('id');
+                                var textEdit = $(this).context.getElementsByTagName('div');
+                                modifyTextText(textEdit, elementId);
                                 break;
                             case "code":
                                 var code = $(this).find("code")[0];
                                 if (typeof $(code).find("ol")[0] == "undefined" || $(this).html() == "" || $(this).html() == "<br>") {
                                     $(this).html(code_inner);
                                 }
+                                var elementId = $(this).attr('id');
+                                var textEdit = $(this).context.getElementsByTagName('li');
+                                modifyTextCode(textEdit, elementId)
                                 break;
                         }
                     }
@@ -522,7 +533,7 @@ Impressionist.prototype =
                     $(this).css("max-height", maxheight + "vw");
                     drawElement(this);
                     if(e.isImmediatePropagationStopped){
-                        modifyElement(this);
+                        modifyElementPosition(this);
                     }
 //                        me.selectElement(this);
                     $(this).removeClass("grabbing");
@@ -797,7 +808,6 @@ Impressionist.prototype =
                 me.assignSlideNumbers(true);
                 me.addFullsliderSlide(uid);
                 $("#presentationmetatitle").html($("#titleinput").val());
-                changeContent();//Event for undo redo
                 addSlideList(uid);
             },
             
@@ -868,7 +878,6 @@ Impressionist.prototype =
                         me.selectSlide("#fullslider_slide_" + newslideid);
                         me.selectThumb(newslideid);
                     });
-                    changeContent();//Event for undo redo
                 });
                 $(".slidemask").on("click", function(e)
                 {
@@ -926,33 +935,26 @@ Impressionist.prototype =
                 else{
                     var options = getOptions(type);
                 }
-                var size = "";
-                var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
-                        size = me.normalSize;
                         color = me.normalColor;
-                        font = me.normalFont;
                         break;
                     case "title":
-                        size = me.titleSize;
                         color = me.titleColor;
-                        font = me.titleFont;
                         break;
                     case "subtitle":
-                        size = me.subtitleSize;
                         color = me.subtitleColor;
-                        font = me.subtitleFont;
                         break;
                     default:
-                        size = "1.75vw";
                         color = "#000";
-                        font = "'Montserrat', sans-serif";
                         break;
                 }
-
-                $(element).css("font-size", size + "vw");
+                $(element).css("font-size", options.fontsize + "vw");
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
+                
                 var text_value = $(element).text();
                 switch(mode){
                     case "em":
@@ -965,7 +967,7 @@ Impressionist.prototype =
                         $(element).children().html("<b><font color='" + color + "'>" + text_value + "</font></b>");
                         break;
                 }
-                $(element).css("font-family", font);
+                $(element).css("font-family", options.format);
 
 
                 $(element).css("position", "absolute");
@@ -991,21 +993,43 @@ Impressionist.prototype =
                 addCodeList(element.id);
             },
             addCodeStyle: function(element) {
-                $(element).css("font-size", "1.3vw");
+                var options = getOptions('code');
+                $(element).css("font-size", options.fontsize + "vw");
                 $(element).css("position", "absolute");
-                $(element).css("left", "24.6vw");
-                $(element).css("top", "5.66vw");
+                $(element).css("left", options.left + "vw");
+                $(element).css("top", options.top + "vw");
                 $(element).css("line-height", "initial", "important");
                 //$(element).css("color", "#000");
                 $(element).css("height", "initial");
                 $(element).css("width", "auto");
                 $(element).css("white-space", "normal");
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
                 var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
                 var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
                 $(element).css("max-width", maxwidth + "vw");
                 $(element).css("max-height", maxheight + "vw");
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
+                me.addStyleCode(element, options.style);
+                me.changeNumbersCode(element, options.numbers)
+            },
+            addStyleCode: function(element, value){
+                elementToChange = $(element.children);
+                var current = elementToChange.attr("data-class");
+                elementToChange.removeClass(current);
+                elementToChange.addClass(value);
+                elementToChange.attr("data-class", value);
+            },
+            changeNumbersCode: function(element, value){
+                var ol = $(element.getElementsByTagName('ol'));
+                if(value == 'true'){
+                    ol.css("list-style-type", "decimal");
+                }
+                else{
+                    ol.css("list-style-type", "none");
+                }
             },
             prettifyCode: function() {
                 $($(me.selectedforedit).find("code")[0]).removeClass();
@@ -1173,10 +1197,14 @@ Impressionist.prototype =
 
                     if (me.mode == "create")
                     {
+                        $('#markdown-text').val('');
+                        resetAll();
                         me.createNewPresentation();
                     }
                     else
                     {
+                        $('#markdown-text').val('');
+                        resetAll();
                         $("#presentationmetatitle").html($("#titleinput").val());
                         me.currentPresentation.title = $("#titleinput").val();
                         me.savePresentation();
@@ -1387,12 +1415,12 @@ Impressionist.prototype =
                 //Upload image from url
                 $("#addurlimgbtn").on("click", function(e)
                 {
+                    takeUrlImage($("#urlimageinput").val());
                     $("#urlimgform").submit();
                 });
 
                 $('#urlimgform').submit(function() {
                     $.post($(this).attr('action'), $(this).serialize(), function(json) {
-//                        console.log(json);
 //                       me.addImageToSlide(json);
                         //Clear input and preview image
                         $("#urlimageinput").val("");
@@ -1867,26 +1895,41 @@ Impressionist.prototype =
                 }, 'json');
 
             },
-            addImageToSlide: function(data)
+            addImageToSlide: function(data, url=undefined)
             {
-                var element = me.addFullsliderSlideItem(image_snippet);
+                if(manualImage){
+                    var element = me.addFullsliderSlideItem(image_snippet);
+                }
+                else{
+                    var element = me.addFullsliderSlideItemMD(image_snippet, url);
+                }
+                
                 var id = $(element).attr("id");
 
                 data.element = $("#" + id);
-                me.addImageStyle(data);
+                me.addImageStyle(data, url);
 
                 me.finishAddFile($("#" + id));
+                addImagesList(id, url);
             },
-            addImageStyle: function(data) {
+            addImageStyle: function(data, url=undefined) {
                 var element = data.element;
-
+                if(manualImage){
+                    var options = getOptions('image');
+                }
+                else{
+                    var options = imagesListProcess[url].shift();
+                }
+                
                 var src = data.src;
                 var im_width = data.width;
                 var im_height = data.height;
                 $(element).find("img").attr("src", src);
                 element.css("position", "absolute");
-                element.css("left", "15vw");
-                element.css("top", "15vw");
+//                element.css("left", "15vw");
+//                element.css("top", "15vw");
+                element.css("left", options.left + "vw");
+                element.css("top", options.top + "vw");
                 var scale;
                 if (im_height < im_width) {
                     scale = im_width / im_height;
@@ -1904,9 +1947,12 @@ Impressionist.prototype =
                         im_width = 7;
                     }
                 }
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
 
-                element.css("height", im_height + "vw");
-                element.css("width", im_width + "vw");
+                element.css("height", options.height + "vw");
+                element.css("width", options.width + "vw");
             },
             addGraphics: function() {
                 var graphic_list = $("#canvas").find("svg").children();
@@ -1932,12 +1978,19 @@ Impressionist.prototype =
                                 break;
                         }
 
-                        me.addGraphicStyle(element, graphic);
+//                        me.addGraphicStyle(element, graphic);
+                        if (manualFigure) {
+                            me.addGraphicStyle(element, graphic);
+                        }
+                        else{
+                            me.addGraphicStyleMD(element, graphic);
+                        }
 
                         me.finishAddFile($(element));
                         
                         addFigureList(element.id, svgtype);
                         takeIdFigure(element.id);
+                        addOptionsNewFigure(element)
                     }
                 }
             },
@@ -2297,7 +2350,6 @@ Impressionist.prototype =
                 me.assignSlideNumbers(true);
                 me.addFullsliderSlideMD(uid);
                 $("#presentationmetatitle").html($("#titleinput").val());
-                changeContent();//Event for undo redo
                 return uid;
             },
             addFullsliderSlideMD: function(id){
@@ -2319,7 +2371,7 @@ Impressionist.prototype =
                 }
                 me.generateScaledSlide(me.selectedSlide);
             },
-            addFullsliderTextMD: function(type, text, mode, top, left) {
+            addFullsliderTextMD: function(type, text) {
                 text = text.split('\n');
                 var futureText = '';
                 for(p = 0; p < text.length; p++){
@@ -2327,14 +2379,14 @@ Impressionist.prototype =
                 }
                 var mText = text_snippet.replace("Sample Text", futureText);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyleMD(element, type, mode, top, left);
+                me.addTextStyleMD(element, type, false, text);
                 me.finishAddFile($(element));
                 return element.id;
             },
-            addFullsliderListMD: function(text, top, left) {
+            addFullsliderListMD: function(text) {
                 var mText = text_snippet.replace("Sample Text", text);
                 var element = me.addFullsliderSlideItem(mText);
-                me.addTextStyleMD(element, 'normal', 'normal', top, left, true);
+                me.addTextStyleMD(element, 'normal', 'normal', true);
                 me.finishAddFile($(element));
                 return element.id;
             },
@@ -2391,72 +2443,46 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-            addTextStyleMD: function(element, type, mode, top, left, list=false) {
+            addTextStyleMD: function(element, type, list=false, text_value = undefined) {
                 if(type == 'normal'){
                     var options = getOptions('text');
                 }
                 else{
                     var options = getOptions(type);
                 }
-                var size = "";
-                var font = "";
                 var color = "";
                 switch (type) {
                     case "normal":
-                        size = me.normalSize;
                         color = me.normalColor;
-                        font = me.normalFont;
                         break;
                     case "title":
-                        size = me.titleSize;
                         color = me.titleColor;
-                        font = me.titleFont;
                         break;
                     case "subtitle":
-                        size = me.subtitleSize;
                         color = me.subtitleColor;
-                        font = me.subtitleFont;
                         break;
                     default:
-                        size = "1.75vw";
                         color = "#000";
-                        font = "'Montserrat', sans-serif";
                         break;
                 }
-
-                $(element).css("font-size", size + "vw");
-                var text_value = $(element).text().split('\n');
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
+                $(element).css("font-size", options.fontsize + "vw");
+                if(text_value == undefined){
+                    var text_value = $(element).text().split('\n');
+                }                
                 var h = 0;
                 if(list){
-//                    console.log($(element > ol).children());
-//                    $(element > ol).children().each(function(){
-//                        $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
-//                        h++;
-//                    });
+                    //Not added more
                 }
                 else{
-                    switch(mode){
-                        case "em":
-                            $(element).children().each(function(){
-                                $(this).html("<i><font color='" + color + "'>" + text_value[h] + "</font></i>")
-                                h++;
-                            });
-                            break;
-                        case "normal":
-                            $(element).children().each(function(){
-                                $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
-                                h++;
-                            });
-                            break;
-                        case "strong":
-                            $(element).children().each(function(){
-                                $(this).html("<b><font color='" + color + "'>" + text_value[h] + "</font></b>")
-                                h++;
-                            });
-                            break;
-                    }
+                    $(element).children().each(function(){
+                        $(this).html("<font color='" + color + "'>" + text_value[h] + "</font>")
+                        h++;
+                    });
                 }
-                $(element).css("font-family", font);
+                $(element).css("font-family", options.format);
 
 
                 $(element).css("position", "absolute");
@@ -2474,5 +2500,94 @@ Impressionist.prototype =
                 $(element).css("overflow", "hidden");
                 $(element).css("word-break", "break-word", "important");
             },
-        };
+            addGraphicStyleMD: function(element, graphic) {
+                var svg_element = $(element).find("svg");
+                var added_graphic = $(svg_element).children()[0];
+                
+                var options = getOptions('figure');
 
+                var stroke_width = pxToVw(parseFloat($(graphic).attr("stroke-width")));
+                var is_arrow = false;
+
+                if ($(added_graphic).is("defs")) { //If is arrow
+                    is_arrow = true;
+                    var last = $($(svg_element).children()).size() - 1;
+                    var added_graphic = $(svg_element).children()[last];
+                    stroke_width *= 3;
+                }
+
+                //After append, because before has relative modal values
+                var width = parseFloat(pxToVw(graphic.getBBox().width));
+                var height = parseFloat(pxToVw(graphic.getBBox().height));
+
+                var left = graphic.getBBox().x;
+                var top = graphic.getBBox().y;
+
+                var left_translate = (left * -1);
+                var top_translate = (top * -1);
+
+                switch (true) {
+                    case (height != 0 && width != 0):
+                        if (width > height) {
+                            var w_rel = (stroke_width + 0 * height / width);
+                        }
+                        else {
+                            var w_rel = (stroke_width + 0 * width / height);
+                        }
+                        width += w_rel;
+                        left_translate += vwToPx(w_rel / 2);
+                        height += w_rel;
+                        top_translate += vwToPx(w_rel / 2);
+                        break;
+                    case(height != 0 && width == 0):
+                        width += stroke_width + 1;
+                        left_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            height += stroke_width + 1;
+                            top_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                    case(height == 0 && width != 0):
+                        height += stroke_width + 1;
+                        top_translate += vwToPx((stroke_width + 1) / 2);
+                        if (is_arrow) {
+                            width += stroke_width + 1;
+                            left_translate += vwToPx(stroke_width / 1.75);
+                        }
+                        break
+                }
+                if(options.transform != 0){
+                    $(element).css("transform", "rotate(" + options.transform + "deg)");
+                }
+                $(added_graphic).attr("transform", "translate(" + left_translate + ", " + top_translate + ")");
+
+//                width = options.width;
+//                height = options.height;
+                left = options.left;
+                top = options.top;
+                
+                $(svg_element).css("width", width + "vw");
+                $(svg_element).css("height", height + "vw");
+                $(svg_element).css("position", "absolute");
+                $(element).css("width", width + "vw");
+                $(element).css("height", height + "vw");
+                $(element).css("position", "absolute");
+                $(element).css("left", left + "vw");
+                $(element).css("top", top + "vw");
+
+
+                //Javascript insteadof Jquery because attr("viewBox") set attribute "viewbox". Case Sensitive
+                $(svg_element)[0].setAttribute('preserveAspectRatio', "xMinYMin meet");
+                $(svg_element)[0].setAttribute('viewBox', "0 0 " + vwToPx(width) + " " + vwToPx(height));
+                var maxwidth = calculateMaxWidth(element, $(".fullslider-slide-container"));
+                var maxheight = calculateMaxHeight(element, $(".fullslider-slide-container"));
+                $(element).css("max-width", maxwidth + "vw");
+                $(element).css("max-height", maxheight + "vw");
+            },
+            addFullsliderSlideItemMD: function(template, url=undefined){
+                var id = "slidelement_" + me.generateUID();
+                template = template.split("slidelement_id").join(id);
+                $(imagesListProcess[url].shift()).append(template);
+                return (document.getElementById(id));
+            },
+        };

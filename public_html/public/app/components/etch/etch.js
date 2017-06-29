@@ -224,11 +224,21 @@ function initializeTextColorChooser(color) {
         toggleBold: function(e) {
             e.preventDefault();
             document.execCommand('bold', false, null);
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleItalic: function(e) {
             e.preventDefault();
             document.execCommand('italic', false, null);
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleUnderline: function(e) {
@@ -284,11 +294,21 @@ function initializeTextColorChooser(color) {
         toggleUnorderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertUnorderedList', false, null);
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleOrderedList: function(e) {
             e.preventDefault();
             document.execCommand('insertOrderedList', false, null);
+            var element = me.selectedforedit;
+            if(element != ''){
+                var textEdit = element.getElementsByTagName('div');
+                modifyTextText(textEdit, element.getAttribute('id'));
+            }
             changeContent();//Event for undo redo
         },
         toggleUndo: function(e) {
@@ -366,9 +386,11 @@ function initializeTextColorChooser(color) {
             var ol = $($(elementToChange).find("ol"));
             if (ol.css("list-style-type") == "decimal") {
                 ol.css("list-style-type", "none");
+                modifyCode(elementToChange, 'numbers', 'false');
             }
             else {
                 ol.css("list-style-type", "decimal");
+                modifyCode(elementToChange, 'numbers', 'true');
             }
             changeContent();//Event for undo redo
         },
@@ -436,6 +458,7 @@ function initializeTextColorChooser(color) {
             $(elementToChange).css("font-size", new_fontsize + "vw");
             var fontSizeReadout = document.getElementsByClassName('fontSizeReadout')[0];
             fontSizeReadout.innerHTML = new_fontsize.toFixed(2) + " vw";
+            modifyElementSize(elementToChange);
         },
         fontSizeDown: function(e) {
             var elementToChange = getElementEditing();
@@ -449,11 +472,12 @@ function initializeTextColorChooser(color) {
             $(elementToChange).css("font-size", new_fontsize + "vw");
             var fontSizeReadout = document.getElementsByClassName('fontSizeReadout')[0];
             fontSizeReadout.innerHTML = new_fontsize.toFixed(2) + " vw";
+            modifyElementSize(elementToChange);
         },
         setCodeStyle: function(e) {
             e.preventDefault();
-            var elementToChange = getElementEditing();
-            elementToChange = $(elementToChange.find("pre"));
+            var elementToChanger = getElementEditing();
+            elementToChange = $(elementToChanger.find("pre"));
 
             var current = elementToChange.attr("data-class");
             var value = extractValue(e);
@@ -463,6 +487,7 @@ function initializeTextColorChooser(color) {
             var codestyle = document.getElementsByClassName('codeStyleReadout')[0];
             codestyle.innerHTML = value;
             me.prettifyCode();
+            modifyCode(elementToChanger, 'style', value);
             changeContent();//Event for undo redo
         },
         setFontFamily: function(e) {
@@ -481,6 +506,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 face: value_name
             });
+            modifyCode(elementToChange, 'format', value)
             changeContent();//Event for undo redo
         },
         setFontSize: function(e) {
@@ -499,6 +525,7 @@ function initializeTextColorChooser(color) {
             Backbone.trigger('etch:state', {
                 size: value
             });
+            modifyElementSize(elementToChange);
             changeContent();//Event for undo redo
         }
 

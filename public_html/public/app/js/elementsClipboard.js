@@ -42,11 +42,13 @@ function pasteEl() {
         case "slidethumb":
             if (isInElement($(".slidethumbholder"), currentClicked)) {
                 if (isElementByClass("slidethumb", currentClicked)) {
-                    me.copySlideToSlide(elClipboard.value);
+                    var newSlide = me.copySlideToSlide(elClipboard.value);
+                    pasteSlideToSlide(elClipboard.value, newSlide);
                     changeContent();//Event for undo redo  
                 }
                 else {
-                    me.cloneSlide(elClipboard.value);
+                    var newSlide = me.cloneSlide(elClipboard.value);
+                    pasteSlides(elClipboard.value, newSlide);
                     launchEvent("click", document.getElementsByClassName("slidethumbholder")[0]);
                     changeContent();//Event for undo redo  
                 }
@@ -70,7 +72,8 @@ function pasteEl() {
 }
 
 function pasteSlidelement() {
-    me.cloneElement(elClipboard.value);
+    var newElement = me.cloneElement(elClipboard.value);
+    pasteElements(elClipboard.value, newElement);
     me.appendClonedElement();
     changeContent();//Event for undo redo  
 }
