@@ -23,12 +23,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	sudo docker pull sergioserr/fullslider:v0.5
+	sudo docker pull sergioserr/fullslider:v0.6
 	```
 3. Run image
 
 	```
-	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.5
+	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.6
 	```
 4. Open your browser and write url: 
 
@@ -42,12 +42,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	docker pull sergioserr/fullslider:v0.5
+	docker pull sergioserr/fullslider:v0.6
 	```
 3. Run image
 
 	```
-	docker run -p 8888:8888 sergioserr/fullslider:v0.5
+	docker run -p 8888:8888 sergioserr/fullslider:v0.6
 	```
 4. Get docker machine ip
 	
@@ -145,7 +145,7 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ## Release Notes
 
-###### v0.5 - With Fullslider, you can do: ######
+###### v0.6 - With Fullslider, you can do: ######
  - Create new presentations.
  - Download presentation as .fspf file (FullSlider Presentation File).
  - Open downloaded presentations from Fullslider, with .fspf extension.
@@ -193,7 +193,7 @@ When user click on Download button, a file with .fspf extension is automatically
 
 ![edit](https://cloud.githubusercontent.com/assets/6854006/15626730/12b11214-24cd-11e6-883a-120d33d3cf13.PNG)
 
-## Text-editor guide [Version 0.2] ## 
+## Text-editor guide [Version 0.3] ## 
 
 * Slide without title --> #
 * Slide with title --> #Title
@@ -215,6 +215,21 @@ When user click on Download button, a file with .fspf extension is automatically
 * Options -> for text elements -> {options: XX:'YY',XX:'YY'}, ending with ---; where XX and YY are:
 	* [XX] top -> [YY] Distance from the element to the top of the slide
 	* [XX] left -> [YY] Distance from the element to the left of the slide
+	* [XX] transform -> [YY] Between 0-1 this indicates the rotation of the element
+	* [XX] height -> [YY] Height of the element (only figures and images)
+	* [XX] width -> [YY] Width of the element (only figures and images)
+	* [XX] font-size -> [YY] Size of the element (only code and text)
+	* [XX] fill -> [YY] Colour of filling in format rgb (only figures)
+	* [XX] stroke -> [YY] Colour of the border in format rgb (only figures)
+	* [XX] lineSize -> [YY] Size of the border (only figures)
+	* [XX] opacity -> [YY] Betwenn 0-1 this is opacity of the element (only figures)
+	* [XX] numbers -> [YY] Value boolean this indicate if the element is numbered (only code)
+	* [XX] style -> [YY] Letter style (only code and text)
+	* [XX] backcolor -> [YY] Colour of the background in format rgb (only text)
+	* [XX] index -> [YY] 'f' for index in each slide with title or subtitle or 'p' only index in the beggining (this option should be the first line)
+	
+* The content of the all elements are modifiable.
+* Now you can do undo and redo, you can do copy and paste too, even you can move any element like the thumbnails.
 
 ![fullslider with in markdown](https://cloud.githubusercontent.com/assets/15110402/24818402/ab5ccc5a-1be0-11e7-8e59-a3332ed63c97.png)
 ![fullslider with new in markdown](https://cloud.githubusercontent.com/assets/15110402/24817815/3aebfede-1bde-11e7-82b2-4648a8937ea9.png)
