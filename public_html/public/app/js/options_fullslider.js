@@ -216,9 +216,7 @@ function modifyCode(element, option, value){
 function modifyElementPosition(element){
     var options = parserElement(element, 'position');
     var type = element.getAttribute('data-type')
-//    console.log(type); //debug
     var textOptions = '';
-//    console.log(options); //debug
     for(option in options){
         switch(option){
             case 'top':
@@ -241,16 +239,13 @@ function modifyElementPosition(element){
                 break;
         }
     }
-//    console.log(textOptions) //debug
     var id = element.getAttribute("id").substr(12, 4);
     addOptionsList(id, textOptions);
 }
 function modifyElementSize(element){
     var options = parserElement(element, 'size');
     var type = element.attr('data-type')
-//    console.log(type); //debug
     var textOptions = '';
-//    console.log(options); //debug
     for(option in options){
         switch(option){
             case 'width':
@@ -302,13 +297,11 @@ function modifyElementSize(element){
                 break;
         }
     }
-//    console.log(textOptions) //debug
     var id = element.attr("id").substr(12, 4);
     addOptionsList(id, textOptions);
 }
 function mergeOptions(oldOp, newOp){
     var options = oldOp.split(',');
-//    console.log(options) //debug
     var option = '';
     var value = '';
     var textOptions = newOp;
@@ -399,7 +392,6 @@ function getOptions(type){
             }
             break;
     }
-//    console.log(options) //debug
     return options;
 }
 function getOptionText(option, options){
@@ -569,7 +561,6 @@ function getOptionFigure(option, options){
 //Set temporal options
 function set_temp(options){
     var options = options.split(',');
-//    console.log(options); //debug
     var option = '';
     var value = '';
     for(var op = 0; op < options.length; op++){
@@ -619,7 +610,6 @@ function set_temp(options){
                 case 'format':
                     value = obtainValue(options[op]);
                     default_temp.format = "'" + value + "', " + addFormat(value);
-                    console.log(default_temp.format)
                     op++;
                     break;
             }
@@ -627,7 +617,6 @@ function set_temp(options){
     }
 }
 function addFormat(value){
-    console.log(value); //debug
     switch(value){
         case 'Abril Fatface':
             return 'cursive';
@@ -732,7 +721,6 @@ function addFormat(value){
 function addOptionsNewFigure(element){
     var options = parserElement(element, 'position');
     var textOptions = '';
-//    console.log(options); //debug
     for(option in options){
         switch(option){
             case 'top':
@@ -774,31 +762,30 @@ function addOptionsNewFigure(element){
                 break;
         }
     }
-//    console.log(textOptions) //debug
     var id = element.getAttribute("id").substr(12, 4);
     addOptionsList(id, textOptions);
 }
 
 //Index
 function prepocessing(indexType){
-        for(var pre = 2 ; pre < source.length; ++pre ){
-            if(source[pre][1] != undefined){
-                switch(source[pre][0]){
-                    case 'slide1':
-                        slides_list.push(1);
-                        slides_list.push(source[pre][1]);
-                        break;
-                    case 'slide2':
-                        slides_list.push(2);
-                        slides_list.push(source[pre][1]);
-                        break;
-                }
+    restructureList(0, false, '');
+    restructureList(0, false, '');
+    for(var pre = 2 ; pre < source.length; ++pre ){
+        if(source[pre][1] != undefined){
+            switch(source[pre][0]){
+                case 'slide1':
+                    slides_list.push(1);
+                    slides_list.push(source[pre][1]);
+                    break;
+                case 'slide2':
+                    slides_list.push(2);
+                    slides_list.push(source[pre][1]);
+                    break;
             }
         }
-        modeIndex = indexType;
-        max_line += 2;
-        createSlideIndex("first", 0);
-        max_line -= 2;
+    }
+    modeIndex = indexType;
+    createSlideIndex("first", 0);
 }
 
 //Data obtain
@@ -839,7 +826,6 @@ var parserElement = function(element, type){
     else if(type == 'size'){
         var parseText = element.attr("style").split(';');
     }
-//    console.log(parseText); //debug
     var options = {};
     var option = '';
     var value = '';
@@ -888,9 +874,4 @@ function cleanDefault(){
 function clearOptions(){
     cleanDefault();
     slideNumElements = {};
-}
-
-//debug
-function mostrarDatos(){
-    console.log(slideNumElements);
 }

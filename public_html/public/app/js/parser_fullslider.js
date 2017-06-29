@@ -12,7 +12,6 @@ var spaceLines = []; //White lines in text editor
 var max_line = 0; //Max_line for add text editor
 var manualFigure = true; //Difference between graphic or text add figure
 var manualImage = true; //Difference between graphic or text add image
-//var mainSlide = ''; //Save the slide title for subslides
 var optionsLines = []; //Options lines in text editor
 var typeElements = {}; //Type of element for each element of the presentation
 var imagesListProcess = {}; //Save the images for adding later
@@ -31,7 +30,6 @@ $(document).ready(function() {
         // Markdown
         var content = $('#markdown-text').val();
         source = markdown.toHTML(content);
-//        console.log(source); //debug
         // Check error
         if(source[0] != 'start'){
             alert("An error occurred, please try again later");
@@ -44,33 +42,11 @@ $(document).ready(function() {
             while(spaceLines.includes(max_line)){
                 max_line++;
             }
-//            console.log(source); //debug
-//            console.log(i); //debug
-//            console.log(id_slides_list); //debug
         };
         deleteSpaces();
         initializeUndoRedo();
         change = true;
     });
-//    $('#testing').click(function() {
-//        console.log(elements_list); //debug
-//        console.log("Espacios " + spaceLines); //debug
-//        console.log("Max line " + max_line); //debug
-//        console.log(id_slides_list); //debug
-//        console.log("Opciones " + optionsLines); //debug
-//        console.log(typeElements); //debug
-//        mostrarDatos(); //debug
-//        console.log(imagesListProcess) //debug
-//        console.log(slides_list); //debug
-//        console.log(id_index_slides) //debug
-//        console.log(copiesTextEditor); //debug
-//        console.log(futureCopiesTextEditor); //debug
-//        console.log(presentTextEditor); //debug
-//        console.log(copiesVariables); //debug
-//        console.log(futureCopiesVariables); //debug
-//        console.log(presentVariables); //debug
-//        console.log(old_slides); //debug
-//    });
 }); 
 
 var process = function(source){
@@ -119,9 +95,7 @@ var process = function(source){
                     if((typeof source[p]) != "string"){
                         while(p1 < source[p].length){
                             if((typeof source[p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                 temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                             }
                             else{
                                 temText += source[p][p1];
@@ -140,7 +114,6 @@ var process = function(source){
                 id = Impressionist.prototype.addFullsliderTextMD("title", proText);
                 id = id.substr(12, 4);
                 elements_list[id] = max_line;
-//                mainSlide = source[1];
                 typeElements[id] = 'titleS';
                 moreTitle(1);
                 break;
@@ -164,9 +137,6 @@ var process = function(source){
                 elements_list[id] = max_line;
                 addNumElementsSlide(id);
                 typeElements[id] = 'slide2';
-//                id = Impressionist.prototype.addFullsliderTextMD("title", mainSlide, mode, 0.0732064, 1.02489);
-//                id = id.substr(12, 4);
-//                elements_list[id] = max_line;
                 var p = 1;
                 var p1 = 1;
                 var proText = '';
@@ -175,9 +145,7 @@ var process = function(source){
                     if((typeof source[p]) != "string"){
                         while(p1 < source[p].length){
                             if((typeof source[p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                 temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                             }
                             else{
                                 temText += source[p][p1];
@@ -203,7 +171,6 @@ var process = function(source){
             break;
         case 'options':
             optionsLines.push(max_line);
-//            console.log('Options pass'); //debug
             set_temp(source[1]);
             break;
         case 'tl1':
@@ -215,9 +182,7 @@ var process = function(source){
                 if((typeof source[p]) != "string"){
                     while(p1 < source[p].length){
                         if((typeof source[p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                             temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                         }
                         else{
                             temText += source[p][p1];
@@ -233,7 +198,6 @@ var process = function(source){
                 }
                 p++;
             }
-//            console.log(proText); //debug
             var id = Impressionist.prototype.addFullsliderTextMD("title", proText);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
@@ -249,9 +213,7 @@ var process = function(source){
                 if((typeof source[p]) != "string"){
                     while(p1 < source[p].length){
                         if((typeof source[p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                             temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                         }
                         else{
                             temText += source[p][p1];
@@ -267,7 +229,6 @@ var process = function(source){
                 }
                 p++;
             }
-//            console.log(proText); //debug
             var id = Impressionist.prototype.addFullsliderTextMD("subtitle", proText);
             id = id.substr(12, 4);
             elements_list[id] = max_line;
@@ -324,7 +285,6 @@ var process = function(source){
             break;
         case 'ol':
             var lines = multiElement(max_line, 'list');
-//            console.log(lines); //debug
             var p = 1;
             var p1 = 1;
             var temText = '';
@@ -336,9 +296,7 @@ var process = function(source){
                         if((typeof source[x][p]) != "string"){
                             while(p1 < source[x][p].length){
                                 if((typeof source[x][p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                     temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                                 }
                                 else{
                                     temText += source[x][p][p1];
@@ -362,9 +320,7 @@ var process = function(source){
                         if((typeof source[x][p]) != "string"){
                             while(p1 < source[x][p].length){
                                 if((typeof source[x][p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                     temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                                 }
                                 else{
                                     temText += source[x][p][p1];
@@ -396,7 +352,6 @@ var process = function(source){
             break;
         case 'ul':
             var lines = multiElement(max_line, 'list');
-//            console.log(lines); //debug
             var p = 1;
             var p1 = 1;
             var temText = '';
@@ -408,9 +363,7 @@ var process = function(source){
                         if((typeof source[x][p]) != "string"){
                             while(p1 < source[x][p].length){
                                 if((typeof source[x][p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                     temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                                 }
                                 else{
                                     temText += source[x][p][p1];
@@ -434,9 +387,7 @@ var process = function(source){
                         if((typeof source[x][p]) != "string"){
                             while(p1 < source[x][p].length){
                                 if((typeof source[x][p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                     temText += '<' + source[x][p][p1][0] + '>' + source[x][p][p1][1] + '</' + source[x][p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                                 }
                                 else{
                                     temText += source[x][p][p1];
@@ -470,7 +421,6 @@ var process = function(source){
             switch(code_img){
                 case 'code':
                     var lines = multiElement(max_line, 'code');
-//                    console.log(lines); //debug
                     var text = '<li>';
                     for(x = 0; x < source[1].length; x++){
                         text += source[1][x];
@@ -501,7 +451,6 @@ var process = function(source){
                     break;
                 default:
                     var lines = multiElement(max_line, 'text');
-//                    console.log(lines) //debug
                     var p = 1;
                     var p1 = 1;
                     var proText = '';
@@ -510,9 +459,7 @@ var process = function(source){
                         if((typeof source[p]) != "string"){
                             while(p1 < source[p].length){
                                 if((typeof source[p][p1]) != "string"){
-//                                    console.log(source[p]); //debug
                                     temText += '<' + source[p][p1][0] + '>' + source[p][p1][1] + '</' + source[p][p1][0] + '>';
-//                                    console.log(source[p]); //debug
                                 }
                                 else{
                                     temText += source[p][p1];
@@ -532,7 +479,6 @@ var process = function(source){
                         }
                         p++;
                     }
-//                    console.log(proText) //debug
                     var id = Impressionist.prototype.addFullsliderTextMD("normal", proText);
                     id = id.substr(12, 4);
                     elements_list[id] = lines;
@@ -570,10 +516,10 @@ var deleteSlideList = function(idSlide){
         for(var i = 0; i < id_index_slides.length; i++){
             if(id_index_slides[i] == idSlide){
                 id_index_slides = [];
-                restructureList(0, false, '');
-                max_line--;
-                restructureList(0, false, '');
-                max_line--;
+//                restructureList(0, false, '');
+//                max_line--;
+//                restructureList(0, false, '');
+//                max_line--;
                 optionsLines.splice(0,1);
                 modeIndex = '';
             }
@@ -585,13 +531,9 @@ var deleteSlideList = function(idSlide){
     delete typeElements[idSlide];
     for(lock in elements_list){
         if(elements_list[lock] == line){
-//            console.log("-----") //debug
-//            console.log(lock) //debug
-//            console.log(elements_list[lock]) //debug
             delete elements_list[lock];
         }
     }
-//    console.log(elements_list); //debug
     restructureList(line, false, 'slide');
     max_line--;
     if(spaceLines.includes(line)){
@@ -623,13 +565,7 @@ var deleteSlideList = function(idSlide){
                 findOption = true;
             }
         }
-//        console.log("Tamaño"); //debug
-//        console.log(locks.length); //debug
         var lock = locks[l];
-//        console.log(locks); //debug
-//        console.log("l: " + l + ", lock " + lock); //debug
-//        console.log(elements_list); //debug
-//        console.log("elements_list[lock] " + elements_list[lock]); //debug
         if(compareLines(elements_list[lock], line)){
             for(iS = 0; iS < id_slides_list.length; iS++){
                 if(id_slides_list[iS] == lock){
@@ -658,9 +594,7 @@ var deleteSlideList = function(idSlide){
         if(!notSlide){
             break;
         }
-//        console.log((locks.length) - 1); //debug
         if((l == locks.length) && posibleTitle){
-//            console.log("Reinicio"); //debug
             l = 0;
         }
     }
@@ -668,13 +602,9 @@ var deleteSlideList = function(idSlide){
 }
 function compareLines(lineElement, line){
     if(lineElement.length != undefined){
-//        console.log('Multi'); //debug
         return lineElement[0] == line;
     }
     else{
-//        console.log('NOMulti'); //debug
-//        console.log(lineElement); //debug
-//        console.log(line); //debug
         return lineElement == line;
     }
 }
@@ -690,7 +620,6 @@ var deleteElementList = function(idElement, fromSlide = false){
         idElement = idElement.substr(12, 4);
     }
     var lineElement = elements_list[idElement];
-//    console.log(lineElement.length) //debug
     if(lineElement.length != undefined){
         lessElement(typeElements[idElement], lineElement.length);
         delete typeElements[idElement];
@@ -925,16 +854,11 @@ var addOptionsList = function(idElement, options){
 
 //Paste elements
 var pasteElements = function(element, newElement){
-//    console.log(newElement); //debug
     var id = element.attr("id").substr(12, 4);
     var newId = newElement.attr("id").substr(12, 4);
     var type = typeElements[id];
     var lineSlide = currentSlide();
-//    console.log(id); //debug
-//    console.log(newId); //debug
-//    console.log(type); //debug
     var lines = elements_list[id];
-//    console.log(lines); //debug
     if(lines.length != undefined){
         var text = $('#markdown-text').val().split('\n');
         var copyText = '';
@@ -946,7 +870,6 @@ var pasteElements = function(element, newElement){
                 copyText += text[cp] + '\n';
             }
         }
-//        console.log(copyText); //debug
         copyText += '\n';
         restructureList(lineSlide+2, true, 'paste', copyText, lines.length+1);
         newLines = [];
@@ -960,7 +883,6 @@ var pasteElements = function(element, newElement){
     else{
         var text = $('#markdown-text').val().split('\n');
         var copyText = text[lines];
-//        console.log(copyText); //debug
         copyText += '\n';
         restructureList(lineSlide+2, true, 'paste', copyText);
         elements_list[newId] = lineSlide + 2;
@@ -1011,10 +933,7 @@ var pasteElements = function(element, newElement){
 var pasteSlides = function(slide, newSlide, copyLine = undefined){
     var id = slide.attr("id").substr(17, 4);
     var newId = newSlide.attr("id").substr(17, 4);
-//    console.log(id); //debug
-//    console.log(newId); //debug
     var newElements = document.getElementById(newSlide.attr('id')).children;
-//    console.log(newElements); //debug
     var text = $('#markdown-text').val().split('\n');
     var lineSlide = elements_list[id];
     var textSize = 1;
@@ -1041,7 +960,6 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
         var futureLine = copyLine;
         restructureList(copyLine, true, '', '', textSize);
     }
-//    console.log($('#markdown-text').val().split('\n')); //debug
     var found = false;
     var oldElement = '';
     var firstElement = true;
@@ -1051,7 +969,6 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
                 if(elements_list[key].includes(cp)){
                     if(typeElements[key] != 'slide1' && typeElements[key] != 'slide2'){
                         futureLines.push(futureLine);
-//                        console.log(futureLine); //debug
                         oldElement = key;
                         found = true;
                     }
@@ -1061,7 +978,6 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
                 if(typeElements[key] != 'slide1' && typeElements[key] != 'slide2'){
                     if(elements_list[key] == cp){
                         futureLines.push(futureLine);
-//                        console.log(futureLine); //debug
                         oldElement = key;
                         found = true;
                     }
@@ -1116,10 +1032,7 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
             firstElement = false;
         }
     }
-//    console.log(copyText); //debug
-//    console.log(copyText.split('\n').length - 1); //debug
     id_slides_list.push(newId);
-//    console.log(copyText); //debug
     if(copyLine == undefined){
         restructureList(max_line, true, 'paste', copyText, 0);
         elements_list[newId] = max_line;
@@ -1133,11 +1046,8 @@ var pasteSlides = function(slide, newSlide, copyLine = undefined){
     changeTextEditor();
 }
 var identifyElement = function(newElement, lines, oldId){
-//    console.log(newElement); //debug
     var newId = newElement["id"].substr(12, 4);
-//    console.log(newId); //debug
     var type = typeElements[oldId];
-//    console.log(type); //debug
     elements_list[newId] = lines;
     switch(type){
         case 'figure':
@@ -1257,7 +1167,6 @@ function processingText(){
     var textLine = 0;
     var firstElement = true;
     var last = preText.length - 1;
-//    console.log(preText.length); //debug
     while(preTextLine <= last){
         if(preText[preTextLine] != '' || !firstElement){ //This avoid white line in first position
             if(preText[preTextLine].includes('{options') && preText[preTextLine].includes('}') && firstElement){//This add a white line after presentation options
@@ -1304,7 +1213,6 @@ function processingText(){
                 }
             }
         }
-//        console.log(text); //debug
         preTextLine++;
     }
     if(text[text.length-1] != ' '){ //This add a final white line
@@ -1316,16 +1224,12 @@ function processingText(){
 function restructureList(modified, add, type, textAdd=undefined, movesLines=undefined){
     var preText = $('#markdown-text').val().split('\n');
     var preElement = preText[modified];
-//    console.log(preElement); //debug
-//    console.log(modified); //debug
-//    console.log(preText); //debug
     var text = '';
     if(preText.length == 1){ //First initialize
         text = '#\n\n';
     }
     else{
         for(var rL = 0; rL <= preText.length-1; rL++){
-//            console.log(rL); //debug
             if(rL == modified){
                 if(add){
                     switch(type){
@@ -1391,8 +1295,6 @@ function restructureList(modified, add, type, textAdd=undefined, movesLines=unde
                 }
                 
             }
-//            console.log(text); //debug
-//            console.log('-------------------------'); //debug
         }
     }
     $('#markdown-text').val(text);
@@ -1472,9 +1374,7 @@ function restructureList(modified, add, type, textAdd=undefined, movesLines=unde
 }
 function multiElement(line, type){
     var lines = [];
-//    console.log(line); //debug
     var text = $('#markdown-text').val().split('\n');
-//    console.log(text) //debug
     switch(type){
         case 'code':
             var n = 1;
@@ -1516,7 +1416,6 @@ function deleteSpaces(){
     var sp = 0;
     while(sp < spaceLines.length){
         if(spaceLines[sp+1] == spaceLines[sp] + 1 || spaceLines[sp+1] == spaceLines[sp]){
-//            console.log(spaceLines); //debug
             restructureList(spaceLines[sp], false, '');
             spaceLines.splice(sp, 1);
             max_line--;
@@ -1533,7 +1432,6 @@ function modifyTextCode(textElement, idElement){
     //Delete element
     var line = lines[0];
     var lastLine = lines[lines.length-1];
-//    console.log(textElement[0].textContent); //debug
     for(var mT = line; mT <= lastLine; mT++){
         restructureList(line, false, '');
         max_line--;
@@ -1547,7 +1445,7 @@ function modifyTextCode(textElement, idElement){
         restructureList(line, false, '');
         max_line--;
     }
-    //write same element modified
+    //Write same element modified
     elements_list[idElement] = [];
     for(var tA = 0; tA < textElement.length; tA++){
         if(tA == 0){
@@ -1578,7 +1476,6 @@ function modifyTextCode(textElement, idElement){
     changeTextEditor();
 }
 function modifyTextText(textElement, idElement){
-//    console.log(textElement); //debug
     var idElement = idElement.substr(12, 4);
     var type = typeElements[idElement];
     var lines = elements_list[idElement];
@@ -1606,7 +1503,6 @@ function modifyTextText(textElement, idElement){
         elements_list[idElement] = [];
         var chi = 0;
         var modT = '';
-//        console.log(textElement); //debug
         for(var mTT = 0; mTT < textElement.length; mTT++){
             if(textElement[mTT].children.length != 1){
                 if(textElement[mTT].innerHTML.includes('<ul>')){
@@ -1638,10 +1534,7 @@ function modifyTextText(textElement, idElement){
                     modT = textElement[mTT].children.item(0).innerHTML;      
                 }
             }
-//            console.log(linesList); //debug
-//            console.log(modT); //debug
             var modifiedText = replaceStyleText(modT);
-//            console.log(modifiedText); //debug
             if(modifiedText != ''){
                 if(linesList != 0){
                     if(mTT == textElement.length-1){
@@ -1735,8 +1628,6 @@ function modifyTextText(textElement, idElement){
                     modT = textElement[mTT].children.item(0).innerHTML;      
                 }
             }
-//            console.log(linesList); //debug
-//            console.log(modT); //debug
             var modifiedText = '';
             switch(type){
                 case 'title':
@@ -1755,7 +1646,6 @@ function modifyTextText(textElement, idElement){
                     modifiedText += replaceStyleText(modT);
                     break;
             }
-//            console.log(modifiedText); //debug
             if(modifiedText != ''){
                 if(linesList != 0){
                     if(mTT == textElement.length-1){
@@ -1821,7 +1711,7 @@ function modifyTextText(textElement, idElement){
 function replaceStyleText(text){
     var modifiedText = text.replace(/^\s+/g, '');
     modifiedText = modifiedText.replace(/<br>/g, '.');
-    modifiedText = modifiedText.replace(/&nbsp;*/g, ' ');
+    modifiedText = modifiedText.replace(/&nbsp;*/g, '');
     modifiedText = modifiedText.replace(/<b>\s*/g, '**');
     modifiedText = modifiedText.replace(/<\/b>/g, '**');
     modifiedText = modifiedText.replace(/<i>\s*/g, '_');
@@ -1833,11 +1723,9 @@ function replaceStyleText(text){
     return modifiedText;
 }
 function toList(textElement, mode){
-//    console.log(textElement); //debug
     var textList = '';
     var ind = 1;
     for(var l = 0; l < textElement.length; l++){
-//        console.log(textElement[l].innerHTML); //debug
         if(mode == 0){ //unorder
             textList += '* ' + textElement[l].innerHTML + '\n';
         }
@@ -1847,23 +1735,16 @@ function toList(textElement, mode){
         }
     }
     textList += '---'
-//    console.log(textList); //debug
     return textList;
 }
 function moveSlideMD(slides, slide){
-//    console.log(slides); //debug
-//    console.log('Slide moved: ' + slide.id); //debug
     for(var mS = 0; mS < slides.length; mS++){
-//        console.log(slides[mS].id); //debug
         if(slides[mS].id.includes(slide.id)){
-//            console.log('Yeah, ' + slides[mS].id + ' == ' + slide.id); //debug
             if(slides[mS+1] != undefined){
                 var s = slides[mS+1].id.substr(11,4);
-//                console.log('Line next slide: ' + elements_list[s]); //debug
                 moveSlide(slide.id, elements_list[s]);
             }
             else{
-//                console.log('Last slide'); //debug
                 moveSlide(slide.id, max_line);
             }
         }
@@ -1873,15 +1754,13 @@ var moveSlide = function(idSlide, line){
     var newElements = document.getElementById(idSlide).children;
     idSlide = idSlide.substr(11,4);
     newElements = newElements[3].children;
-//    console.log(newElements); //debug
+    newElements = orderNewElements(newElements);
     var text = $('#markdown-text').val().split('\n');
-//    console.log(text); //debug
     var lineSlide = elements_list[idSlide];
     var lineText = lineSlide;
     var moveText = text[lineText] + '\n';
     lineText++;
     while(lineText != text.length-1 && text[lineText] != undefined && !(text[lineText].includes('#')) && !(text[lineText].includes('##'))){
-//        console.log(lineText); //debug
         if(lineText+1 != text.length-1 && text[lineText+1] != undefined && !(text[lineText+1].includes('#')) && !(text[lineText+1].includes('##'))){
             moveText += text[lineText] + '\n';
         }
@@ -1890,14 +1769,10 @@ var moveSlide = function(idSlide, line){
         }
         lineText++;
     }
-//    console.log(moveText); //debug
-//    console.log('line: ' + line); //debug
     // Delete old position
     var lT = moveText.split('\n').length;
     var oldLine = elements_list[idSlide];
-//    console.log(oldLine); //debug
     for(var dT = 0; dT < lT; dT++){
-//        console.log(dT); //debug
         if(spaceLines.includes(oldLine)){
             for(s = 0; s < spaceLines.length; s++){
                 if(oldLine == spaceLines[s]){
@@ -1922,14 +1797,10 @@ var moveSlide = function(idSlide, line){
             restructureList(oldLine, false, '');
         }
     }
-//    console.log(spaceLines); //debug
-//    console.log(newElements); //debug
-//    console.log('line: ' + line + ' y restará: ' + moveText.split('\n').length); //debug
     // Add again
     if(line != 0){
         line = line - (moveText.split('\n').length);
     }
-//    console.log('line: ' + line); //debug
     restructureList(line, true, 'paste', moveText, lT);
     var nE = 1;
     moveText = moveText.split('\n');
@@ -1937,24 +1808,73 @@ var moveSlide = function(idSlide, line){
     line++;
     var idE = '';
     for(var movedT = 1; movedT < moveText.length; movedT++){
-        if(moveText[movedT].includes('{options')){
-//            console.log('options'); //debug
-            optionsLines.push(line);
-            line++;
-            movedT++;
-        }
-        else if(moveText[movedT] != ''){
-//            console.log(newElements[nE]); //debug
-            idE = newElements[nE].id.substr(12,4);
-            elements_list[idE] = line;
-            nE++;
-        }
-        else{
-//            console.log(line); //debug
-            spaceLines.push(line);
+        if(newElements[nE] != undefined){
+            if(moveText[movedT].includes('{options')){
+                optionsLines.push(line);
+                line++;
+                movedT++;
+            }
+            else if(moveText[movedT] != ''){
+                idE = newElements[nE].id.substr(12,4);
+                if(elements_list[idE].length != undefined){
+                    var lines = [];
+                    for(var r = 0; r < elements_list[idE].length; r++){
+                        lines.push(line);
+                        if(r != elements_list[idE].length-1){
+                            line++;
+                            movedT++;
+                        }
+                    }
+                    elements_list[idE] = lines;
+                }
+                else{
+                    elements_list[idE] = line;
+                }
+                nE++;
+            }
+            else{
+                spaceLines.push(line);
+            }
         }
         line++;
     }
+    spaceLines.push(line-1);
+    changeTextEditor();
+}
+function orderNewElements(elements1){
+    var elements = Array.from(elements1);
+    var nE = 1;
+    var aux = '';
+    var idE1 = '';
+    var idE2 = '';
+    var l1 = 0;
+    var l2 = 0;
+    while(nE < elements.length-1){
+        idE1 = elements[nE].id.substr(12,4);
+        idE2 = elements[nE+1].id.substr(12,4);
+        if(elements_list[idE2].length != undefined){
+            l2 = elements_list[idE2][0];
+        }
+        else{
+            l2 = elements_list[idE2];
+        }
+        if(elements_list[idE1].length != undefined){
+            l1 = elements_list[idE1][0];
+        }
+        else{
+            l1 = elements_list[idE1];
+        }
+        if(l2 < l1){
+            aux = elements[nE];
+            elements[nE] = elements[nE+1];
+            elements[nE+1] = aux;
+            nE = 1;
+        }
+        else{
+            nE++;
+        }
+    }
+    return elements.slice();
 }
 
 function resetAll(){
@@ -1971,60 +1891,3 @@ function resetAll(){
     spaceLines = [];
     imagesListProcess = {};
 }
-//Ejemplo debug
-
-//#1
-//
-//a
-//aa
-//aaa
-//
-//b
-//bb
-//bbb
-//
-//#2
-//
-//`function(){
-//  console.log('Hola');
-//}`
-//
-//* a
-//* b
-//* c
-//---
-//
-//Hola
-//
-//#3
-//
-//Adios
-//
-//12345
-//
-//#4
-//
-//>
-//
-//>>
-//
-//>>>
-//
-//#5
-
-
-//{options: index:'f'}
-//
-//#1
-//
-//#2
-//
-//##3
-//
-//#4
-//
-//Hola
-//
-//#
-//
-//#5

@@ -201,16 +201,16 @@ function initializeUndoRedo() {
 
         updateButtons(history);
 
-        key('ctrl+z', function(e) {
-            me.changesCounter--;
-            undoEditor();
-            history.undo(setEditorContents);
-        });
-
-        key('ctrl+shift+z', function(e) {
-            me.changesCounter++;
-            redoEditor();
-            history.redo(setEditorContents);
-        });
+//        key('ctrl+z', function(e) {
+//            me.changesCounter--;
+//            undoEditor();
+//            history.undo(setEditorContents);
+//        });
+//
+//        key('ctrl+shift+z', function(e) {
+//            me.changesCounter++;
+//            redoEditor();
+//            history.redo(setEditorContents);
+//        });
     });
 }
