@@ -386,11 +386,11 @@ function initializeTextColorChooser(color) {
             var ol = $($(elementToChange).find("ol"));
             if (ol.css("list-style-type") == "decimal") {
                 ol.css("list-style-type", "none");
-                modifyCode(elementToChange, 'numbers', 'false');
+                modifyCodes(elementToChange, 'numbers', 'false');
             }
             else {
                 ol.css("list-style-type", "decimal");
-                modifyCode(elementToChange, 'numbers', 'true');
+                modifyCodes(elementToChange, 'numbers', 'true');
             }
             changeContent();//Event for undo redo
         },
@@ -487,7 +487,7 @@ function initializeTextColorChooser(color) {
             var codestyle = document.getElementsByClassName('codeStyleReadout')[0];
             codestyle.innerHTML = value;
             me.prettifyCode();
-            modifyCode(elementToChanger, 'style', value);
+            modifyCodes(elementToChanger, 'style', value);
             changeContent();//Event for undo redo
         },
         setFontFamily: function(e) {

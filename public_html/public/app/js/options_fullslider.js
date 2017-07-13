@@ -200,7 +200,7 @@ function modifyFigure(element, option, value){
     var id = element.getAttribute("id").substr(12, 4);
     addOptionsList(id, textOptions);
 }
-function modifyCode(element, option, value){
+function modifyCodes(element, option, value){
     var textOptions = '';
     switch(option){
         case 'style':
@@ -318,9 +318,15 @@ function mergeOptions(oldOp, newOp){
 }
 function modifyCode(element, option, value){
     var textOptions = '';
+	var v = 1;
+	var vValue = '';
+	while(value[v] != ','){
+		vValue += value[v]
+		v++
+	}
     switch(option){
         case 'format':
-            textOptions += option + ':' + " '" + value + "',";
+            textOptions += option + ':' + " '" + vValue + "',";
             break;
     }
     var id = element.attr("id").substr(12, 4);
