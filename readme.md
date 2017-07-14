@@ -23,12 +23,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	sudo docker pull sergioserr/fullslider:v0.6
+	sudo docker pull sergioserr/fullslider:v0.6.1
 	```
 3. Run image
 
 	```
-	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.6
+	sudo docker run -p 8888:8888 sergioserr/fullslider:v0.6.1
 	```
 4. Open your browser and write url: 
 
@@ -42,12 +42,12 @@ Once Docker has been installed, continue with following steps:
 2. Download Fullslider image
 
 	```
-	docker pull sergioserr/fullslider:v0.6
+	docker pull sergioserr/fullslider:v0.6.1
 	```
 3. Run image
 
 	```
-	docker run -p 8888:8888 sergioserr/fullslider:v0.6
+	docker run -p 8888:8888 sergioserr/fullslider:v0.6.1
 	```
 4. Get docker machine ip
 	
